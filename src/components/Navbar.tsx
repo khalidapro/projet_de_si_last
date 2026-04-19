@@ -1,14 +1,23 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Scale, LayoutDashboard, Users, LogIn } from "lucide-react";
+import { Scale, LayoutDashboard, Users, LogIn, Briefcase, Inbox, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
+import { useApp } from "@/lib/store";
 
-const links = [
+const clientLinks = [
   { to: "/directory", label: "Directory", icon: Users },
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+];
+const lawyerLinks = [
+  { to: "/workspace", label: "Workspace", icon: Briefcase },
+  { to: "/workspace/requests", label: "Requests", icon: Inbox },
 ];
 
 export function Navbar() {
   const loc = useLocation();
+  const user = useApp((s) => s.user);
+  const setUser = useApp((s) => s.setUser);
+  const links = user?.role === "lawyer" ? lawyerLinks : clientLinks;
+
   return (
     <motion.header
       initial={{ y: -30, opacity: 0 }}
@@ -24,13 +33,15 @@ export function Navbar() {
           </div>
           <div className="leading-tight">
             <div className="font-display text-lg font-semibold">Avocat<span className="text-gradient">·</span>Link</div>
-            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Premium LegalTech</div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              {user?.role === "lawyer" ? "Lawyer Workspace" : "Premium LegalTech"}
+            </div>
           </div>
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">
           {links.map((l) => {
-            const active = loc.pathname.startsWith(l.to);
+            const active = loc.pathname === l.to || (l.to !== "/workspace" && loc.pathname.startsWith(l.to));
             return (
               <Link
                 key={l.to}
@@ -53,13 +64,30 @@ export function Navbar() {
           })}
         </nav>
 
-        <Link
-          to="/login"
-          className="group relative inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-accent px-4 py-2 text-sm font-semibold text-white shadow-[0_0_30px_-8px_rgba(99,102,241,0.7)] transition hover:shadow-[0_0_40px_-4px_rgba(99,102,241,0.8)]"
-        >
-          <LogIn className="h-4 w-4" />
-          Sign in
-        </Link>
+        {user ? (
+          <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2 glass rounded-xl px-3 py-1.5">
+              <div className={`h-2 w-2 rounded-full ${user.role === "lawyer" ? "bg-cyan-400" : "bg-emerald-400"} animate-pulse`} />
+              <span className="text-xs font-medium">{user.name}</span>
+              <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{user.role}</span>
+            </div>
+            <button
+              onClick={() => setUser(null)}
+              className="grid h-9 w-9 place-items-center rounded-xl glass hover:bg-white/10 transition"
+              aria-label="Sign out"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          </div>
+        ) : (
+          <Link
+            to="/login"
+            className="group relative inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-accent px-4 py-2 text-sm font-semibold text-white shadow-[0_0_30px_-8px_rgba(99,102,241,0.7)]"
+          >
+            <LogIn className="h-4 w-4" />
+            Sign in
+          </Link>
+        )}
       </div>
     </motion.header>
   );
