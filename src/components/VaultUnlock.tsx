@@ -23,9 +23,7 @@ export function VaultUnlock({
     const t1 = setTimeout(() => setPhase("unlocking"), 400);
     const t2 = setTimeout(() => setPhase("open"), 1500);
     const t3 = setTimeout(() => onUnlocked(), 1900);
-    return () => {
-      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
-    };
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, [open, onUnlocked]);
 
   return (
@@ -36,22 +34,22 @@ export function VaultUnlock({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 z-[110] grid place-items-center bg-black/80 backdrop-blur-xl"
+          className="fixed inset-0 z-[110] grid place-items-center bg-foreground/40 backdrop-blur-xl"
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: "spring", stiffness: 240, damping: 26 }}
             onClick={(e) => e.stopPropagation()}
-            className="glass-strong w-full max-w-md rounded-3xl p-10 text-center"
+            className="surface-lg w-full max-w-md rounded-3xl p-10 text-center bg-card"
           >
             <div className="relative mx-auto h-28 w-28">
               <motion.div
-                className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 ring-1 ring-white/10"
+                className="absolute inset-0 rounded-full chip-emerald"
                 animate={{
                   boxShadow: phase === "open"
-                    ? "0 0 80px 12px rgba(16,185,129,0.45)"
-                    : "0 0 40px 4px rgba(99,102,241,0.5)",
+                    ? "0 0 80px 12px oklch(0.7 0.16 160 / 0.55)"
+                    : "0 0 40px 4px oklch(0.7 0.16 160 / 0.4)",
                 }}
               />
               <div className="absolute inset-0 grid place-items-center">
@@ -73,7 +71,7 @@ export function VaultUnlock({
                       animate={{ scale: 1, opacity: 1, rotate: 0 }}
                       transition={{ type: "spring", stiffness: 260, damping: 18 }}
                     >
-                      <Unlock className="h-12 w-12 text-emerald-400" />
+                      <Unlock className="h-12 w-12 text-primary" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -85,10 +83,10 @@ export function VaultUnlock({
               {phase === "open" ? "Vault Unlocked" : phase === "unlocking" ? "Decrypting…" : "Secure Vault"}
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Verifying access keys for <span className="text-foreground">{clientName}</span>'s confidential brief.
+              Verifying access keys for <span className="text-foreground font-semibold">{clientName}</span>'s confidential brief.
             </p>
 
-            <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300 ring-1 ring-emerald-400/30">
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full chip-emerald px-3 py-1 text-xs font-semibold">
               <ShieldCheck className="h-3.5 w-3.5" /> AES-256 · Zero-knowledge
             </div>
           </motion.div>

@@ -32,7 +32,7 @@ function DirectoryPage() {
   );
 
   return (
-    <main className="mx-auto max-w-7xl px-6 pt-12 pb-24">
+    <div className="mx-auto max-w-7xl px-6 pt-8 pb-24">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -43,9 +43,9 @@ function DirectoryPage() {
       </motion.div>
 
       {/* Filters */}
-      <div className="glass-strong sticky top-24 z-30 rounded-2xl p-4 md:p-5 mb-8">
+      <div className="surface-lg sticky top-24 z-30 rounded-2xl p-4 md:p-5 mb-8">
         <div className="grid gap-4 md:grid-cols-[1fr_auto_auto] md:items-center">
-          <div className="flex items-center gap-2 glass rounded-xl px-3.5 py-2.5">
+          <div className="flex items-center gap-2 surface rounded-xl px-3.5 py-2.5">
             <Search className="h-4 w-4 text-muted-foreground" />
             <input
               value={q}
@@ -55,17 +55,17 @@ function DirectoryPage() {
             />
           </div>
 
-          <div className="flex items-center gap-1.5 rounded-xl bg-white/5 p-1">
+          <div className="flex items-center gap-1.5 rounded-xl bg-secondary p-1">
             {SPECIALTIES.map((s) => (
               <button
                 key={s}
                 onClick={() => setSpec(s)}
-                className={`relative px-3.5 py-1.5 text-xs font-medium rounded-lg transition ${spec === s ? "text-white" : "text-muted-foreground hover:text-foreground"}`}
+                className={`relative px-3.5 py-1.5 text-xs font-semibold rounded-lg transition ${spec === s ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
               >
                 {spec === s && (
                   <motion.div
                     layoutId="spec-pill"
-                    className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary to-accent"
+                    className="absolute inset-0 rounded-lg bg-primary glow-primary"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
@@ -122,6 +122,6 @@ function DirectoryPage() {
         onClose={() => setSelected(null)}
         onConfirm={(c) => addConsultation(c)}
       />
-    </main>
+    </div>
   );
 }

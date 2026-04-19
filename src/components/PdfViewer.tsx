@@ -21,19 +21,19 @@ export function PdfViewer({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[120] bg-black/80 backdrop-blur-xl p-4 md:p-10 grid place-items-center"
+          className="fixed inset-0 z-[120] bg-foreground/40 backdrop-blur-xl p-4 md:p-10 grid place-items-center"
           onClick={onClose}
         >
           <motion.div
             layoutId={layoutId}
             onClick={(e) => e.stopPropagation()}
-            className="glass-strong relative w-full max-w-3xl h-[80vh] rounded-2xl overflow-hidden"
+            className="surface-lg relative w-full max-w-3xl h-[80vh] rounded-2xl overflow-hidden bg-card"
             transition={{ type: "spring", stiffness: 260, damping: 28 }}
           >
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
+            <div className="flex items-center justify-between border-b border-border px-5 py-3 bg-card">
               <div className="flex items-center gap-2 text-sm">
                 <FileText className="h-4 w-4 text-primary" />
-                <span className="font-medium">{documentName}</span>
+                <span className="font-semibold">{documentName}</span>
               </div>
               <div className="flex items-center gap-2">
                 <button className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
@@ -45,19 +45,17 @@ export function PdfViewer({
               </div>
             </div>
 
-            <div className="relative h-[calc(80vh-49px)] overflow-auto bg-[#1a1d2e] p-8">
-              {/* Mock document */}
-              <div className="mx-auto max-w-2xl bg-[#f5f3ee] text-slate-900 rounded-md p-10 shadow-2xl relative overflow-hidden">
-                {/* Watermark */}
+            <div className="relative h-[calc(80vh-49px)] overflow-auto bg-secondary p-8">
+              <div className="mx-auto max-w-2xl bg-white text-slate-900 rounded-md p-10 shadow-xl relative overflow-hidden">
                 <div className="pointer-events-none absolute inset-0 grid place-items-center">
-                  <div className="rotate-[-30deg] font-display text-5xl font-bold text-rose-600/20 tracking-widest text-center leading-tight">
+                  <div className="rotate-[-30deg] font-display text-5xl font-bold text-rose-500/15 tracking-widest text-center leading-tight">
                     CONFIDENTIAL<br />
                     <span className="text-3xl">{userName.toUpperCase()}</span>
                   </div>
                 </div>
                 <h1 className="font-display text-3xl mb-2">Legal Brief</h1>
                 <p className="text-xs uppercase tracking-widest text-slate-500">{documentName}</p>
-                <hr className="my-4 border-slate-300" />
+                <hr className="my-4 border-slate-200" />
                 <p className="text-sm leading-relaxed text-slate-700">
                   This document contains privileged attorney-client communication. Unauthorized
                   disclosure is strictly prohibited under applicable law. All content herein is

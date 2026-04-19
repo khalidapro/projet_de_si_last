@@ -41,7 +41,7 @@ export function BookingModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] grid place-items-center bg-black/70 backdrop-blur-md p-4"
+          className="fixed inset-0 z-[100] grid place-items-center bg-foreground/30 backdrop-blur-md p-4"
           onClick={onClose}
         >
           <motion.div
@@ -50,7 +50,7 @@ export function BookingModal({
             exit={{ scale: 0.95, y: 12, opacity: 0 }}
             transition={{ type: "spring", stiffness: 280, damping: 26 }}
             onClick={(e) => e.stopPropagation()}
-            className="glass-strong relative w-full max-w-2xl rounded-3xl p-8 overflow-hidden"
+            className="surface-lg relative w-full max-w-2xl rounded-3xl p-8 overflow-hidden bg-card"
           >
             <button onClick={onClose} className="absolute right-5 top-5 text-muted-foreground hover:text-foreground transition">
               <X className="h-5 w-5" />
@@ -65,17 +65,18 @@ export function BookingModal({
                 initial={{ x: -120, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ type: "spring", stiffness: 180, damping: 20, delay: 0.1 }}
-                className="grid place-items-center h-20 w-20 rounded-2xl bg-gradient-to-br from-cyan-500/30 to-indigo-500/30 ring-1 ring-white/10"
+                className="grid place-items-center h-20 w-20 rounded-2xl chip-emerald"
               >
-                <User className="h-8 w-8 text-cyan-200" />
+                <User className="h-8 w-8" />
               </motion.div>
 
               <div className="relative">
                 <motion.div
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [0, 1.4, 1], opacity: [0, 1, 0.9] }}
+                  animate={{ scale: [0, 1.4, 1], opacity: [0, 1, 0.95] }}
                   transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
-                  className="h-3 w-3 rounded-full bg-gradient-to-r from-primary to-accent shadow-[0_0_30px_8px_rgba(99,102,241,0.7)]"
+                  className="h-3 w-3 rounded-full bg-primary"
+                  style={{ boxShadow: "0 0 30px 10px rgba(16,185,129,0.55)" }}
                 />
                 <span className="absolute inset-0 grid place-items-center">
                   <span className="absolute h-3 w-3 rounded-full pulse-ring" />
@@ -86,7 +87,7 @@ export function BookingModal({
                 initial={{ x: 120, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ type: "spring", stiffness: 180, damping: 20, delay: 0.1 }}
-                className="grid place-items-center h-20 w-20 rounded-2xl bg-gradient-to-br from-indigo-500/30 to-emerald-500/30 ring-1 ring-white/10 font-display text-xl"
+                className="grid place-items-center h-20 w-20 rounded-2xl chip-amber font-display text-xl"
               >
                 {lawyer.initials}
               </motion.div>
@@ -115,9 +116,9 @@ export function BookingModal({
                     onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                     onDragLeave={() => setDragOver(false)}
                     onDrop={(e) => { e.preventDefault(); setDragOver(false); handleFile(e.dataTransfer.files?.[0]); }}
-                    className={`relative w-full rounded-2xl p-8 text-center transition ${dragOver ? "bg-primary/10" : "bg-white/[0.02]"}`}
+                    className={`relative w-full rounded-2xl p-8 text-center transition ${dragOver ? "bg-primary/10" : "bg-secondary/40"}`}
                   >
-                    <div className="absolute inset-0 rounded-2xl dashed-glow opacity-80" />
+                    <div className="absolute inset-0 rounded-2xl dashed-glow opacity-90" />
                     <Upload className="mx-auto h-7 w-7 text-primary" />
                     <div className="mt-2 font-medium">Drop your PDF proof here</div>
                     <div className="text-xs text-muted-foreground">or click to browse — encrypted in transit</div>
@@ -130,11 +131,11 @@ export function BookingModal({
                     initial={{ borderRadius: 24 }}
                     animate={{ borderRadius: 999 }}
                     transition={{ type: "spring", stiffness: 260, damping: 24 }}
-                    className="mx-auto inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-5 py-3 text-sm font-medium text-emerald-300 ring-1 ring-emerald-400/30 glow-emerald"
+                    className="mx-auto inline-flex items-center gap-2 rounded-full chip-emerald px-5 py-3 text-sm font-semibold glow-primary"
                   >
                     <FileCheck2 className="h-4 w-4" />
                     Document Encrypted & Secured
-                    <span className="ml-1 text-emerald-200/60 text-xs">· {uploaded}</span>
+                    <span className="ml-1 text-muted-foreground text-xs">· {uploaded}</span>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -142,12 +143,12 @@ export function BookingModal({
 
             <div className="mt-7 flex items-center justify-between gap-4">
               <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" /> AES-256 · Zero-knowledge storage
+                <ShieldCheck className="h-3.5 w-3.5 text-primary" /> AES-256 · Zero-knowledge storage
               </div>
               <button
                 onClick={confirm}
                 data-magnetic
-                className="rounded-xl bg-gradient-to-r from-primary to-accent px-5 py-2.5 text-sm font-semibold text-white shadow-[0_0_30px_-8px_rgba(99,102,241,0.7)]"
+                className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground glow-primary"
               >
                 Confirm booking
               </button>

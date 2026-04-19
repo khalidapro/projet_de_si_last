@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShieldCheck, Mail, Lock, ArrowRight, User, KeyRound, Search, Check, Briefcase, Scale } from "lucide-react";
 import { useState } from "react";
@@ -27,20 +27,23 @@ function LoginPage() {
 
   const finish = () => {
     setUser({
-      name,
-      email,
-      role,
+      name, email, role,
       ...(role === "lawyer" ? { specialty, barreau } : {}),
     });
     navigate({ to: role === "lawyer" ? "/workspace" : "/directory" });
   };
 
   return (
-    <div className="min-h-screen grid md:grid-cols-2">
+    <div className="min-h-screen grid md:grid-cols-2 bg-background">
       {/* Left — form */}
       <div className="relative flex items-center justify-center p-8">
         <div className="w-full max-w-sm">
-          <div className="font-display text-2xl">Avocat<span className="text-gradient">·</span>Link</div>
+          <Link to="/" className="inline-flex items-center gap-2">
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[oklch(0.7_0.16_160)] to-[oklch(0.78_0.18_145)]">
+              <Scale className="h-4 w-4 text-white" strokeWidth={2.4} />
+            </div>
+            <span className="font-display text-xl font-semibold">Avocat<span className="text-gradient">·</span>Link</span>
+          </Link>
 
           <AnimatePresence mode="wait">
             {step === "login" && (
@@ -56,12 +59,12 @@ function LoginPage() {
                 <p className="mt-1 text-sm text-muted-foreground">Choose your portal to continue.</p>
 
                 {/* Role toggle */}
-                <div className="mt-6 relative grid grid-cols-2 gap-1 glass rounded-2xl p-1.5">
+                <div className="mt-6 relative grid grid-cols-2 gap-1 surface rounded-2xl p-1.5">
                   <motion.div
                     layout
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    className="absolute inset-y-1.5 w-[calc(50%-6px)] rounded-xl bg-gradient-to-r from-primary to-accent shadow-[0_0_30px_-4px_rgba(99,102,241,0.7)]"
-                    style={{ left: role === "client" ? 6 : "calc(50% + 0px)" }}
+                    className="absolute inset-y-1.5 w-[calc(50%-6px)] rounded-xl bg-primary glow-primary"
+                    style={{ left: role === "client" ? 6 : "calc(50%)" }}
                   />
                   {(["client", "lawyer"] as Role[]).map((r) => (
                     <button
@@ -69,7 +72,7 @@ function LoginPage() {
                       type="button"
                       onClick={() => setRole(r)}
                       className={`relative z-10 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-colors ${
-                        role === r ? "text-white" : "text-muted-foreground"
+                        role === r ? "text-primary-foreground" : "text-muted-foreground"
                       }`}
                     >
                       {r === "client" ? <User className="h-4 w-4" /> : <Scale className="h-4 w-4" />}
@@ -79,7 +82,7 @@ function LoginPage() {
                 </div>
 
                 <label className="mt-6 block text-xs uppercase tracking-wider text-muted-foreground">Email</label>
-                <div className="mt-1.5 flex items-center gap-2 glass rounded-xl px-3.5 py-3">
+                <div className="mt-1.5 flex items-center gap-2 surface rounded-xl px-3.5 py-3">
                   <Mail className="h-4 w-4 text-muted-foreground" />
                   <input
                     value={email}
@@ -89,7 +92,7 @@ function LoginPage() {
                   />
                 </div>
                 <label className="mt-4 block text-xs uppercase tracking-wider text-muted-foreground">Password</label>
-                <div className="mt-1.5 flex items-center gap-2 glass rounded-xl px-3.5 py-3">
+                <div className="mt-1.5 flex items-center gap-2 surface rounded-xl px-3.5 py-3">
                   <Lock className="h-4 w-4 text-muted-foreground" />
                   <input type="password" defaultValue="••••••••••" className="flex-1 bg-transparent text-sm outline-none" />
                 </div>
@@ -108,9 +111,9 @@ function LoginPage() {
                           <select
                             value={specialty}
                             onChange={(e) => setSpecialty(e.target.value as typeof specialty)}
-                            className="mt-1.5 w-full glass rounded-xl px-3 py-3 text-sm outline-none"
+                            className="mt-1.5 w-full surface rounded-xl px-3 py-3 text-sm outline-none"
                           >
-                            {SPECIALTIES.map((s) => <option key={s} value={s} className="bg-[#0B0F19]">{s}</option>)}
+                            {SPECIALTIES.map((s) => <option key={s} value={s}>{s}</option>)}
                           </select>
                         </div>
                         <div>
@@ -118,7 +121,7 @@ function LoginPage() {
                           <input
                             value={barreau}
                             onChange={(e) => setBarreau(e.target.value)}
-                            className="mt-1.5 w-full glass rounded-xl px-3 py-3 text-sm outline-none"
+                            className="mt-1.5 w-full surface rounded-xl px-3 py-3 text-sm outline-none"
                           />
                         </div>
                       </div>
@@ -128,13 +131,19 @@ function LoginPage() {
 
                 <button
                   type="submit"
-                  className="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-accent py-3 text-sm font-semibold text-white glow-primary"
+                  className="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground glow-primary"
                 >
                   Continue as {role === "client" ? "Client" : "Lawyer"} <ArrowRight className="h-4 w-4" />
                 </button>
 
-                <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-medium text-emerald-300 ring-1 ring-emerald-400/30">
+                <div className="mt-4 inline-flex items-center gap-2 rounded-full chip-emerald px-3 py-1 text-[10px] font-semibold">
                   <ShieldCheck className="h-3 w-3" /> Secure E2E Encrypted Login
+                </div>
+
+                <div className="mt-6 text-[11px] text-muted-foreground">
+                  By continuing you agree to our{" "}
+                  <Link to="/terms" className="text-primary hover:underline">Terms</Link>{" "}and{" "}
+                  <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>.
                 </div>
               </motion.form>
             )}
@@ -154,22 +163,25 @@ function LoginPage() {
       </div>
 
       {/* Right — visual */}
-      <div className="relative hidden md:block bg-app overflow-hidden">
-        <div className="absolute inset-0 bg-grid opacity-40" />
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-accent/20" />
+      <div className="relative hidden md:block overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[oklch(0.7_0.16_160)]/15 via-white to-[oklch(0.78_0.16_75)]/20" />
+        <div className="absolute -top-24 -left-24 h-[500px] w-[500px] rounded-full bg-[oklch(0.7_0.16_160)]/30 blur-[140px]" />
+        <div className="absolute -bottom-24 -right-24 h-[480px] w-[480px] rounded-full bg-[oklch(0.78_0.16_75)]/30 blur-[140px]" />
+        <div className="absolute inset-0 bg-grid opacity-50" />
+
         <div className="relative h-full flex flex-col items-center justify-center p-10">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: "spring", stiffness: 180, damping: 20 }}
-            className="glass-strong rounded-3xl p-10 max-w-md text-center"
+            className="surface-lg rounded-3xl p-10 max-w-md text-center"
           >
-            <div className="relative mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-gradient-to-br from-emerald-500/30 to-cyan-500/30 ring-1 ring-emerald-400/30 glow-emerald">
-              <ShieldCheck className="h-10 w-10 text-emerald-300" />
+            <div className="relative mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-primary glow-primary">
+              <ShieldCheck className="h-10 w-10 text-primary-foreground" />
               <span className="absolute inset-0 rounded-2xl pulse-ring" />
             </div>
-            <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-300 ring-1 ring-emerald-400/30">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full chip-emerald px-3 py-1 text-xs font-semibold">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
               End-to-End Encrypted
             </div>
             <AnimatePresence mode="wait">
@@ -187,7 +199,7 @@ function LoginPage() {
                     ? "Communications are encrypted client-side. We physically cannot access them."
                     : "Receive vetted leads, manage cases, and review encrypted briefs in one workspace."}
                 </p>
-                <div className="mt-5 inline-flex items-center gap-2 rounded-xl glass px-3 py-2 text-xs">
+                <div className="mt-5 inline-flex items-center gap-2 rounded-xl surface px-3 py-2 text-xs">
                   {role === "client" ? <User className="h-3.5 w-3.5" /> : <Briefcase className="h-3.5 w-3.5" />}
                   Routing to: <span className="text-gradient font-semibold">{role === "client" ? "/directory" : "/workspace"}</span>
                 </div>
@@ -224,11 +236,11 @@ function OnboardingFlow({ role, step, name, setName, onNext }: { role: Role; ste
     >
       <div className="flex items-center gap-2 mb-6">
         {[1, 2, 3].map((s) => (
-          <div key={s} className={`h-1 flex-1 rounded-full transition-colors ${s <= step ? "bg-gradient-to-r from-primary to-accent" : "bg-white/10"}`} />
+          <div key={s} className={`h-1 flex-1 rounded-full transition-colors ${s <= step ? "bg-primary" : "bg-secondary"}`} />
         ))}
       </div>
 
-      <div className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-primary/30 to-accent/30 ring-1 ring-white/10">
+      <div className="grid h-12 w-12 place-items-center rounded-xl chip-emerald">
         <meta.icon className="h-5 w-5" />
       </div>
       <h2 className="mt-4 font-display text-3xl">{meta.title}</h2>
@@ -240,21 +252,21 @@ function OnboardingFlow({ role, step, name, setName, onNext }: { role: Role; ste
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="mt-1.5 w-full glass rounded-xl px-3.5 py-3 text-sm outline-none"
+            className="mt-1.5 w-full surface rounded-xl px-3.5 py-3 text-sm outline-none"
           />
         </div>
       )}
       {step === 2 && (
-        <div className="mt-6 glass rounded-xl p-4 text-sm text-muted-foreground">
+        <div className="mt-6 surface rounded-xl p-4 text-sm text-muted-foreground">
           <ul className="space-y-2">
-            <li className="flex gap-2"><Check className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" /> Documents encrypted client-side with AES-256.</li>
-            <li className="flex gap-2"><Check className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" /> Zero-knowledge architecture — staff cannot decrypt.</li>
-            <li className="flex gap-2"><Check className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" /> Annual independent security audits.</li>
+            <li className="flex gap-2"><Check className="h-4 w-4 text-primary shrink-0 mt-0.5" /> Documents encrypted client-side with AES-256.</li>
+            <li className="flex gap-2"><Check className="h-4 w-4 text-primary shrink-0 mt-0.5" /> Zero-knowledge architecture — staff cannot decrypt.</li>
+            <li className="flex gap-2"><Check className="h-4 w-4 text-primary shrink-0 mt-0.5" /> Annual independent security audits.</li>
           </ul>
         </div>
       )}
       {step === 3 && (
-        <div className="mt-6 glass rounded-xl p-5 text-center">
+        <div className="mt-6 surface rounded-xl p-5 text-center">
           <div className="text-4xl">{role === "lawyer" ? "⚖️" : "🔍"}</div>
           <p className="mt-2 text-sm text-muted-foreground">
             {role === "lawyer" ? "Your inbox is ready — pending requests await." : "Ready to browse 1,200+ vetted lawyers."}
@@ -264,7 +276,7 @@ function OnboardingFlow({ role, step, name, setName, onNext }: { role: Role; ste
 
       <button
         onClick={onNext}
-        className="mt-8 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-accent py-3 text-sm font-semibold text-white glow-primary"
+        className="mt-8 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground glow-primary"
       >
         {step === 3 ? `Enter ${role === "lawyer" ? "Workspace" : "Avocat-Link"}` : "Continue"} <ArrowRight className="h-4 w-4" />
       </button>
