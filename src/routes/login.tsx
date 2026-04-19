@@ -1,17 +1,22 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Mail, Lock, ArrowRight, User, KeyRound, Search, Check } from "lucide-react";
+import { ShieldCheck, Mail, Lock, ArrowRight, User, KeyRound, Search, Check, Briefcase, Scale } from "lucide-react";
 import { useState } from "react";
-import { useApp } from "@/lib/store";
+import { useApp, type Role } from "@/lib/store";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
 });
 
+const SPECIALTIES = ["Business", "Penal", "Family"] as const;
+
 function LoginPage() {
   const [step, setStep] = useState<"login" | 1 | 2 | 3>("login");
+  const [role, setRole] = useState<Role>("client");
   const [email, setEmail] = useState("alex@avocat-link.io");
   const [name, setName] = useState("Alex Mercier");
+  const [specialty, setSpecialty] = useState<(typeof SPECIALTIES)[number]>("Business");
+  const [barreau, setBarreau] = useState("Paris");
   const navigate = useNavigate();
   const setUser = useApp((s) => s.setUser);
 
@@ -21,8 +26,13 @@ function LoginPage() {
   };
 
   const finish = () => {
-    setUser({ name, email });
-    navigate({ to: "/directory" });
+    setUser({
+      name,
+      email,
+      role,
+      ...(role === "lawyer" ? { specialty, barreau } : {}),
+    });
+    navigate({ to: role === "lawyer" ? "/workspace" : "/directory" });
   };
 
   return (
@@ -40,12 +50,35 @@ function LoginPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -16 }}
                 onSubmit={submitLogin}
-                className="mt-10"
+                className="mt-8"
               >
-                <h1 className="font-display text-3xl">Welcome back.</h1>
-                <p className="mt-1 text-sm text-muted-foreground">Sign in to your secure portal.</p>
+                <h1 className="font-display text-3xl">Welcome.</h1>
+                <p className="mt-1 text-sm text-muted-foreground">Choose your portal to continue.</p>
 
-                <label className="mt-8 block text-xs uppercase tracking-wider text-muted-foreground">Email</label>
+                {/* Role toggle */}
+                <div className="mt-6 relative grid grid-cols-2 gap-1 glass rounded-2xl p-1.5">
+                  <motion.div
+                    layout
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    className="absolute inset-y-1.5 w-[calc(50%-6px)] rounded-xl bg-gradient-to-r from-primary to-accent shadow-[0_0_30px_-4px_rgba(99,102,241,0.7)]"
+                    style={{ left: role === "client" ? 6 : "calc(50% + 0px)" }}
+                  />
+                  {(["client", "lawyer"] as Role[]).map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setRole(r)}
+                      className={`relative z-10 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-colors ${
+                        role === r ? "text-white" : "text-muted-foreground"
+                      }`}
+                    >
+                      {r === "client" ? <User className="h-4 w-4" /> : <Scale className="h-4 w-4" />}
+                      {r === "client" ? "Je suis un Client" : "Je suis un Avocat"}
+                    </button>
+                  ))}
+                </div>
+
+                <label className="mt-6 block text-xs uppercase tracking-wider text-muted-foreground">Email</label>
                 <div className="mt-1.5 flex items-center gap-2 glass rounded-xl px-3.5 py-3">
                   <Mail className="h-4 w-4 text-muted-foreground" />
                   <input
@@ -61,18 +94,55 @@ function LoginPage() {
                   <input type="password" defaultValue="••••••••••" className="flex-1 bg-transparent text-sm outline-none" />
                 </div>
 
+                <AnimatePresence>
+                  {role === "lawyer" && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="grid grid-cols-2 gap-3 mt-4">
+                        <div>
+                          <label className="block text-xs uppercase tracking-wider text-muted-foreground">Spécialité</label>
+                          <select
+                            value={specialty}
+                            onChange={(e) => setSpecialty(e.target.value as typeof specialty)}
+                            className="mt-1.5 w-full glass rounded-xl px-3 py-3 text-sm outline-none"
+                          >
+                            {SPECIALTIES.map((s) => <option key={s} value={s} className="bg-[#0B0F19]">{s}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-xs uppercase tracking-wider text-muted-foreground">Barreau</label>
+                          <input
+                            value={barreau}
+                            onChange={(e) => setBarreau(e.target.value)}
+                            className="mt-1.5 w-full glass rounded-xl px-3 py-3 text-sm outline-none"
+                          />
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
                 <button
                   type="submit"
                   className="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-accent py-3 text-sm font-semibold text-white glow-primary"
                 >
-                  Continue <ArrowRight className="h-4 w-4" />
+                  Continue as {role === "client" ? "Client" : "Lawyer"} <ArrowRight className="h-4 w-4" />
                 </button>
+
+                <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-medium text-emerald-300 ring-1 ring-emerald-400/30">
+                  <ShieldCheck className="h-3 w-3" /> Secure E2E Encrypted Login
+                </div>
               </motion.form>
             )}
 
             {step !== "login" && (
               <OnboardingFlow
                 key={`step-${step}`}
+                role={role}
                 step={step as 1 | 2 | 3}
                 name={name}
                 setName={setName}
@@ -102,10 +172,27 @@ function LoginPage() {
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
               End-to-End Encrypted
             </div>
-            <h2 className="mt-6 font-display text-3xl">Your privilege, protected.</h2>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Communications are encrypted client-side. We physically cannot access them.
-            </p>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={role}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+              >
+                <h2 className="mt-6 font-display text-3xl">
+                  {role === "client" ? "Your privilege, protected." : "Your practice, amplified."}
+                </h2>
+                <p className="mt-3 text-sm text-muted-foreground">
+                  {role === "client"
+                    ? "Communications are encrypted client-side. We physically cannot access them."
+                    : "Receive vetted leads, manage cases, and review encrypted briefs in one workspace."}
+                </p>
+                <div className="mt-5 inline-flex items-center gap-2 rounded-xl glass px-3 py-2 text-xs">
+                  {role === "client" ? <User className="h-3.5 w-3.5" /> : <Briefcase className="h-3.5 w-3.5" />}
+                  Routing to: <span className="text-gradient font-semibold">{role === "client" ? "/directory" : "/workspace"}</span>
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </motion.div>
         </div>
       </div>
@@ -113,12 +200,18 @@ function LoginPage() {
   );
 }
 
-function OnboardingFlow({ step, name, setName, onNext }: { step: 1 | 2 | 3; name: string; setName: (s: string) => void; onNext: () => void }) {
-  const steps = [
+function OnboardingFlow({ role, step, name, setName, onNext }: { role: Role; step: 1 | 2 | 3; name: string; setName: (s: string) => void; onNext: () => void }) {
+  const stepsClient = [
     { icon: User, title: "Profile setup", text: "Tell us who you are. This stays private." },
     { icon: KeyRound, title: "Security brief", text: "Your data is encrypted with keys only you hold." },
     { icon: Search, title: "Find your lawyer", text: "We'll match you in seconds." },
   ];
+  const stepsLawyer = [
+    { icon: Briefcase, title: "Practice profile", text: "Confirm your name as it appears on the bar register." },
+    { icon: KeyRound, title: "Security brief", text: "Client briefs are encrypted in transit and at rest." },
+    { icon: Scale, title: "Open your workspace", text: "Review pending requests and start accepting cases." },
+  ];
+  const steps = role === "lawyer" ? stepsLawyer : stepsClient;
   const meta = steps[step - 1];
 
   return (
@@ -162,8 +255,10 @@ function OnboardingFlow({ step, name, setName, onNext }: { step: 1 | 2 | 3; name
       )}
       {step === 3 && (
         <div className="mt-6 glass rounded-xl p-5 text-center">
-          <div className="text-4xl">⚖️</div>
-          <p className="mt-2 text-sm text-muted-foreground">Ready to browse 1,200+ vetted lawyers.</p>
+          <div className="text-4xl">{role === "lawyer" ? "⚖️" : "🔍"}</div>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {role === "lawyer" ? "Your inbox is ready — pending requests await." : "Ready to browse 1,200+ vetted lawyers."}
+          </p>
         </div>
       )}
 
@@ -171,7 +266,7 @@ function OnboardingFlow({ step, name, setName, onNext }: { step: 1 | 2 | 3; name
         onClick={onNext}
         className="mt-8 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-accent py-3 text-sm font-semibold text-white glow-primary"
       >
-        {step === 3 ? "Enter Avocat-Link" : "Continue"} <ArrowRight className="h-4 w-4" />
+        {step === 3 ? `Enter ${role === "lawyer" ? "Workspace" : "Avocat-Link"}` : "Continue"} <ArrowRight className="h-4 w-4" />
       </button>
     </motion.div>
   );

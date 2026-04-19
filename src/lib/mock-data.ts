@@ -36,3 +36,22 @@ export const INITIAL_CONSULTATIONS: Consultation[] = [
   { id: "c2", lawyer: LAWYERS[2], date: "2026-04-30T14:30:00", status: "Analyzing", documentName: "Custody_Brief.pdf" },
   { id: "c3", lawyer: LAWYERS[4], date: "2026-05-02T09:00:00", status: "Pending", documentName: "Case_File_2026.pdf" },
 ];
+
+export interface LawyerRequest {
+  id: string;
+  clientName: string;
+  clientInitials: string;
+  subject: string;
+  specialty: Specialty;
+  documentName: string;
+  estimatedFee: number;
+  submittedAt: string;
+  status: "pending" | "accepted" | "declined";
+}
+
+export const INITIAL_REQUESTS: LawyerRequest[] = [
+  { id: "r1", clientName: "Camille Roux", clientInitials: "CR", subject: "Shareholder dispute — minority buyout", specialty: "Business", documentName: "Shareholder_Notice.pdf", estimatedFee: 1200, submittedAt: "2026-04-18T09:14:00", status: "pending" },
+  { id: "r2", clientName: "Nadia Brahimi", clientInitials: "NB", subject: "Custody modification request", specialty: "Family", documentName: "Court_Order_v2.pdf", estimatedFee: 780, submittedAt: "2026-04-18T11:42:00", status: "pending" },
+  { id: "r3", clientName: "Étienne Fabre", clientInitials: "EF", subject: "Appeal — fraud charges", specialty: "Penal", documentName: "Trial_Transcript.pdf", estimatedFee: 2400, submittedAt: "2026-04-17T16:05:00", status: "pending" },
+  { id: "r4", clientName: "Yasmine Cohen", clientInitials: "YC", subject: "M&A advisory — series B", specialty: "Business", documentName: "Term_Sheet.pdf", estimatedFee: 3100, submittedAt: "2026-04-17T08:00:00", status: "accepted" },
+];
