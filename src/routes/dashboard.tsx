@@ -43,7 +43,7 @@ END:VCALENDAR`;
   };
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-12 pb-24">
+    <div className="mx-auto max-w-6xl px-6 pt-8 pb-24">
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="font-display text-4xl md:text-5xl">
           <Decrypt text={`Welcome, ${user?.name ?? "Counsel"}`} duration={900} />
@@ -60,11 +60,11 @@ END:VCALENDAR`;
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.07 }}
-              className="glass rounded-2xl p-6"
+              className="surface rounded-2xl p-6"
             >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="flex items-center gap-4">
-                  <div className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-primary/30 to-accent/30 ring-1 ring-white/10 font-display">
+                  <div className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 ring-1 ring-border font-display">
                     {c.lawyer.initials}
                   </div>
                   <div>
@@ -86,21 +86,21 @@ END:VCALENDAR`;
                 </div>
               </div>
 
-              <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-white/5 pt-4">
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
                 <motion.button
                   layoutId={docId}
                   onClick={() => setOpenDoc(c.id)}
-                  className="glass inline-flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm hover:bg-white/5 transition"
+                  className="surface inline-flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm hover:bg-secondary transition"
                 >
                   <FileText className="h-4 w-4 text-primary" />
-                  <span className="font-medium">{c.documentName}</span>
-                  <span className="text-xs text-emerald-300">· encrypted</span>
+                  <span className="font-semibold">{c.documentName}</span>
+                  <span className="text-xs text-[oklch(0.45_0.16_160)]">· encrypted</span>
                 </motion.button>
 
                 {c.status === "Confirmed" && (
                   <button
                     onClick={() => exportIcs(c)}
-                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-accent px-4 py-2.5 text-sm font-semibold text-white glow-primary"
+                    className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground glow-primary"
                   >
                     <Calendar className="h-4 w-4" /> Export to Calendar (.ics)
                   </button>
@@ -118,6 +118,6 @@ END:VCALENDAR`;
           );
         })}
       </div>
-    </main>
+    </div>
   );
 }
