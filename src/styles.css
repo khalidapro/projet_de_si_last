@@ -41,21 +41,20 @@
 
 :root {
   --radius: 0.875rem;
-  /* Light mode — Parchment & Terracotta (premium LegalTech) */
-  /* Palette: #6F4E37 chocolate, #F6E6D1 beige, #B2AAAA taupe, #FDFDFD ivory, #D9A06F terracotta */
-  --background: oklch(0.945 0.025 75);              /* Creamy beige #F6E6D1 */
-  --foreground: oklch(0.36 0.05 55);                /* Chocolate brown #6F4E37 */
-  --card: oklch(0.99 0.003 80);                     /* Pure ivory #FDFDFD */
-  --card-foreground: oklch(0.36 0.05 55);
-  --popover: oklch(0.99 0.003 80);
-  --popover-foreground: oklch(0.36 0.05 55);
+  /* Light mode — Sepia Justice (warm parchment, deeper chocolate, copper accent) */
+  --background: oklch(0.93 0.03 70);                /* Warm parchment */
+  --foreground: oklch(0.3 0.055 50);                /* Deeper chocolate */
+  --card: oklch(0.985 0.008 75);                    /* Warm ivory */
+  --card-foreground: oklch(0.3 0.055 50);
+  --popover: oklch(0.985 0.008 75);
+  --popover-foreground: oklch(0.3 0.055 50);
 
-  --primary: oklch(0.72 0.11 55);                   /* Light terracotta #D9A06F */
-  --primary-foreground: oklch(0.99 0.003 80);
-  --secondary: oklch(0.92 0.018 70);                /* Warm beige tint */
-  --secondary-foreground: oklch(0.36 0.05 55);
-  --muted: oklch(0.9 0.012 65);
-  --muted-foreground: oklch(0.5 0.03 55);           /* Lighter chocolate */
+  --primary: oklch(0.62 0.13 50);                   /* Burnished copper */
+  --primary-foreground: oklch(0.985 0.008 75);
+  --secondary: oklch(0.9 0.025 68);                 /* Warm beige */
+  --secondary-foreground: oklch(0.3 0.055 50);
+  --muted: oklch(0.88 0.018 65);
+  --muted-foreground: oklch(0.46 0.04 52);
 
   --accent: oklch(0.7 0.005 60);                    /* Taupe gray #B2AAAA */
   --accent-foreground: oklch(0.36 0.05 55);
@@ -75,7 +74,7 @@
   --gradient-radial:
     radial-gradient(ellipse at center, oklch(0.97 0.015 75) 0%, oklch(0.92 0.022 70) 55%, oklch(0.82 0.025 65) 100%);
 
-  --gradient-primary: linear-gradient(135deg, oklch(0.78 0.1 60), oklch(0.6 0.12 45));   /* terracotta → bronze */
+  --gradient-primary: linear-gradient(135deg, oklch(0.7 0.13 55), oklch(0.48 0.13 40));   /* copper → deep bronze */
   --gradient-amber:   linear-gradient(135deg, oklch(0.82 0.13 75), oklch(0.7 0.13 60));
 
   --shadow-soft: 0 1px 2px oklch(0.36 0.05 55 / 0.06),
@@ -91,8 +90,8 @@
 }
 
 .dark {
-  /* Darkened chocolate base #302015, taupe surfaces */
-  --background: oklch(0.18 0.025 50);
+  /* Deep sepia night — matches Lady Justice arches */
+  --background: oklch(0.16 0.025 45);
   --foreground: oklch(0.98 0.005 80);               /* Pure ivory text */
   --card: oklch(0.32 0.018 55);                     /* Darkened taupe #605850 */
   --card-foreground: oklch(0.98 0.005 80);
