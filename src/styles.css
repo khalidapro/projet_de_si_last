@@ -246,4 +246,38 @@
   .chip-emerald { background: oklch(0.7 0.16 160 / 0.12); color: oklch(0.45 0.16 160); border: 1px solid oklch(0.7 0.16 160 / 0.25); }
   .chip-amber   { background: oklch(0.78 0.16 75 / 0.14); color: oklch(0.5 0.18 60);  border: 1px solid oklch(0.78 0.16 75 / 0.3); }
   .chip-rose    { background: oklch(0.66 0.22 15 / 0.12); color: oklch(0.5 0.22 15);  border: 1px solid oklch(0.66 0.22 15 / 0.28); }
+
+  .dark .chip-emerald { color: oklch(0.85 0.18 160); }
+  .dark .chip-amber   { color: oklch(0.88 0.17 80); }
+  .dark .chip-rose    { color: oklch(0.82 0.22 18); }
+
+  /* Gavel strike — quick shake + green flash */
+  @keyframes gavel-shake {
+    0%, 100% { transform: translateX(0) rotate(0); }
+    15% { transform: translateX(-6px) rotate(-0.6deg); }
+    30% { transform: translateX(7px) rotate(0.6deg); }
+    45% { transform: translateX(-4px) rotate(-0.4deg); }
+    60% { transform: translateX(4px) rotate(0.4deg); }
+    80% { transform: translateX(-2px); }
+  }
+  @keyframes gavel-flash {
+    0%   { box-shadow: 0 0 0 0 oklch(0.7 0.16 160 / 0); }
+    30%  { box-shadow: 0 0 0 6px oklch(0.7 0.16 160 / 0.45), 0 0 40px 4px oklch(0.7 0.16 160 / 0.6); }
+    100% { box-shadow: 0 0 0 0 oklch(0.7 0.16 160 / 0); }
+  }
+  .gavel-strike {
+    animation: gavel-shake 0.55s cubic-bezier(0.36,0.07,0.19,0.97), gavel-flash 0.85s ease-out;
+  }
+
+  /* Biometric scan laser */
+  @keyframes scan-line {
+    0%   { transform: translateY(-100%); opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { transform: translateY(120%); opacity: 0; }
+  }
+  .scan-line {
+    background: linear-gradient(180deg, transparent, oklch(0.7 0.16 160) 50%, transparent);
+    animation: scan-line 1.4s ease-in-out;
+  }
 }
