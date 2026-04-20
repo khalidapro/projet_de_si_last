@@ -140,6 +140,8 @@ function WorkspacePage() {
         userName={activeRequest?.clientName ?? ""}
         layoutId={`vault-${viewerFor ?? "x"}`}
       />
+
+      <InvoiceModal open={!!invoice} onClose={() => setInvoice(null)} data={invoice} />
     </div>
   );
 }
@@ -186,13 +188,19 @@ function Column({ title, tone, count, children }: { title: string; tone: "amber"
   );
 }
 
-function RequestCard({ r, onAccept, onDecline, onReview, muted }: {
+function RequestCard({ r, onAccept, onDecline, onReview, onInvoice, muted }: {
   r: import("@/lib/mock-data").LawyerRequest;
   onAccept?: () => void;
   onDecline?: () => void;
   onReview?: () => void;
+  onInvoice?: () => void;
   muted?: boolean;
 }) {
+  const [strike, setStrike] = useState(false);
+  const handleAccept = () => {
+    setStrike(true);
+    setTimeout(() => { setStrike(false); onAccept?.(); }, 520);
+  };
   return (
     <motion.div
       layout
@@ -200,7 +208,7 @@ function RequestCard({ r, onAccept, onDecline, onReview, muted }: {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.94 }}
       transition={{ type: "spring", stiffness: 260, damping: 24 }}
-      className={`relative rounded-xl p-4 ring-1 ring-border ${muted ? "bg-secondary/40" : "bg-card"}`}
+      className={`relative rounded-xl p-4 ring-1 ring-border ${muted ? "bg-secondary/40" : "bg-card"} ${strike ? "gavel-strike" : ""}`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -222,6 +230,10 @@ function RequestCard({ r, onAccept, onDecline, onReview, muted }: {
 
       <p className="mt-3 text-sm text-muted-foreground line-clamp-2">{r.subject}</p>
 
+      <div className="mt-2 text-[11px] text-muted-foreground inline-flex items-center gap-1.5">
+        Direct line: <Redacted>+33 6 12 34 56 78</Redacted>
+      </div>
+
       <button
         onClick={onReview}
         disabled={!onReview}
@@ -237,7 +249,7 @@ function RequestCard({ r, onAccept, onDecline, onReview, muted }: {
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            onClick={onAccept}
+            onClick={handleAccept}
             data-magnetic
             className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground glow-primary"
           >
@@ -256,10 +268,24 @@ function RequestCard({ r, onAccept, onDecline, onReview, muted }: {
       )}
 
       {!onAccept && r.status === "accepted" && (
-        <div className="mt-3 inline-flex items-center gap-1 text-[10px] font-semibold text-[oklch(0.45_0.16_160)]">
-          <Star className="h-3 w-3 fill-current" /> Active engagement
+        <div className="mt-3 flex items-center justify-between gap-2">
+          <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-[oklch(0.45_0.16_160)]">
+            <Star className="h-3 w-3 fill-current" /> Active engagement
+          </div>
+          {onInvoice && (
+            <button
+              onClick={onInvoice}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-2.5 py-1.5 text-[11px] font-semibold text-primary hover:bg-primary/15 transition"
+            >
+              <Receipt className="h-3.5 w-3.5" /> Generate Invoice
+            </button>
+          )}
         </div>
       )}
+
+      <div className="mt-3 pt-3 border-t border-border/60">
+        <StickyNote defaultValue={r.status === "accepted" ? "Counterparty seems open to settlement — confirm next call." : ""} />
+      </div>
     </motion.div>
   );
 }
