@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { Calendar, FileText, ArrowUpRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Calendar, FileText, ArrowUpRight, Video } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { StatusStepper } from "@/components/StatusStepper";
 import { PdfViewer } from "@/components/PdfViewer";
 import { Decrypt } from "@/components/Decrypt";
+import { Redacted } from "@/components/Redacted";
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
@@ -16,6 +17,12 @@ function DashboardPage() {
   const advance = useApp((s) => s.advance);
   const user = useApp((s) => s.user);
   const [openDoc, setOpenDoc] = useState<string | null>(null);
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 5000);
+    return () => clearInterval(t);
+  }, []);
 
   const exportIcs = (c: { lawyer: { name: string }; date: string; documentName: string }) => {
     const dt = new Date(c.date);

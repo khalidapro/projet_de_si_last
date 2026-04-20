@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMemo, useState, useEffect } from "react";
-import { Briefcase, TrendingUp, Inbox, CheckCircle2, XCircle, FileText, Star, Clock, Wallet, Receipt, Phone } from "lucide-react";
+import { Briefcase, TrendingUp, Inbox, CheckCircle2, XCircle, FileText, Star, Clock, Wallet, Receipt } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { Decrypt } from "@/components/Decrypt";
 import { VaultUnlock } from "@/components/VaultUnlock";
