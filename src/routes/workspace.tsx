@@ -1,11 +1,14 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMemo, useState, useEffect } from "react";
-import { Briefcase, TrendingUp, Inbox, CheckCircle2, XCircle, FileText, Star, Clock, Wallet } from "lucide-react";
+import { Briefcase, TrendingUp, Inbox, CheckCircle2, XCircle, FileText, Star, Clock, Wallet, Receipt, Phone } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { Decrypt } from "@/components/Decrypt";
 import { VaultUnlock } from "@/components/VaultUnlock";
 import { PdfViewer } from "@/components/PdfViewer";
+import { StickyNote } from "@/components/StickyNote";
+import { InvoiceModal, type InvoiceData } from "@/components/InvoiceModal";
+import { Redacted } from "@/components/Redacted";
 
 export const Route = createFileRoute("/workspace")({
   component: WorkspacePage,
@@ -19,6 +22,7 @@ function WorkspacePage() {
 
   const [vaultFor, setVaultFor] = useState<string | null>(null);
   const [viewerFor, setViewerFor] = useState<string | null>(null);
+  const [invoice, setInvoice] = useState<InvoiceData | null>(null);
 
   useEffect(() => {
     if (user && user.role !== "lawyer") navigate({ to: "/directory" });
@@ -96,7 +100,19 @@ function WorkspacePage() {
           <Column title="Accepted" tone="emerald" count={requests.filter((r) => r.status === "accepted").length}>
             <AnimatePresence mode="popLayout">
               {requests.filter((r) => r.status === "accepted").map((r) => (
-                <RequestCard key={r.id} r={r} onReview={() => setVaultFor(r.id)} muted />
+                <RequestCard
+                  key={r.id} r={r}
+                  onReview={() => setVaultFor(r.id)}
+                  onInvoice={() => setInvoice({
+                    clientName: r.clientName,
+                    lawyerName: user.name,
+                    rate: Math.round(r.estimatedFee / 4),
+                    hours: 4,
+                    date: new Date().toISOString(),
+                    reference: `AVL-${new Date().getFullYear()}-${r.id.toUpperCase()}`,
+                  })}
+                  muted
+                />
               ))}
             </AnimatePresence>
           </Column>
