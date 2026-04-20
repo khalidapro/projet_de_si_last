@@ -59,8 +59,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
             className="fixed inset-0 z-[9998] pointer-events-none"
             style={{
               background: ripple.to === "dark"
-                ? "radial-gradient(circle at center, #0B0F19 0%, #000 100%)"
-                : "radial-gradient(circle at center, #FFFFFF 0%, #F8FAFC 100%)",
+                ? "radial-gradient(circle at center, #302015 0%, #1A100A 100%)"
+                : "radial-gradient(circle at center, #FDFDFD 0%, #F6E6D1 100%)",
             }}
           />
         )}

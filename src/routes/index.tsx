@@ -19,8 +19,8 @@ function HomePage() {
       <header className="sticky top-4 z-40 mx-auto mt-4 w-[min(1200px,calc(100%-2rem))]">
         <div className="glass-strong flex items-center justify-between rounded-2xl px-5 py-3">
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="relative grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[oklch(0.7_0.16_160)] to-[oklch(0.78_0.18_145)]">
-              <Scale className="h-4.5 w-4.5 text-white" strokeWidth={2.4} />
+            <div className="relative grid h-9 w-9 place-items-center rounded-xl bg-[image:var(--gradient-primary)]">
+              <Scale className="h-4.5 w-4.5 text-primary-foreground" strokeWidth={2.4} />
             </div>
             <div className="leading-tight">
               <div className="font-display text-lg font-semibold">Avocat<span className="text-gradient">·</span>Link</div>
