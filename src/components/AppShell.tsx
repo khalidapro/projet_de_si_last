@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { NotificationsBell } from "./NotificationsBell";
+import { ThemeToggle } from "./ThemeToggle";
 import type { ComponentType } from "react";
 
 interface NavItem { to: string; label: string; icon: ComponentType<{ className?: string }>; }
@@ -128,6 +129,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <ThemeToggle />
               <NotificationsBell />
               <Link
                 to="/messages"

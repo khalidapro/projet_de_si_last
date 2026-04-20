@@ -1,7 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { X, ShieldCheck, Upload, FileCheck2, User } from "lucide-react";
+import { X, ShieldCheck, Upload, FileCheck2, User, Fingerprint } from "lucide-react";
 import { useState, useRef } from "react";
 import type { Lawyer, Consultation } from "@/lib/mock-data";
+
+type Phase = "idle" | "uploading" | "scanning" | "secured";
 
 export function BookingModal({
   lawyer,
@@ -14,13 +16,17 @@ export function BookingModal({
 }) {
   const [uploaded, setUploaded] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [phase, setPhase] = useState<Phase>("idle");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const reset = () => { setUploaded(null); setDragOver(false); };
+  const reset = () => { setUploaded(null); setDragOver(false); setPhase("idle"); };
 
   const handleFile = (f: File | undefined) => {
     if (!f) return;
     setUploaded(f.name);
+    setPhase("uploading");
+    setTimeout(() => setPhase("scanning"), 600);
+    setTimeout(() => setPhase("secured"), 2100);
   };
 
   const confirm = () => {
@@ -107,7 +113,7 @@ export function BookingModal({
                 onChange={(e) => handleFile(e.target.files?.[0])}
               />
               <AnimatePresence mode="wait">
-                {!uploaded ? (
+                {phase === "idle" && (
                   <motion.button
                     key="dz"
                     layout
@@ -123,13 +129,36 @@ export function BookingModal({
                     <div className="mt-2 font-medium">Drop your PDF proof here</div>
                     <div className="text-xs text-muted-foreground">or click to browse — encrypted in transit</div>
                   </motion.button>
-                ) : (
+                )}
+
+                {(phase === "uploading" || phase === "scanning") && (
+                  <motion.div
+                    key="scan"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="relative w-full rounded-2xl bg-secondary/40 ring-1 ring-border p-8 text-center overflow-hidden"
+                  >
+                    <div className="relative mx-auto h-16 w-16">
+                      <Fingerprint className="h-16 w-16 text-primary mx-auto" strokeWidth={1.6} />
+                      {phase === "scanning" && (
+                        <span className="absolute inset-x-0 top-0 h-1 scan-line" />
+                      )}
+                    </div>
+                    <div className="mt-3 font-medium text-sm">
+                      {phase === "uploading" ? "Uploading…" : "Biometric scan in progress…"}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-0.5">{uploaded}</div>
+                  </motion.div>
+                )}
+
+                {phase === "secured" && (
                   <motion.div
                     key="encrypted"
                     layout
                     layoutId="dropzone"
-                    initial={{ borderRadius: 24 }}
-                    animate={{ borderRadius: 999 }}
+                    initial={{ borderRadius: 24, scale: 0.9 }}
+                    animate={{ borderRadius: 999, scale: 1 }}
                     transition={{ type: "spring", stiffness: 260, damping: 24 }}
                     className="mx-auto inline-flex items-center gap-2 rounded-full chip-emerald px-5 py-3 text-sm font-semibold glow-primary"
                   >

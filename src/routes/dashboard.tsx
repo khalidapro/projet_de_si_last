@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { Calendar, FileText, ArrowUpRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Calendar, FileText, ArrowUpRight, Video } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { StatusStepper } from "@/components/StatusStepper";
 import { PdfViewer } from "@/components/PdfViewer";
 import { Decrypt } from "@/components/Decrypt";
+import { Redacted } from "@/components/Redacted";
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
@@ -16,6 +17,12 @@ function DashboardPage() {
   const advance = useApp((s) => s.advance);
   const user = useApp((s) => s.user);
   const [openDoc, setOpenDoc] = useState<string | null>(null);
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 5000);
+    return () => clearInterval(t);
+  }, []);
 
   const exportIcs = (c: { lawyer: { name: string }; date: string; documentName: string }) => {
     const dt = new Date(c.date);
@@ -86,6 +93,10 @@ END:VCALENDAR`;
                 </div>
               </div>
 
+              <div className="mt-3 text-[11px] text-muted-foreground inline-flex items-center gap-1.5">
+                Direct line: <Redacted>+33 1 84 88 12 04</Redacted>
+              </div>
+
               <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
                 <motion.button
                   layoutId={docId}
@@ -97,14 +108,33 @@ END:VCALENDAR`;
                   <span className="text-xs text-[oklch(0.45_0.16_160)]">· encrypted</span>
                 </motion.button>
 
-                {c.status === "Confirmed" && (
-                  <button
-                    onClick={() => exportIcs(c)}
-                    className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground glow-primary"
-                  >
-                    <Calendar className="h-4 w-4" /> Export to Calendar (.ics)
-                  </button>
-                )}
+                {c.status === "Confirmed" && (() => {
+                  const callTime = new Date(c.date).getTime();
+                  const liveWindow = now >= callTime - 10 * 60 * 1000 && now <= callTime + 60 * 60 * 1000;
+                  return (
+                    <div className="flex items-center gap-2">
+                      <motion.button
+                        animate={liveWindow ? { scale: [1, 1.04, 1] } : {}}
+                        transition={liveWindow ? { duration: 1.6, repeat: Infinity } : {}}
+                        disabled={!liveWindow}
+                        className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
+                          liveWindow
+                            ? "bg-primary text-primary-foreground glow-primary"
+                            : "bg-secondary text-muted-foreground cursor-not-allowed"
+                        }`}
+                      >
+                        <Video className="h-4 w-4" />
+                        {liveWindow ? "Join Video Call" : "Call unlocks at start"}
+                      </motion.button>
+                      <button
+                        onClick={() => exportIcs(c)}
+                        className="inline-flex items-center gap-2 rounded-xl surface px-3.5 py-2.5 text-sm font-semibold"
+                      >
+                        <Calendar className="h-4 w-4 text-primary" /> .ics
+                      </button>
+                    </div>
+                  );
+                })()}
               </div>
 
               <PdfViewer

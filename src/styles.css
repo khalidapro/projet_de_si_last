@@ -4,7 +4,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700;800;900&display=swap');
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -74,7 +74,7 @@
   --gradient-radial:
     radial-gradient(ellipse at top left, oklch(0.7 0.16 160 / 0.07), transparent 55%),
     radial-gradient(ellipse at bottom right, oklch(0.78 0.16 75 / 0.06), transparent 55%),
-    linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+    linear-gradient(180deg, transparent 0%, transparent 100%);
 
   --gradient-primary: linear-gradient(135deg, oklch(0.7 0.16 160), oklch(0.78 0.18 145));
   --gradient-amber:   linear-gradient(135deg, oklch(0.82 0.16 75), oklch(0.78 0.18 60));
@@ -91,12 +91,52 @@
   --shadow-glow-rose:    0 0 0 4px oklch(0.66 0.22 15 / 0.12),  0 12px 32px -8px oklch(0.66 0.22 15 / 0.45);
 }
 
+.dark {
+  --background: oklch(0.16 0.02 250);
+  --foreground: oklch(0.97 0.01 240);
+  --card: oklch(0.2 0.02 250);
+  --card-foreground: oklch(0.97 0.01 240);
+  --popover: oklch(0.2 0.02 250);
+  --popover-foreground: oklch(0.97 0.01 240);
+
+  --primary: oklch(0.78 0.18 160);
+  --primary-foreground: oklch(0.12 0.02 240);
+  --secondary: oklch(0.26 0.02 250);
+  --secondary-foreground: oklch(0.95 0.01 240);
+  --muted: oklch(0.24 0.02 250);
+  --muted-foreground: oklch(0.7 0.02 240);
+
+  --accent: oklch(0.82 0.17 75);
+  --accent-foreground: oklch(0.15 0.02 240);
+  --destructive: oklch(0.7 0.22 15);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.78 0.18 160);
+
+  --emerald: oklch(0.78 0.18 160);
+  --amber:   oklch(0.82 0.17 75);
+  --rose:    oklch(0.7 0.22 15);
+
+  --glass: oklch(0.2 0.02 250 / 0.55);
+
+  --gradient-radial:
+    radial-gradient(ellipse at top left, oklch(0.78 0.18 160 / 0.10), transparent 55%),
+    radial-gradient(ellipse at bottom right, oklch(0.82 0.17 75 / 0.08), transparent 55%),
+    linear-gradient(180deg, transparent 0%, transparent 100%);
+
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.4), 0 8px 24px -12px oklch(0 0 0 / 0.5);
+  --shadow-soft-lg: 0 2px 4px oklch(0 0 0 / 0.4), 0 24px 48px -16px oklch(0 0 0 / 0.6);
+  --shadow-neumorph: 8px 8px 24px oklch(0 0 0 / 0.4), -6px -6px 18px oklch(1 0 0 / 0.04);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
   }
   html, body {
-    background: #FFFFFF;
+    background: var(--background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -120,30 +160,30 @@
     background-attachment: fixed;
   }
   .surface {
-    background: #FFFFFF;
-    border: 1px solid oklch(0.18 0.02 240 / 0.06);
+    background: var(--card);
+    border: 1px solid var(--border);
     box-shadow: var(--shadow-soft);
   }
   .surface-lg {
-    background: #FFFFFF;
-    border: 1px solid oklch(0.18 0.02 240 / 0.06);
+    background: var(--card);
+    border: 1px solid var(--border);
     box-shadow: var(--shadow-soft-lg);
   }
   .glass {
-    background: oklch(1 0 0 / 0.7);
+    background: var(--glass);
     backdrop-filter: blur(18px) saturate(160%);
     -webkit-backdrop-filter: blur(18px) saturate(160%);
-    border: 1px solid oklch(0.18 0.02 240 / 0.07);
+    border: 1px solid var(--border);
   }
   .glass-strong {
-    background: oklch(1 0 0 / 0.85);
+    background: var(--glass);
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border: 1px solid oklch(0.18 0.02 240 / 0.08);
+    border: 1px solid var(--border);
     box-shadow: var(--shadow-soft-lg);
   }
   .neumorph {
-    background: #FFFFFF;
+    background: var(--card);
     border-radius: 1.25rem;
     box-shadow: var(--shadow-neumorph);
   }
@@ -206,4 +246,38 @@
   .chip-emerald { background: oklch(0.7 0.16 160 / 0.12); color: oklch(0.45 0.16 160); border: 1px solid oklch(0.7 0.16 160 / 0.25); }
   .chip-amber   { background: oklch(0.78 0.16 75 / 0.14); color: oklch(0.5 0.18 60);  border: 1px solid oklch(0.78 0.16 75 / 0.3); }
   .chip-rose    { background: oklch(0.66 0.22 15 / 0.12); color: oklch(0.5 0.22 15);  border: 1px solid oklch(0.66 0.22 15 / 0.28); }
+
+  .dark .chip-emerald { color: oklch(0.85 0.18 160); }
+  .dark .chip-amber   { color: oklch(0.88 0.17 80); }
+  .dark .chip-rose    { color: oklch(0.82 0.22 18); }
+
+  /* Gavel strike — quick shake + green flash */
+  @keyframes gavel-shake {
+    0%, 100% { transform: translateX(0) rotate(0); }
+    15% { transform: translateX(-6px) rotate(-0.6deg); }
+    30% { transform: translateX(7px) rotate(0.6deg); }
+    45% { transform: translateX(-4px) rotate(-0.4deg); }
+    60% { transform: translateX(4px) rotate(0.4deg); }
+    80% { transform: translateX(-2px); }
+  }
+  @keyframes gavel-flash {
+    0%   { box-shadow: 0 0 0 0 oklch(0.7 0.16 160 / 0); }
+    30%  { box-shadow: 0 0 0 6px oklch(0.7 0.16 160 / 0.45), 0 0 40px 4px oklch(0.7 0.16 160 / 0.6); }
+    100% { box-shadow: 0 0 0 0 oklch(0.7 0.16 160 / 0); }
+  }
+  .gavel-strike {
+    animation: gavel-shake 0.55s cubic-bezier(0.36,0.07,0.19,0.97), gavel-flash 0.85s ease-out;
+  }
+
+  /* Biometric scan laser */
+  @keyframes scan-line {
+    0%   { transform: translateY(-100%); opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { transform: translateY(120%); opacity: 0; }
+  }
+  .scan-line {
+    background: linear-gradient(180deg, transparent, oklch(0.7 0.16 160) 50%, transparent);
+    animation: scan-line 1.4s ease-in-out;
+  }
 }

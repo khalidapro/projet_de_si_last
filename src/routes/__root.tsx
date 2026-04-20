@@ -2,6 +2,8 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts, useLocation } from
 import { MagneticCursor } from "@/components/MagneticCursor";
 import { ScrollGlow } from "@/components/ScrollGlow";
 import { AppShell } from "@/components/AppShell";
+import { CourtroomBg } from "@/components/CourtroomBg";
+import { ThemeProvider } from "@/lib/theme";
 
 import appCss from "../styles.css?url";
 
@@ -69,7 +71,8 @@ function RootComponent() {
   // Login & landing have their own layouts (no chrome)
   const bare = loc.pathname === "/login" || loc.pathname === "/" || loc.pathname === "/terms" || loc.pathname === "/privacy";
   return (
-    <>
+    <ThemeProvider>
+      <CourtroomBg />
       <ScrollGlow />
       <MagneticCursor />
       {bare ? (
@@ -77,6 +80,6 @@ function RootComponent() {
       ) : (
         <AppShell><Outlet /></AppShell>
       )}
-    </>
+    </ThemeProvider>
   );
 }

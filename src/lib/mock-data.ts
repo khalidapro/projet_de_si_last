@@ -32,7 +32,7 @@ export interface Consultation {
 }
 
 export const INITIAL_CONSULTATIONS: Consultation[] = [
-  { id: "c1", lawyer: LAWYERS[0], date: "2026-04-28T10:00:00", status: "Confirmed", documentName: "NDA_Acquisition_v3.pdf" },
+  { id: "c1", lawyer: LAWYERS[0], date: new Date(Date.now() + 60 * 1000).toISOString(), status: "Confirmed", documentName: "NDA_Acquisition_v3.pdf" },
   { id: "c2", lawyer: LAWYERS[2], date: "2026-04-30T14:30:00", status: "Analyzing", documentName: "Custody_Brief.pdf" },
   { id: "c3", lawyer: LAWYERS[4], date: "2026-05-02T09:00:00", status: "Pending", documentName: "Case_File_2026.pdf" },
 ];
