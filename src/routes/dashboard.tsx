@@ -1,12 +1,57 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Calendar, FileText, ArrowUpRight, Video } from "lucide-react";
+import { Calendar, FileText, ArrowUpRight, Video, Scale, Clock, ShieldCheck } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { StatusStepper } from "@/components/StatusStepper";
 import { PdfViewer } from "@/components/PdfViewer";
 import { Decrypt } from "@/components/Decrypt";
 import { Redacted } from "@/components/Redacted";
+import { Tilt3D, TiltLayer } from "@/components/Tilt3D";
+
+type StatTone = "primary" | "emerald" | "amber";
+function StatWidget({
+  icon: Icon,
+  label,
+  value,
+  hint,
+  tone = "primary",
+}: {
+  icon: typeof Scale;
+  label: string;
+  value: string | number;
+  hint: string;
+  tone?: StatTone;
+}) {
+  const toneClass =
+    tone === "emerald"
+      ? "from-[oklch(0.75_0.15_160)]/25 to-[oklch(0.55_0.18_160)]/10 text-[oklch(0.45_0.16_160)]"
+      : tone === "amber"
+        ? "from-[oklch(0.85_0.14_75)]/25 to-[oklch(0.65_0.16_75)]/10 text-[oklch(0.55_0.16_75)]"
+        : "from-primary/25 to-accent/10 text-primary";
+  return (
+    <Tilt3D className="relative">
+      <div className="surface relative overflow-hidden rounded-2xl p-5" style={{ transformStyle: "preserve-3d" }}>
+        <TiltLayer z={0}>
+          <div className={`absolute -top-10 -right-10 h-32 w-32 rounded-full bg-gradient-to-br ${toneClass} blur-2xl opacity-70`} />
+        </TiltLayer>
+        <TiltLayer z={30}>
+          <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+            <Icon className={`h-3.5 w-3.5 ${toneClass.split(" ").pop()}`} />
+            {label}
+          </div>
+          <div className="mt-2 font-display text-3xl">{value}</div>
+          <div className="mt-1 text-xs text-muted-foreground">{hint}</div>
+        </TiltLayer>
+        <TiltLayer z={60} className="absolute bottom-4 right-4">
+          <div className={`rounded-lg bg-gradient-to-br ${toneClass} px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider shadow-lg`}>
+            Live
+          </div>
+        </TiltLayer>
+      </div>
+    </Tilt3D>
+  );
+}
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
@@ -57,6 +102,34 @@ END:VCALENDAR`;
         </h1>
         <p className="mt-2 text-muted-foreground">{consultations.length} active consultations</p>
       </motion.div>
+
+      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <StatWidget
+          icon={Scale}
+          label="Active cases"
+          value={consultations.length}
+          hint="Across all specialties"
+          tone="primary"
+        />
+        <StatWidget
+          icon={Clock}
+          label="Next hearing"
+          value={
+            consultations[0]
+              ? new Date(consultations[0].date).toLocaleDateString(undefined, { month: "short", day: "numeric" })
+              : "—"
+          }
+          hint={consultations[0]?.lawyer.name ?? "No upcoming"}
+          tone="amber"
+        />
+        <StatWidget
+          icon={ShieldCheck}
+          label="Documents secured"
+          value={consultations.length}
+          hint="End-to-end encrypted"
+          tone="emerald"
+        />
+      </div>
 
       <div className="mt-10 space-y-4">
         {consultations.map((c, i) => {
