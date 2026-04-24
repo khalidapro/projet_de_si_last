@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ShieldCheck, Mail, Lock, ArrowRight, User, KeyRound, Search, Check, Briefcase, Scale } from "lucide-react";
 import { useState } from "react";
 import { useApp, type Role } from "@/lib/store";
+import { useAudit } from "@/lib/audit";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,

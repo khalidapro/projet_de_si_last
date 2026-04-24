@@ -82,8 +82,14 @@ function WorkspaceInner() {
               {requests.filter((r) => r.status === "pending").map((r) => (
                 <RequestCard
                   key={r.id} r={r}
-                  onAccept={() => decide(r.id, "accepted")}
-                  onDecline={() => decide(r.id, "declined")}
+                  onAccept={() => {
+                    decide(r.id, "accepted");
+                    useAudit.getState().log({ type: "role_switch", actor: user.name, role: "lawyer", detail: `Accepted request from ${r.clientName}` });
+                  }}
+                  onDecline={() => {
+                    decide(r.id, "declined");
+                    useAudit.getState().log({ type: "access_denied", actor: user.name, role: "lawyer", detail: `Declined request from ${r.clientName}` });
+                  }}
                   onReview={() => setVaultFor(r.id)}
                 />
               ))}
@@ -95,14 +101,18 @@ function WorkspaceInner() {
                 <RequestCard
                   key={r.id} r={r}
                   onReview={() => setVaultFor(r.id)}
-                  onInvoice={() => setInvoice({
-                    clientName: r.clientName,
-                    lawyerName: user.name,
-                    rate: Math.round(r.estimatedFee / 4),
-                    hours: 4,
-                    date: new Date().toISOString(),
-                    reference: `AVL-${new Date().getFullYear()}-${r.id.toUpperCase()}`,
-                  })}
+                  onInvoice={() => {
+                    const data = {
+                      clientName: r.clientName,
+                      lawyerName: user.name,
+                      rate: Math.round(r.estimatedFee / 4),
+                      hours: 4,
+                      date: new Date().toISOString(),
+                      reference: `AVL-${new Date().getFullYear()}-${r.id.toUpperCase()}`,
+                    };
+                    setInvoice(data);
+                    useAudit.getState().log({ type: "invoice_generated", actor: user.name, role: "lawyer", detail: `Invoice ${data.reference} for ${r.clientName} · €${data.rate * data.hours}` });
+                  }}
                   muted
                 />
               ))}
@@ -122,7 +132,15 @@ function WorkspaceInner() {
         open={vaultFor !== null}
         clientName={requests.find((r) => r.id === vaultFor)?.clientName ?? ""}
         onClose={() => setVaultFor(null)}
-        onUnlocked={() => { const id = vaultFor; setVaultFor(null); setViewerFor(id); }}
+        onUnlocked={() => {
+          const id = vaultFor;
+          const req = requests.find((r) => r.id === id);
+          if (req) {
+            useAudit.getState().log({ type: "vault_unlock", actor: user.name, role: "lawyer", detail: `Unlocked vault: ${req.clientName} · ${req.documentName}` });
+          }
+          setVaultFor(null);
+          setViewerFor(id);
+        }}
       />
 
       <PdfViewer
