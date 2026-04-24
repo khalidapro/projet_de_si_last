@@ -1,10 +1,11 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
-  Scale, Users, LayoutDashboard, MessageSquare, Briefcase, Inbox,
-  LogOut, Search, FileText, Shield,
+  Scale, Users, LayoutDashboard, MessageSquare, Briefcase,
+  LogOut, Search, FileText, Shield, ScrollText, Settings as Cog,
 } from "lucide-react";
 import { useApp } from "@/lib/store";
+import { useAudit } from "@/lib/audit";
 import { NotificationsBell } from "./NotificationsBell";
 import { ThemeToggle } from "./ThemeToggle";
 import type { ComponentType } from "react";
@@ -15,11 +16,14 @@ const clientNav: NavItem[] = [
   { to: "/directory", label: "Directory", icon: Users },
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/messages",  label: "Messages",  icon: MessageSquare },
+  { to: "/audit",     label: "Audit log", icon: ScrollText },
+  { to: "/settings",  label: "Settings",  icon: Cog },
 ];
 const lawyerNav: NavItem[] = [
   { to: "/workspace", label: "Workspace", icon: Briefcase },
-  { to: "/workspace/requests", label: "Requests", icon: Inbox },
   { to: "/messages",  label: "Messages",  icon: MessageSquare },
+  { to: "/audit",     label: "Audit log", icon: ScrollText },
+  { to: "/settings",  label: "Settings",  icon: Cog },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -30,6 +34,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const items = user?.role === "lawyer" ? lawyerNav : clientNav;
 
   const signOut = () => {
+    if (user) {
+      useAudit.getState().log({
+        type: "logout",
+        actor: user.name,
+        role: user.role,
+        detail: "Session ended from sidebar",
+      });
+    }
     setUser(null);
     navigate({ to: "/login" });
   };
