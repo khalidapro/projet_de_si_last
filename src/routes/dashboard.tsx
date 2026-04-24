@@ -59,7 +59,15 @@ export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
 });
 
-// (DashboardInner body continues below)
+function DashboardPage() {
+  return (
+    <RoleGuard action="view:dashboard" requiredRole="client">
+      <DashboardInner />
+    </RoleGuard>
+  );
+}
+
+function DashboardInner() {
   const consultations = useApp((s) => s.consultations);
   const advance = useApp((s) => s.advance);
   const user = useApp((s) => s.user);
