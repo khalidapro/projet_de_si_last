@@ -31,6 +31,12 @@ function LoginPage() {
       name, email, role,
       ...(role === "lawyer" ? { specialty, barreau } : {}),
     });
+    useAudit.getState().log({
+      type: "login",
+      actor: name,
+      role,
+      detail: `Signed in as ${role} · ${email}`,
+    });
     navigate({ to: role === "lawyer" ? "/workspace" : "/directory" });
   };
 
@@ -71,7 +77,12 @@ function LoginPage() {
                     <button
                       key={r}
                       type="button"
-                      onClick={() => setRole(r)}
+                      onClick={() => {
+                        if (r !== role) {
+                          useAudit.getState().log({ type: "role_switch", actor: name || "Anonymous", role: r, detail: `Switched intent to ${r}` });
+                        }
+                        setRole(r);
+                      }}
                       className={`relative z-10 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-colors ${
                         role === r ? "text-primary-foreground" : "text-muted-foreground"
                       }`}
