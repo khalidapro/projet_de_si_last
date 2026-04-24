@@ -83,18 +83,20 @@ function DashboardInner() {
     const dt = new Date(c.date);
     const end = new Date(dt.getTime() + 3600000);
     const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
-    const ics = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Avocat-Link//EN
-BEGIN:VEVENT
-UID:${crypto.randomUUID()}@avocat-link.io
-DTSTAMP:${fmt(new Date())}
-DTSTART:${fmt(dt)}
-DTEND:${fmt(end)}
-SUMMARY:Consultation with ${c.lawyer.name}
-DESCRIPTION:Confidential consultation — doc: ${c.documentName}
-END:VEVENT
-END:VCALENDAR`;
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//Avocat-Link//EN",
+      "BEGIN:VEVENT",
+      `UID:${crypto.randomUUID()}@avocat-link.io`,
+      `DTSTAMP:${fmt(new Date())}`,
+      `DTSTART:${fmt(dt)}`,
+      `DTEND:${fmt(end)}`,
+      `SUMMARY:Consultation with ${c.lawyer.name}`,
+      `DESCRIPTION:Confidential consultation — doc: ${c.documentName}`,
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
     const blob = new Blob([ics], { type: "text/calendar" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
