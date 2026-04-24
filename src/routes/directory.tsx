@@ -6,6 +6,8 @@ import { LAWYERS, type Lawyer, type Specialty } from "@/lib/mock-data";
 import { LawyerCard } from "@/components/LawyerCard";
 import { BookingModal } from "@/components/BookingModal";
 import { useApp } from "@/lib/store";
+import { useAudit } from "@/lib/audit";
+import { RoleGuard } from "@/components/RoleGuard";
 
 export const Route = createFileRoute("/directory")({
   component: DirectoryPage,
@@ -14,6 +16,14 @@ export const Route = createFileRoute("/directory")({
 const SPECIALTIES: ("All" | Specialty)[] = ["All", "Business", "Penal", "Family"];
 
 function DirectoryPage() {
+  return (
+    <RoleGuard action="view:directory" requiredRole="client">
+      <DirectoryInner />
+    </RoleGuard>
+  );
+}
+
+function DirectoryInner() {
   const [q, setQ] = useState("");
   const [spec, setSpec] = useState<"All" | Specialty>("All");
   const [maxRate, setMaxRate] = useState(450);
@@ -120,7 +130,22 @@ function DirectoryPage() {
       <BookingModal
         lawyer={selected}
         onClose={() => setSelected(null)}
-        onConfirm={(c) => addConsultation(c)}
+        onConfirm={(c) => {
+          addConsultation(c);
+          const u = useApp.getState().user;
+          useAudit.getState().log({
+            type: "booking",
+            actor: u?.name ?? "Anonymous",
+            role: u?.role ?? "anonymous",
+            detail: `Booked ${c.lawyer.name} · ${c.documentName}`,
+          });
+          useAudit.getState().log({
+            type: "upload",
+            actor: u?.name ?? "Anonymous",
+            role: u?.role ?? "anonymous",
+            detail: `Encrypted brief uploaded: ${c.documentName}`,
+          });
+        }}
       />
     </div>
   );

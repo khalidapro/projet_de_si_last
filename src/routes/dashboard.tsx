@@ -3,11 +3,13 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Calendar, FileText, ArrowUpRight, Video, Scale, Clock, ShieldCheck } from "lucide-react";
 import { useApp } from "@/lib/store";
+import { useAudit } from "@/lib/audit";
 import { StatusStepper } from "@/components/StatusStepper";
 import { PdfViewer } from "@/components/PdfViewer";
 import { Decrypt } from "@/components/Decrypt";
 import { Redacted } from "@/components/Redacted";
 import { Tilt3D, TiltLayer } from "@/components/Tilt3D";
+import { RoleGuard } from "@/components/RoleGuard";
 
 type StatTone = "primary" | "emerald" | "amber";
 function StatWidget({
@@ -58,6 +60,14 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function DashboardPage() {
+  return (
+    <RoleGuard action="view:dashboard" requiredRole="client">
+      <DashboardInner />
+    </RoleGuard>
+  );
+}
+
+function DashboardInner() {
   const consultations = useApp((s) => s.consultations);
   const advance = useApp((s) => s.advance);
   const user = useApp((s) => s.user);

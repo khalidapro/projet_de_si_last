@@ -1,20 +1,30 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { Briefcase, TrendingUp, Inbox, CheckCircle2, XCircle, FileText, Star, Clock, Wallet, Receipt } from "lucide-react";
 import { useApp } from "@/lib/store";
+import { useAudit } from "@/lib/audit";
 import { Decrypt } from "@/components/Decrypt";
 import { VaultUnlock } from "@/components/VaultUnlock";
 import { PdfViewer } from "@/components/PdfViewer";
 import { StickyNote } from "@/components/StickyNote";
 import { InvoiceModal, type InvoiceData } from "@/components/InvoiceModal";
 import { Redacted } from "@/components/Redacted";
+import { RoleGuard } from "@/components/RoleGuard";
 
 export const Route = createFileRoute("/workspace")({
   component: WorkspacePage,
 });
 
 function WorkspacePage() {
+  return (
+    <RoleGuard action="view:workspace" requiredRole="lawyer">
+      <WorkspaceInner />
+    </RoleGuard>
+  );
+}
+
+function WorkspaceInner() {
   const user = useApp((s) => s.user);
   const requests = useApp((s) => s.requests);
   const decide = useApp((s) => s.decideRequest);
@@ -24,10 +34,6 @@ function WorkspacePage() {
   const [viewerFor, setViewerFor] = useState<string | null>(null);
   const [invoice, setInvoice] = useState<InvoiceData | null>(null);
 
-  useEffect(() => {
-    if (user && user.role !== "lawyer") navigate({ to: "/directory" });
-  }, [user, navigate]);
-
   const stats = useMemo(() => {
     const accepted = requests.filter((r) => r.status === "accepted");
     const pending = requests.filter((r) => r.status === "pending");
@@ -35,23 +41,9 @@ function WorkspacePage() {
     return { revenue, pending: pending.length, accepted: accepted.length };
   }, [requests]);
 
-  if (!user || user.role !== "lawyer") {
-    return (
-      <div className="mx-auto max-w-2xl px-6 pt-24 text-center">
-        <div className="surface-lg rounded-3xl p-10">
-          <Briefcase className="mx-auto h-8 w-8 text-primary" />
-          <h1 className="mt-4 font-display text-3xl">Lawyer Workspace</h1>
-          <p className="mt-2 text-sm text-muted-foreground">Sign in as an Avocat to access this workspace.</p>
-          <button
-            onClick={() => navigate({ to: "/login" })}
-            className="mt-6 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground glow-primary"
-          >
-            Sign in
-          </button>
-        </div>
-      </div>
-    );
-  }
+  // Guard handles unauthenticated/wrong-role; safe to assume lawyer here.
+  if (!user) return null;
+  void navigate;
 
   const activeRequest = requests.find((r) => r.id === viewerFor);
 
@@ -90,8 +82,14 @@ function WorkspacePage() {
               {requests.filter((r) => r.status === "pending").map((r) => (
                 <RequestCard
                   key={r.id} r={r}
-                  onAccept={() => decide(r.id, "accepted")}
-                  onDecline={() => decide(r.id, "declined")}
+                  onAccept={() => {
+                    decide(r.id, "accepted");
+                    useAudit.getState().log({ type: "role_switch", actor: user.name, role: "lawyer", detail: `Accepted request from ${r.clientName}` });
+                  }}
+                  onDecline={() => {
+                    decide(r.id, "declined");
+                    useAudit.getState().log({ type: "access_denied", actor: user.name, role: "lawyer", detail: `Declined request from ${r.clientName}` });
+                  }}
                   onReview={() => setVaultFor(r.id)}
                 />
               ))}
@@ -103,14 +101,18 @@ function WorkspacePage() {
                 <RequestCard
                   key={r.id} r={r}
                   onReview={() => setVaultFor(r.id)}
-                  onInvoice={() => setInvoice({
-                    clientName: r.clientName,
-                    lawyerName: user.name,
-                    rate: Math.round(r.estimatedFee / 4),
-                    hours: 4,
-                    date: new Date().toISOString(),
-                    reference: `AVL-${new Date().getFullYear()}-${r.id.toUpperCase()}`,
-                  })}
+                  onInvoice={() => {
+                    const data = {
+                      clientName: r.clientName,
+                      lawyerName: user.name,
+                      rate: Math.round(r.estimatedFee / 4),
+                      hours: 4,
+                      date: new Date().toISOString(),
+                      reference: `AVL-${new Date().getFullYear()}-${r.id.toUpperCase()}`,
+                    };
+                    setInvoice(data);
+                    useAudit.getState().log({ type: "invoice_generated", actor: user.name, role: "lawyer", detail: `Invoice ${data.reference} for ${r.clientName} · €${data.rate * data.hours}` });
+                  }}
                   muted
                 />
               ))}
@@ -130,7 +132,15 @@ function WorkspacePage() {
         open={vaultFor !== null}
         clientName={requests.find((r) => r.id === vaultFor)?.clientName ?? ""}
         onClose={() => setVaultFor(null)}
-        onUnlocked={() => { const id = vaultFor; setVaultFor(null); setViewerFor(id); }}
+        onUnlocked={() => {
+          const id = vaultFor;
+          const req = requests.find((r) => r.id === id);
+          if (req) {
+            useAudit.getState().log({ type: "vault_unlock", actor: user.name, role: "lawyer", detail: `Unlocked vault: ${req.clientName} · ${req.documentName}` });
+          }
+          setVaultFor(null);
+          setViewerFor(id);
+        }}
       />
 
       <PdfViewer
