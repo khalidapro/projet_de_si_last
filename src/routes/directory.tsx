@@ -130,7 +130,22 @@ function DirectoryInner() {
       <BookingModal
         lawyer={selected}
         onClose={() => setSelected(null)}
-        onConfirm={(c) => addConsultation(c)}
+        onConfirm={(c) => {
+          addConsultation(c);
+          const u = useApp.getState().user;
+          useAudit.getState().log({
+            type: "booking",
+            actor: u?.name ?? "Anonymous",
+            role: u?.role ?? "anonymous",
+            detail: `Booked ${c.lawyer.name} · ${c.documentName}`,
+          });
+          useAudit.getState().log({
+            type: "upload",
+            actor: u?.name ?? "Anonymous",
+            role: u?.role ?? "anonymous",
+            detail: `Encrypted brief uploaded: ${c.documentName}`,
+          });
+        }}
       />
     </div>
   );
