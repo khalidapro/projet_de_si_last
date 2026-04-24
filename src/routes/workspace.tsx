@@ -1,20 +1,30 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { Briefcase, TrendingUp, Inbox, CheckCircle2, XCircle, FileText, Star, Clock, Wallet, Receipt } from "lucide-react";
 import { useApp } from "@/lib/store";
+import { useAudit } from "@/lib/audit";
 import { Decrypt } from "@/components/Decrypt";
 import { VaultUnlock } from "@/components/VaultUnlock";
 import { PdfViewer } from "@/components/PdfViewer";
 import { StickyNote } from "@/components/StickyNote";
 import { InvoiceModal, type InvoiceData } from "@/components/InvoiceModal";
 import { Redacted } from "@/components/Redacted";
+import { RoleGuard } from "@/components/RoleGuard";
 
 export const Route = createFileRoute("/workspace")({
   component: WorkspacePage,
 });
 
 function WorkspacePage() {
+  return (
+    <RoleGuard action="view:workspace" requiredRole="lawyer">
+      <WorkspaceInner />
+    </RoleGuard>
+  );
+}
+
+function WorkspaceInner() {
   const user = useApp((s) => s.user);
   const requests = useApp((s) => s.requests);
   const decide = useApp((s) => s.decideRequest);
@@ -23,10 +33,6 @@ function WorkspacePage() {
   const [vaultFor, setVaultFor] = useState<string | null>(null);
   const [viewerFor, setViewerFor] = useState<string | null>(null);
   const [invoice, setInvoice] = useState<InvoiceData | null>(null);
-
-  useEffect(() => {
-    if (user && user.role !== "lawyer") navigate({ to: "/directory" });
-  }, [user, navigate]);
 
   const stats = useMemo(() => {
     const accepted = requests.filter((r) => r.status === "accepted");
