@@ -41,23 +41,9 @@ function WorkspaceInner() {
     return { revenue, pending: pending.length, accepted: accepted.length };
   }, [requests]);
 
-  if (!user || user.role !== "lawyer") {
-    return (
-      <div className="mx-auto max-w-2xl px-6 pt-24 text-center">
-        <div className="surface-lg rounded-3xl p-10">
-          <Briefcase className="mx-auto h-8 w-8 text-primary" />
-          <h1 className="mt-4 font-display text-3xl">Lawyer Workspace</h1>
-          <p className="mt-2 text-sm text-muted-foreground">Sign in as an Avocat to access this workspace.</p>
-          <button
-            onClick={() => navigate({ to: "/login" })}
-            className="mt-6 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground glow-primary"
-          >
-            Sign in
-          </button>
-        </div>
-      </div>
-    );
-  }
+  // Guard handles unauthenticated/wrong-role; safe to assume lawyer here.
+  if (!user) return null;
+  void navigate;
 
   const activeRequest = requests.find((r) => r.id === viewerFor);
 
