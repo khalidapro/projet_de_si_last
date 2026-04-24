@@ -35,7 +35,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen bg-app flex">
+    <div className="min-h-screen flex">
       {/* Sidebar */}
       <aside className="hidden md:flex sticky top-0 h-screen w-[260px] flex-col p-4">
         <div className="glass-strong flex h-full flex-col rounded-2xl p-4">

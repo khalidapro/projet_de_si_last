@@ -69,7 +69,7 @@
   --amber:   oklch(0.78 0.13 75);
   --rose:    oklch(0.6 0.18 25);
 
-  --glass: oklch(0.99 0.003 80 / 0.4);              /* Ivory @ 40% */
+  --glass: oklch(0.99 0.003 80 / 0.55);             /* Ivory @ 55% — lets cinematic photo glow through */
 
   --gradient-radial:
     radial-gradient(ellipse at center, oklch(0.97 0.015 75) 0%, oklch(0.92 0.022 70) 55%, oklch(0.82 0.025 65) 100%);
@@ -118,7 +118,7 @@
   --amber:   oklch(0.82 0.14 75);
   --rose:    oklch(0.7 0.2 25);
 
-  --glass: oklch(0.32 0.018 55 / 0.55);
+  --glass: oklch(0.32 0.018 55 / 0.45);             /* Cards subtly transparent over courtroom */
 
   --gradient-radial:
     radial-gradient(ellipse at center, oklch(0.26 0.025 50) 0%, oklch(0.18 0.025 50) 55%, oklch(0.1 0.02 50) 100%);
@@ -135,7 +135,7 @@
     border-color: var(--color-border);
   }
   html, body {
-    background: var(--background);
+    background: transparent;
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;

@@ -34,7 +34,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen grid md:grid-cols-2 bg-background">
+    <div className="min-h-screen grid md:grid-cols-2">
       {/* Left — form */}
       <div className="relative flex items-center justify-center p-8">
         <div className="w-full max-w-sm">
@@ -164,10 +164,10 @@ function LoginPage() {
 
       {/* Right — visual */}
       <div className="relative hidden md:block overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[oklch(0.7_0.16_160)]/15 via-white to-[oklch(0.78_0.16_75)]/20" />
-        <div className="absolute -top-24 -left-24 h-[500px] w-[500px] rounded-full bg-[oklch(0.7_0.16_160)]/30 blur-[140px]" />
-        <div className="absolute -bottom-24 -right-24 h-[480px] w-[480px] rounded-full bg-[oklch(0.78_0.16_75)]/30 blur-[140px]" />
-        <div className="absolute inset-0 bg-grid opacity-50" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-[oklch(0.78_0.13_75)]/15" />
+        <div className="absolute -top-24 -left-24 h-[500px] w-[500px] rounded-full bg-primary/25 blur-[140px]" />
+        <div className="absolute -bottom-24 -right-24 h-[480px] w-[480px] rounded-full bg-[oklch(0.78_0.13_75)]/25 blur-[140px]" />
+        <div className="absolute inset-0 bg-grid opacity-30" />
 
         <div className="relative h-full flex flex-col items-center justify-center p-10">
           <motion.div
