@@ -1,30 +1,43 @@
-import justice from "@/assets/justice-hero.png";
+import { motion } from "framer-motion";
+import courtroom from "@/assets/courtroom-cinematic.jpg";
 
 /**
- * Lady Justice backdrop. Sepia/chocolate tones, full-bleed with vignette.
- * Light mode: softer wash so foreground text stays legible.
- * Dark mode: deeper wash, image more present.
+ * Cinematic courtroom backdrop with Ken Burns effect.
+ * - Slow infinite scale (1 → 1.05) + subtle drift so the room feels alive
+ * - Heavy theme-aware overlay for high text contrast
+ * - Warm vignette to focus the eye on center content
  */
 export function CourtroomBg() {
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 -z-20 overflow-hidden">
-      {/* Hero image — anchored right, slightly cropped, low-opacity for legibility */}
-      <img
-        src={justice}
+      {/* Ken Burns image layer */}
+      <motion.img
+        src={courtroom}
         alt=""
-        width={1200}
-        height={900}
+        width={1920}
+        height={1080}
         loading="eager"
-        className="absolute inset-0 h-full w-full object-cover object-[70%_center] opacity-[0.22] dark:opacity-[0.38] transition-opacity duration-700"
+        className="absolute inset-0 h-full w-full object-cover"
+        initial={{ scale: 1, x: "0%", y: "0%" }}
+        animate={{
+          scale: [1, 1.05, 1.03, 1],
+          x: ["0%", "-1.2%", "1%", "0%"],
+          y: ["0%", "1%", "-0.8%", "0%"],
+        }}
+        transition={{ duration: 40, ease: "easeInOut", repeat: Infinity }}
       />
-      {/* Warm parchment wash to lock palette */}
-      <div className="absolute inset-0 bg-[oklch(0.93_0.03_70)]/70 dark:bg-[oklch(0.16_0.025_45)]/72" />
-      {/* Left-to-right gradient so left column reads cleanly, right shows the figure */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[oklch(0.93_0.03_70)]/85 via-[oklch(0.93_0.03_70)]/40 to-transparent dark:from-[oklch(0.14_0.025_45)]/90 dark:via-[oklch(0.14_0.025_45)]/55 dark:to-transparent" />
-      {/* Radial corner vignette */}
-      <div className="absolute inset-0 [background:radial-gradient(ellipse_at_center,transparent_0%,transparent_50%,oklch(0.3_0.05_45/0.25)_100%)] dark:[background:radial-gradient(ellipse_at_center,transparent_0%,transparent_45%,oklch(0_0_0/0.6)_100%)]" />
-      {/* Warm halo */}
-      <div className="absolute left-1/2 top-1/2 h-[55vmax] w-[55vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[oklch(0.85_0.09_60)]/15 blur-3xl dark:bg-[oklch(0.7_0.13_55)]/12" />
+
+      {/* Theme overlay — light mode: warm parchment wash; dark mode: deep sepia night */}
+      <div className="absolute inset-0 bg-[oklch(0.93_0.03_70)]/72 dark:bg-[oklch(0.12_0.02_45)]/82" />
+
+      {/* Soft top-to-bottom darken for header legibility */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[oklch(0.93_0.03_70)]/40 via-transparent to-[oklch(0.85_0.03_60)]/45 dark:from-[oklch(0.1_0.02_45)]/55 dark:via-transparent dark:to-[oklch(0.08_0.02_45)]/70" />
+
+      {/* Radial vignette */}
+      <div className="absolute inset-0 [background:radial-gradient(ellipse_at_center,transparent_0%,transparent_45%,oklch(0.3_0.05_45/0.3)_100%)] dark:[background:radial-gradient(ellipse_at_center,transparent_0%,transparent_40%,oklch(0_0_0/0.65)_100%)]" />
+
+      {/* Warm halo for hero glow */}
+      <div className="absolute left-1/2 top-1/2 h-[55vmax] w-[55vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[oklch(0.85_0.09_60)]/12 blur-3xl dark:bg-[oklch(0.7_0.13_55)]/10" />
     </div>
   );
 }
