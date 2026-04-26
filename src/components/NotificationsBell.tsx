@@ -68,7 +68,7 @@ export function NotificationsBell() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 400, damping: 18 }}
-            className="absolute -top-1 -right-1 grid h-5 min-w-5 place-items-center rounded-full bg-[oklch(0.78_0.18_70)] px-1 text-[10px] font-bold text-white glow-amber"
+            className="absolute -top-1 -right-1 grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground glow-primary"
             data-testid="notif-unread-count"
           >
             {unread}
