@@ -40,7 +40,7 @@ export function ThemeToggle() {
             transition={{ type: "spring", stiffness: 380, damping: 22 }}
             className="absolute"
           >
-            <Sun className="h-4.5 w-4.5 text-amber-500" strokeWidth={2.2} />
+            <Sun className="h-4.5 w-4.5 text-primary" strokeWidth={2.2} />
           </motion.span>
         )}
       </AnimatePresence>
