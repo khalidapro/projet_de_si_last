@@ -134,7 +134,7 @@ export function InvoiceModal({
               </div>
 
               <div className="mt-10 pt-6 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
-                <div className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> Issued via Avocat·Link · digitally signed</div>
+                <div className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-[#A67B5B]" /> Issued via Avocat·Link · digitally signed</div>
                 <div>Thank you for your trust.</div>
               </div>
             </div>
