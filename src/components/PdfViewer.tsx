@@ -176,7 +176,7 @@ export function PdfViewer({ open, onClose, documentName, userName, layoutId, pag
                       className="mx-auto w-[640px] bg-white text-slate-900 rounded-md p-10 shadow-2xl relative overflow-hidden"
                     >
                       <div className="pointer-events-none absolute inset-0 grid place-items-center">
-                        <div className="rotate-[-30deg] font-display text-5xl font-bold text-rose-500/10 tracking-widest text-center leading-tight">
+                        <div className="rotate-[-30deg] font-display text-5xl font-bold text-foreground/10 tracking-widest text-center leading-tight">
                           CONFIDENTIAL<br />
                           <span className="text-3xl">{userName.toUpperCase()}</span>
                         </div>

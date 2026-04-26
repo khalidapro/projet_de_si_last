@@ -68,7 +68,7 @@ export function NotificationsBell() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 400, damping: 18 }}
-            className="absolute -top-1 -right-1 grid h-5 min-w-5 place-items-center rounded-full bg-[oklch(0.78_0.18_70)] px-1 text-[10px] font-bold text-white glow-amber"
+            className="absolute -top-1 -right-1 grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground glow-primary"
             data-testid="notif-unread-count"
           >
             {unread}
@@ -156,7 +156,7 @@ export function NotificationsBell() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <div className="text-sm font-semibold truncate">{n.title}</div>
-                        {n.unread && !muted && <span className="h-1.5 w-1.5 rounded-full bg-[oklch(0.78_0.18_70)]" />}
+                        {n.unread && !muted && <span className="h-1.5 w-1.5 rounded-full bg-[oklch(0.58_0.07_55)]" />}
                       </div>
                       <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{n.body}</p>
                       <div className="flex items-center justify-between mt-1">

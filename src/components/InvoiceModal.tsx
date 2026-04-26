@@ -36,7 +36,7 @@ export function InvoiceModal({
         table{width:100%;border-collapse:collapse;margin-top:24px}
         th,td{text-align:left;padding:12px 0;border-bottom:1px solid #e2e8f0;font-size:14px}
         th{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#64748b}
-        .total{font-size:24px;font-family:'Playfair Display',serif;color:#10B981}
+        .total{font-size:24px;font-family:'Playfair Display',serif;color:#A67B5B}
       </style></head><body>${node.innerHTML}</body></html>`);
     w.document.close();
     setTimeout(() => { w.focus(); w.print(); }, 250);
@@ -76,7 +76,7 @@ export function InvoiceModal({
               <div className="flex items-start justify-between">
                 <div>
                   <div className="inline-flex items-center gap-2">
-                    <div className="grid h-8 w-8 place-items-center rounded-lg bg-emerald-500 text-white">
+                    <div className="grid h-8 w-8 place-items-center rounded-lg bg-[#A67B5B] text-white">
                       <Scale className="h-4 w-4" />
                     </div>
                     <span className="font-display text-xl font-semibold">Avocat·Link</span>
@@ -128,13 +128,13 @@ export function InvoiceModal({
                   <div className="flex justify-between py-1"><span className="text-slate-500">VAT (20%)</span><span>€{tax.toFixed(2)}</span></div>
                   <div className="flex justify-between mt-2 pt-2 border-t border-slate-200">
                     <span className="font-semibold">Total due</span>
-                    <span className="font-display text-2xl text-emerald-600">€{total.toFixed(2)}</span>
+                    <span className="font-display text-2xl text-[#6F4E37]">€{total.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
 
               <div className="mt-10 pt-6 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
-                <div className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> Issued via Avocat·Link · digitally signed</div>
+                <div className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-[#A67B5B]" /> Issued via Avocat·Link · digitally signed</div>
                 <div>Thank you for your trust.</div>
               </div>
             </div>

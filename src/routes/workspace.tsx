@@ -180,7 +180,7 @@ function StatCard({ icon: Icon, label, value, tone, delay }: { icon: React.Compo
 }
 
 function Column({ title, tone, count, children }: { title: string; tone: "amber" | "emerald" | "rose"; count: number; children: React.ReactNode }) {
-  const dot = tone === "emerald" ? "bg-primary" : tone === "rose" ? "bg-[oklch(0.66_0.22_15)]" : "bg-[oklch(0.78_0.16_75)]";
+  const dot = tone === "emerald" ? "bg-primary" : tone === "rose" ? "bg-destructive" : "bg-accent";
   return (
     <div className="surface rounded-2xl p-4 min-h-[200px]">
       <div className="flex items-center justify-between mb-3 px-1">
@@ -251,7 +251,7 @@ function RequestCard({ r, onAccept, onDecline, onReview, onInvoice, muted }: {
       >
         <FileText className="h-3.5 w-3.5 text-primary" />
         <span className="font-semibold truncate">{r.documentName}</span>
-        <span className="text-[oklch(0.45_0.16_160)]">· encrypted</span>
+        <span className="text-[oklch(0.42_0.06_50)]">· encrypted</span>
       </button>
 
       {onAccept && onDecline && (
@@ -279,7 +279,7 @@ function RequestCard({ r, onAccept, onDecline, onReview, onInvoice, muted }: {
 
       {!onAccept && r.status === "accepted" && (
         <div className="mt-3 flex items-center justify-between gap-2">
-          <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-[oklch(0.45_0.16_160)]">
+          <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-[oklch(0.42_0.06_50)]">
             <Star className="h-3 w-3 fill-current" /> Active engagement
           </div>
           {onInvoice && (

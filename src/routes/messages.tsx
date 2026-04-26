@@ -94,7 +94,7 @@ function MessagesPage() {
                     <div className="flex items-center justify-between gap-2">
                       <div className="text-xs text-muted-foreground truncate">{t.lastMessage}</div>
                       {t.unread > 0 && (
-                        <span className="grid h-5 min-w-5 place-items-center rounded-full bg-[oklch(0.78_0.18_70)] px-1 text-[10px] font-bold text-white">
+                        <span className="grid h-5 min-w-5 place-items-center rounded-full bg-[oklch(0.58_0.07_55)] px-1 text-[10px] font-bold text-white">
                           {t.unread}
                         </span>
                       )}

@@ -46,7 +46,7 @@ function LoginPage() {
       <div className="relative flex items-center justify-center p-8">
         <div className="w-full max-w-sm">
           <Link to="/" className="inline-flex items-center gap-2">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[oklch(0.7_0.16_160)] to-[oklch(0.78_0.18_145)]">
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[oklch(0.58_0.07_55)] to-[oklch(0.50_0.07_50)]">
               <Scale className="h-4 w-4 text-white" strokeWidth={2.4} />
             </div>
             <span className="font-display text-xl font-semibold">Avocat<span className="text-gradient">·</span>Link</span>
