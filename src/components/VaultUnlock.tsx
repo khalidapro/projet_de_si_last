@@ -48,8 +48,8 @@ export function VaultUnlock({
                 className="absolute inset-0 rounded-full chip-emerald"
                 animate={{
                   boxShadow: phase === "open"
-                    ? "0 0 80px 12px oklch(0.7 0.16 160 / 0.55)"
-                    : "0 0 40px 4px oklch(0.7 0.16 160 / 0.4)",
+                    ? "0 0 80px 12px oklch(0.58 0.07 55 / 0.55)"
+                    : "0 0 40px 4px oklch(0.58 0.07 55 / 0.4)",
                 }}
               />
               <div className="absolute inset-0 grid place-items-center">
