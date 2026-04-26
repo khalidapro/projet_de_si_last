@@ -28,9 +28,9 @@ function StatWidget({
 }) {
   const toneClass =
     tone === "emerald"
-      ? "from-[oklch(0.75_0.15_160)]/25 to-[oklch(0.55_0.18_160)]/10 text-[oklch(0.45_0.16_160)]"
+      ? "from-primary/25 to-primary/5 text-primary"
       : tone === "amber"
-        ? "from-[oklch(0.85_0.14_75)]/25 to-[oklch(0.65_0.16_75)]/10 text-[oklch(0.55_0.16_75)]"
+        ? "from-accent/30 to-accent/10 text-foreground/70"
         : "from-primary/25 to-accent/10 text-primary";
   return (
     <Tilt3D className="relative">
