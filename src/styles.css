@@ -107,25 +107,28 @@
   --popover: oklch(0.3 0.02 55);
   --popover-foreground: oklch(0.98 0.005 80);
 
-  --primary: oklch(0.78 0.12 60);                   /* Brighter terracotta */
+  --primary: oklch(0.68 0.075 58);                  /* Brighter Tan for dark mode */
   --primary-foreground: oklch(0.18 0.025 50);
   --secondary: oklch(0.28 0.018 55);
   --secondary-foreground: oklch(0.95 0.005 80);
   --muted: oklch(0.26 0.015 55);
-  --muted-foreground: oklch(0.78 0.015 70);
+  --muted-foreground: oklch(0.75 0.008 60);
 
-  --accent: oklch(0.55 0.012 60);
+  --accent: oklch(0.55 0.008 60);                   /* Gray accent */
   --accent-foreground: oklch(0.98 0.005 80);
-  --destructive: oklch(0.65 0.2 25);
+  --destructive: oklch(0.55 0.11 30);               /* Rust */
   --destructive-foreground: oklch(0.99 0.003 80);
 
-  --border: oklch(0.7 0.005 60 / 22%);
+  --border: oklch(0.72 0.005 60 / 22%);
   --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.78 0.12 60);
+  --ring: oklch(0.68 0.075 58);
 
-  --emerald: oklch(0.72 0.15 165);
-  --amber:   oklch(0.82 0.14 75);
-  --rose:    oklch(0.7 0.2 25);
+  --success: oklch(0.68 0.075 58);                  /* Tan */
+  --warning: oklch(0.72 0.05 70);                   /* Sand */
+  --danger:  oklch(0.55 0.11 30);                   /* Rust */
+  --emerald: var(--success);
+  --amber:   var(--warning);
+  --rose:    var(--danger);
 
   --glass: oklch(0.32 0.018 55 / 0.45);             /* Cards subtly transparent over courtroom */
 
