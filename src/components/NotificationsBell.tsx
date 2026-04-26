@@ -157,7 +157,7 @@ export function NotificationsBell() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <div className="text-sm font-semibold truncate">{n.title}</div>
-                        {n.unread && !muted && <span className="h-1.5 w-1.5 rounded-full bg-[oklch(0.58_0.07_55)]" />}
+                        {n.unread && !muted && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
                       </div>
                       <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{n.body}</p>
                       <div className="flex items-center justify-between mt-1">
