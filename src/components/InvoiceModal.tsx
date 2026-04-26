@@ -76,7 +76,7 @@ export function InvoiceModal({
               <div className="flex items-start justify-between">
                 <div>
                   <div className="inline-flex items-center gap-2">
-                    <div className="grid h-8 w-8 place-items-center rounded-lg bg-emerald-500 text-white">
+                    <div className="grid h-8 w-8 place-items-center rounded-lg bg-[#A67B5B] text-white">
                       <Scale className="h-4 w-4" />
                     </div>
                     <span className="font-display text-xl font-semibold">Avocat·Link</span>
