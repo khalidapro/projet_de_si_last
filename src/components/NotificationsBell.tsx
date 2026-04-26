@@ -3,7 +3,7 @@ import { Bell, BellOff, CheckCircle2, Clock4, Settings as Cog, XCircle } from "l
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useApp } from "@/lib/store";
-import { CLIENT_NOTIFS, LAWYER_NOTIFS, type Notif } from "@/lib/notifications";
+import { CLIENT_NOTIFS, LAWYER_NOTIFS, toSemanticTone, type Notif } from "@/lib/notifications";
 import { CHANNEL_META, isMutedNow, useNotifSettings, type NotifChannel } from "@/lib/notif-settings";
 
 // Map seed notifs into channels for the prefs filter
