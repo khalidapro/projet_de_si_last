@@ -31,9 +31,12 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-emerald: var(--emerald);
-  --color-amber: var(--amber);
-  --color-rose: var(--rose);
+  --color-emerald: var(--success);
+  --color-amber: var(--warning);
+  --color-rose: var(--danger);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
   --color-glass: var(--glass);
   --font-display: "Playfair Display", serif;
   --font-sans: "Inter", sans-serif;
