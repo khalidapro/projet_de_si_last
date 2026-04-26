@@ -38,7 +38,7 @@ export function LawyerCard({ lawyer, onBook }: { lawyer: Lawyer; onBook: (l: Law
 
           <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1">
-              <Star className="h-3.5 w-3.5 fill-[oklch(0.78_0.16_75)] text-[oklch(0.78_0.16_75)]" />
+              <Star className="h-3.5 w-3.5 fill-[oklch(0.58_0.07_55)] text-[oklch(0.58_0.07_55)]" />
               {lawyer.rating}
             </span>
             <span className="inline-flex items-center gap-1">

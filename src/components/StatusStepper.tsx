@@ -13,12 +13,12 @@ export function StatusStepper({ status }: { status: Step }) {
         const isAmber = active && s !== "Confirmed";
         const isEmerald = active && s === "Confirmed";
         const dotColor = isEmerald
-          ? "oklch(0.7 0.16 160)"
+          ? "oklch(0.58 0.07 55)"
           : isAmber
-          ? "oklch(0.78 0.16 75)"
+          ? "oklch(0.58 0.07 55)"
           : done
-          ? "oklch(0.7 0.16 160)"
-          : "oklch(0.18 0.02 240 / 0.18)";
+          ? "oklch(0.58 0.07 55)"
+          : "oklch(0.32 0.045 50 / 0.18)";
         return (
           <div key={s} className="flex items-center gap-2">
             <div className="relative">
@@ -30,9 +30,9 @@ export function StatusStepper({ status }: { status: Step }) {
               {active && <span className="absolute inset-0 pulse-ring rounded-full" />}
             </div>
             <span className={`text-xs font-semibold ${
-              isAmber ? "text-[oklch(0.5_0.18_60)]" :
-              isEmerald ? "text-[oklch(0.45_0.16_160)]" :
-              done ? "text-[oklch(0.45_0.16_160)]" : "text-muted-foreground"
+              isAmber ? "text-[oklch(0.42_0.06_50)]" :
+              isEmerald ? "text-[oklch(0.42_0.06_50)]" :
+              done ? "text-[oklch(0.42_0.06_50)]" : "text-muted-foreground"
             }`}>{s}</span>
             {i < STEPS.length - 1 && (
               <div className="relative h-px w-8 bg-border overflow-hidden">

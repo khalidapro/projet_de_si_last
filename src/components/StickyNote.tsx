@@ -14,7 +14,7 @@ export function StickyNote({ defaultValue = "" }: { defaultValue?: string }) {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[oklch(0.5_0.18_60)] hover:underline"
+        className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[oklch(0.42_0.06_50)] hover:underline"
       >
         <NoteIcon className="h-3.5 w-3.5" />
         {open ? "Hide private notes" : "Private notes"}

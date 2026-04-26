@@ -172,7 +172,7 @@ function DashboardInner() {
                 >
                   <FileText className="h-4 w-4 text-primary" />
                   <span className="font-semibold">{c.documentName}</span>
-                  <span className="text-xs text-[oklch(0.45_0.16_160)]">· encrypted</span>
+                  <span className="text-xs text-[oklch(0.42_0.06_50)]">· encrypted</span>
                 </motion.button>
 
                 {c.status === "Confirmed" && (() => {
