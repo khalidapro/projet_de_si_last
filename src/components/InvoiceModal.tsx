@@ -36,7 +36,7 @@ export function InvoiceModal({
         table{width:100%;border-collapse:collapse;margin-top:24px}
         th,td{text-align:left;padding:12px 0;border-bottom:1px solid #e2e8f0;font-size:14px}
         th{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#64748b}
-        .total{font-size:24px;font-family:'Playfair Display',serif;color:#10B981}
+        .total{font-size:24px;font-family:'Playfair Display',serif;color:#A67B5B}
       </style></head><body>${node.innerHTML}</body></html>`);
     w.document.close();
     setTimeout(() => { w.focus(); w.print(); }, 250);
