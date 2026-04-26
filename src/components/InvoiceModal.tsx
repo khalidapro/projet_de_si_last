@@ -128,7 +128,7 @@ export function InvoiceModal({
                   <div className="flex justify-between py-1"><span className="text-slate-500">VAT (20%)</span><span>€{tax.toFixed(2)}</span></div>
                   <div className="flex justify-between mt-2 pt-2 border-t border-slate-200">
                     <span className="font-semibold">Total due</span>
-                    <span className="font-display text-2xl text-emerald-600">€{total.toFixed(2)}</span>
+                    <span className="font-display text-2xl text-[#6F4E37]">€{total.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
