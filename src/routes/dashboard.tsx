@@ -10,6 +10,7 @@ import { Decrypt } from "@/components/Decrypt";
 import { Redacted } from "@/components/Redacted";
 import { Tilt3D, TiltLayer } from "@/components/Tilt3D";
 import { RoleGuard } from "@/components/RoleGuard";
+import { downloadIcs } from "@/lib/ics";
 
 type StatTone = "primary" | "emerald" | "amber";
 function StatWidget({
@@ -80,30 +81,11 @@ function DashboardInner() {
   }, []);
 
   const exportIcs = (c: { lawyer: { name: string }; date: string; documentName: string }) => {
-    const dt = new Date(c.date);
-    const end = new Date(dt.getTime() + 3600000);
-    const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
-    const ics = [
-      "BEGIN:VCALENDAR",
-      "VERSION:2.0",
-      "PRODID:-//Avocat-Link//EN",
-      "BEGIN:VEVENT",
-      `UID:${crypto.randomUUID()}@avocat-link.io`,
-      `DTSTAMP:${fmt(new Date())}`,
-      `DTSTART:${fmt(dt)}`,
-      `DTEND:${fmt(end)}`,
-      `SUMMARY:Consultation with ${c.lawyer.name}`,
-      `DESCRIPTION:Confidential consultation — doc: ${c.documentName}`,
-      "END:VEVENT",
-      "END:VCALENDAR",
-    ].join("\r\n");
-    const blob = new Blob([ics], { type: "text/calendar" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `consultation-${c.lawyer.name.replace(/\s/g, "-")}.ics`;
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadIcs(`consultation-${c.lawyer.name.replace(/\s/g, "-")}.ics`, {
+      title: `Consultation with ${c.lawyer.name}`,
+      description: `Confidential consultation — doc: ${c.documentName}`,
+      start: new Date(c.date),
+    });
   };
 
   return (
