@@ -24,5 +24,27 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": "off",
     },
   },
+  // Stricter checks for TanStack route files. The router code-splitter
+  // re-parses these modules and any stray module-scope statement (like a
+  // `return` outside a function) hard-fails the dev server with a confusing
+  // "Unknown file" overlay. Catch it at lint time with a clear message.
+  {
+    files: ["src/routes/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "Program > ReturnStatement",
+          message:
+            "Module-scope `return` is not allowed in route files — it crashes the TanStack code-splitter. Move logic inside the route component.",
+        },
+        {
+          selector: "Program > ExpressionStatement > AwaitExpression",
+          message:
+            "Top-level `await` is not allowed in route files — wrap it in the loader or component.",
+        },
+      ],
+    },
+  },
   eslintPluginPrettier,
 );
