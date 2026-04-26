@@ -1,4 +1,24 @@
-export type NotifTone = "amber" | "emerald" | "rose";
+/**
+ * Tone tokens are semantic. The legacy names (emerald/amber/rose) are kept as
+ * aliases so existing data can stay untouched while components reason in terms
+ * of success/warning/danger. Both forms render with the monochromatic legal palette.
+ */
+export type SemanticTone = "success" | "warning" | "danger";
+export type LegacyTone = "emerald" | "amber" | "rose";
+export type NotifTone = SemanticTone | LegacyTone;
+
+const TONE_ALIAS: Record<NotifTone, SemanticTone> = {
+  emerald: "success",
+  amber: "warning",
+  rose: "danger",
+  success: "success",
+  warning: "warning",
+  danger: "danger",
+};
+
+export function toSemanticTone(t: NotifTone): SemanticTone {
+  return TONE_ALIAS[t];
+}
 
 export interface Notif {
   id: string;

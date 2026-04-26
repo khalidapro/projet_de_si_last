@@ -3,7 +3,7 @@ import { Bell, BellOff, CheckCircle2, Clock4, Settings as Cog, XCircle } from "l
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useApp } from "@/lib/store";
-import { CLIENT_NOTIFS, LAWYER_NOTIFS, type Notif } from "@/lib/notifications";
+import { CLIENT_NOTIFS, LAWYER_NOTIFS, toSemanticTone, type Notif } from "@/lib/notifications";
 import { CHANNEL_META, isMutedNow, useNotifSettings, type NotifChannel } from "@/lib/notif-settings";
 
 // Map seed notifs into channels for the prefs filter
@@ -138,8 +138,9 @@ export function NotificationsBell() {
 
             <div className="max-h-[360px] overflow-y-auto">
               {visible.map((n, idx) => {
-                const Icon = n.tone === "emerald" ? CheckCircle2 : n.tone === "rose" ? XCircle : Clock4;
-                const chip = n.tone === "emerald" ? "chip-emerald" : n.tone === "rose" ? "chip-rose" : "chip-amber";
+                const semantic = toSemanticTone(n.tone);
+                const Icon = semantic === "success" ? CheckCircle2 : semantic === "danger" ? XCircle : Clock4;
+                const chip = `chip-${semantic}`;
                 const channel = classify(n);
                 return (
                   <motion.div
@@ -156,7 +157,7 @@ export function NotificationsBell() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <div className="text-sm font-semibold truncate">{n.title}</div>
-                        {n.unread && !muted && <span className="h-1.5 w-1.5 rounded-full bg-[oklch(0.58_0.07_55)]" />}
+                        {n.unread && !muted && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
                       </div>
                       <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{n.body}</p>
                       <div className="flex items-center justify-between mt-1">

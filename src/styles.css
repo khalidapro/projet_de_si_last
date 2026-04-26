@@ -254,13 +254,23 @@
   }
 
   /* Status chips — monochromatic legal palette (no green / yellow / bright red) */
-  .chip-emerald { background: oklch(0.58 0.07 55 / 0.14); color: oklch(0.42 0.06 50); border: 1px solid oklch(0.58 0.07 55 / 0.32); }
-  .chip-amber   { background: oklch(0.70 0.045 70 / 0.16); color: oklch(0.42 0.05 60); border: 1px solid oklch(0.70 0.045 70 / 0.34); }
-  .chip-rose    { background: oklch(0.45 0.10 35 / 0.14); color: oklch(0.42 0.10 32); border: 1px solid oklch(0.45 0.10 35 / 0.32); }
+  .chip-emerald,
+  .chip-success { background: oklch(0.58 0.07 55 / 0.14); color: oklch(0.42 0.06 50); border: 1px solid oklch(0.58 0.07 55 / 0.32); }
+  .chip-amber,
+  .chip-warning { background: oklch(0.70 0.045 70 / 0.16); color: oklch(0.42 0.05 60); border: 1px solid oklch(0.70 0.045 70 / 0.34); }
+  .chip-rose,
+  .chip-danger  { background: oklch(0.45 0.10 35 / 0.14); color: oklch(0.42 0.10 32); border: 1px solid oklch(0.45 0.10 35 / 0.32); }
 
-  .dark .chip-emerald { color: oklch(0.86 0.06 60); }
-  .dark .chip-amber   { color: oklch(0.86 0.045 70); }
-  .dark .chip-rose    { color: oklch(0.78 0.10 30); }
+  .dark .chip-emerald, .dark .chip-success { color: oklch(0.86 0.06 60); }
+  .dark .chip-amber,   .dark .chip-warning { color: oklch(0.86 0.045 70); }
+  .dark .chip-rose,    .dark .chip-danger  { color: oklch(0.78 0.10 30); }
+
+  /* Semantic dot/bar tokens used by steppers and timelines. */
+  .dot-pending   { background: var(--muted-foreground); opacity: 0.55; }
+  .dot-warning   { background: var(--warning); }
+  .dot-success   { background: var(--success); }
+  .dot-danger    { background: var(--danger); }
+  .text-status   { color: var(--success); }
 
   /* Gavel strike — quick shake + tan flash */
   @keyframes gavel-shake {
