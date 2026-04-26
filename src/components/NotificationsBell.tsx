@@ -138,8 +138,9 @@ export function NotificationsBell() {
 
             <div className="max-h-[360px] overflow-y-auto">
               {visible.map((n, idx) => {
-                const Icon = n.tone === "emerald" ? CheckCircle2 : n.tone === "rose" ? XCircle : Clock4;
-                const chip = n.tone === "emerald" ? "chip-emerald" : n.tone === "rose" ? "chip-rose" : "chip-amber";
+                const semantic = toSemanticTone(n.tone);
+                const Icon = semantic === "success" ? CheckCircle2 : semantic === "danger" ? XCircle : Clock4;
+                const chip = `chip-${semantic}`;
                 const channel = classify(n);
                 return (
                   <motion.div
