@@ -11,6 +11,7 @@ import { StickyNote } from "@/components/StickyNote";
 import { InvoiceModal, type InvoiceData } from "@/components/InvoiceModal";
 import { Redacted } from "@/components/Redacted";
 import { RoleGuard } from "@/components/RoleGuard";
+import { SignaturePad } from "@/components/SignaturePad";
 
 export const Route = createFileRoute("/workspace")({
   component: WorkspacePage,
