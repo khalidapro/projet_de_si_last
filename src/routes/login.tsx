@@ -4,6 +4,7 @@ import { ShieldCheck, Mail, Lock, ArrowRight, User, KeyRound, Search, Check, Bri
 import { useState } from "react";
 import { useApp, type Role } from "@/lib/store";
 import { useAudit } from "@/lib/audit";
+import scalesImg from "@/assets/scales-of-justice.jpg";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -174,19 +175,23 @@ function LoginPage() {
         </div>
       </div>
 
-      {/* Right — visual */}
+      {/* Right — Scales of Justice visual */}
       <div className="relative hidden md:block overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-[oklch(0.78_0.13_75)]/15" />
-        <div className="absolute -top-24 -left-24 h-[500px] w-[500px] rounded-full bg-primary/25 blur-[140px]" />
-        <div className="absolute -bottom-24 -right-24 h-[480px] w-[480px] rounded-full bg-[oklch(0.78_0.13_75)]/25 blur-[140px]" />
-        <div className="absolute inset-0 bg-grid opacity-30" />
+        <img
+          src={scalesImg}
+          alt="Bronze scales of justice on a judge's desk"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-background/70 via-background/30 to-background/80" />
+        <div className="absolute -top-24 -left-24 h-[500px] w-[500px] rounded-full bg-primary/20 blur-[140px]" />
+        <div className="absolute -bottom-24 -right-24 h-[480px] w-[480px] rounded-full bg-secondary/40 blur-[140px]" />
 
         <div className="relative h-full flex flex-col items-center justify-center p-10">
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 180, damping: 20 }}
-            className="surface-lg rounded-3xl p-10 max-w-md text-center"
+            initial={{ scale: 0.85, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 160, damping: 22 }}
+            className="glass-strong rounded-3xl p-10 max-w-md text-center backdrop-blur-2xl"
           >
             <div className="relative mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-primary glow-primary">
               <ShieldCheck className="h-10 w-10 text-primary-foreground" />
