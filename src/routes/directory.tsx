@@ -108,14 +108,19 @@ function DirectoryInner() {
       {/* Grid */}
       <motion.div layout className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <AnimatePresence mode="popLayout">
-          {filtered.map((l) => (
+          {filtered.map((l, i) => (
             <motion.div
               key={l.id}
               layout
-              initial={{ opacity: 0, y: 24, scale: 0.96 }}
+              initial={{ opacity: 0, y: 40, scale: 0.94 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.94 }}
-              transition={{ type: "spring", stiffness: 220, damping: 24 }}
+              transition={{
+                type: "spring",
+                stiffness: 220,
+                damping: 24,
+                delay: Math.min(i * 0.07, 0.6),
+              }}
             >
               <LawyerCard lawyer={l} onBook={setSelected} />
             </motion.div>

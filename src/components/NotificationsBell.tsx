@@ -79,11 +79,16 @@ export function NotificationsBell() {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 320, damping: 26 }}
-            className="absolute right-0 mt-3 w-[360px] glass-strong rounded-2xl overflow-hidden z-50"
+            initial={{ opacity: 0, height: 0, y: -4 }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            exit={{ opacity: 0, height: 0, y: -4 }}
+            transition={{
+              height: { type: "spring", stiffness: 320, damping: 32 },
+              opacity: { duration: 0.18 },
+              y: { duration: 0.18 },
+            }}
+            style={{ transformOrigin: "top right" }}
+            className="absolute right-0 mt-3 w-[360px] glass-strong rounded-2xl overflow-hidden z-50 backdrop-blur-xl"
             data-testid="notif-dropdown"
           >
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
