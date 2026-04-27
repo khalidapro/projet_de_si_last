@@ -294,6 +294,12 @@ function RequestCard({ r, onAccept, onDecline, onReview, onInvoice, muted }: {
         </div>
       )}
 
+      {r.status === "accepted" && (
+        <div className="mt-3 pt-3 border-t border-border/60">
+          <SignaturePad documentName={r.documentName} />
+        </div>
+      )}
+
       <div className="mt-3 pt-3 border-t border-border/60">
         <StickyNote defaultValue={r.status === "accepted" ? "Counterparty seems open to settlement — confirm next call." : ""} />
       </div>
