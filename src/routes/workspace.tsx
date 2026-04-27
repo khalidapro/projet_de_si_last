@@ -11,7 +11,6 @@ import { StickyNote } from "@/components/StickyNote";
 import { InvoiceModal, type InvoiceData } from "@/components/InvoiceModal";
 import { Redacted } from "@/components/Redacted";
 import { RoleGuard } from "@/components/RoleGuard";
-import { SignaturePad } from "@/components/SignaturePad";
 
 export const Route = createFileRoute("/workspace")({
   component: WorkspacePage,
@@ -291,12 +290,6 @@ function RequestCard({ r, onAccept, onDecline, onReview, onInvoice, muted }: {
               <Receipt className="h-3.5 w-3.5" /> Generate Invoice
             </button>
           )}
-        </div>
-      )}
-
-      {r.status === "accepted" && (
-        <div className="mt-3 pt-3 border-t border-border/60">
-          <SignaturePad documentName={r.documentName} />
         </div>
       )}
 

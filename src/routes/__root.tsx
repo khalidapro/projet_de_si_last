@@ -1,10 +1,8 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts, useLocation } from "@tanstack/react-router";
-import { AnimatePresence } from "framer-motion";
 import { MagneticCursor } from "@/components/MagneticCursor";
 import { ScrollGlow } from "@/components/ScrollGlow";
 import { AppShell } from "@/components/AppShell";
 import { CourtroomBg } from "@/components/CourtroomBg";
-import { PageTransition } from "@/components/PageTransition";
 import { ThemeProvider } from "@/lib/theme";
 
 import appCss from "../styles.css?url";
@@ -70,21 +68,18 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const loc = useLocation();
+  // Login & landing have their own layouts (no chrome)
   const bare = loc.pathname === "/login" || loc.pathname === "/" || loc.pathname === "/terms" || loc.pathname === "/privacy";
   return (
     <ThemeProvider>
       <CourtroomBg />
       <ScrollGlow />
       <MagneticCursor />
-      <AnimatePresence mode="wait">
-        <PageTransition key={loc.pathname}>
-          {bare ? (
-            <div className="min-h-screen bg-app"><Outlet /></div>
-          ) : (
-            <AppShell><Outlet /></AppShell>
-          )}
-        </PageTransition>
-      </AnimatePresence>
+      {bare ? (
+        <div className="min-h-screen bg-app"><Outlet /></div>
+      ) : (
+        <AppShell><Outlet /></AppShell>
+      )}
     </ThemeProvider>
   );
 }
