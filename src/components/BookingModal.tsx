@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { X, ShieldCheck, Upload, FileCheck2, User, Fingerprint } from "lucide-react";
+import { X, ShieldCheck, Upload, FileCheck2, User, Fingerprint, CalendarPlus, Loader2, Check } from "lucide-react";
 import { useState, useRef } from "react";
 import type { Lawyer, Consultation } from "@/lib/mock-data";
 
@@ -17,9 +17,16 @@ export function BookingModal({
   const [uploaded, setUploaded] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [phase, setPhase] = useState<Phase>("idle");
+  const [gcalState, setGcalState] = useState<"idle" | "syncing" | "done">("idle");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const reset = () => { setUploaded(null); setDragOver(false); setPhase("idle"); };
+  const reset = () => { setUploaded(null); setDragOver(false); setPhase("idle"); setGcalState("idle"); };
+
+  const syncGoogle = () => {
+    if (gcalState !== "idle") return;
+    setGcalState("syncing");
+    setTimeout(() => setGcalState("done"), 1600);
+  };
 
   const handleFile = (f: File | undefined) => {
     if (!f) return;
