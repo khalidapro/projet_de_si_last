@@ -41,7 +41,18 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen grid md:grid-cols-2">
+    <div className="relative min-h-screen grid md:grid-cols-2 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <img
+          src="https://images.unsplash.com/photo-1621538600868-4663e0018861?w=1600"
+          alt=""
+          aria-hidden="true"
+          className="h-full w-full object-cover blur-[6px] scale-105 opacity-50"
+          loading="eager"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-background/85 via-background/70 to-background/90" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(166,123,91,0.18),transparent_55%)]" />
+      </div>
       {/* Left — form */}
       <div className="relative flex items-center justify-center p-8">
         <div className="w-full max-w-sm">
