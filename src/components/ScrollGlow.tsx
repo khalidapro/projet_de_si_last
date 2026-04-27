@@ -12,7 +12,7 @@ export function ScrollGlow() {
         style={{ top: y, left: x }}
         className="absolute h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[160px]"
       >
-        <div className="h-full w-full rounded-full bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.18),transparent_60%)]" />
+        <div className="h-full w-full rounded-full bg-[radial-gradient(circle_at_center,rgba(166,123,91,0.22),transparent_60%)]" />
       </motion.div>
       <motion.div
         style={{ top: y2 }}
