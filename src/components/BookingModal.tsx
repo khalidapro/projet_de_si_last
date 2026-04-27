@@ -82,7 +82,7 @@ export function BookingModal({
                   animate={{ scale: [0, 1.4, 1], opacity: [0, 1, 0.95] }}
                   transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
                   className="h-3 w-3 rounded-full bg-primary"
-                  style={{ boxShadow: "0 0 30px 10px rgba(16,185,129,0.55)" }}
+                  style={{ boxShadow: "0 0 30px 10px rgba(166,123,91,0.55)" }}
                 />
                 <span className="absolute inset-0 grid place-items-center">
                   <span className="absolute h-3 w-3 rounded-full pulse-ring" />
