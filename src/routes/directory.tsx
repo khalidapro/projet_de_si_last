@@ -105,17 +105,30 @@ function DirectoryInner() {
         </div>
       </div>
 
-      {/* Grid */}
-      <motion.div layout className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Grid — staggered cascade entrance */}
+      <motion.div
+        layout
+        initial="hidden"
+        animate="show"
+        variants={{
+          hidden: {},
+          show: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } },
+        }}
+        className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+      >
         <AnimatePresence mode="popLayout">
           {filtered.map((l) => (
             <motion.div
               key={l.id}
               layout
-              initial={{ opacity: 0, y: 24, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
+              variants={{
+                hidden: { opacity: 0, y: 32, scale: 0.94 },
+                show: { opacity: 1, y: 0, scale: 1 },
+              }}
+              initial="hidden"
+              animate="show"
               exit={{ opacity: 0, scale: 0.94 }}
-              transition={{ type: "spring", stiffness: 220, damping: 24 }}
+              transition={{ type: "spring", stiffness: 180, damping: 22, mass: 0.9 }}
             >
               <LawyerCard lawyer={l} onBook={setSelected} />
             </motion.div>

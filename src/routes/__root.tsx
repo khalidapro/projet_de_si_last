@@ -3,6 +3,7 @@ import { MagneticCursor } from "@/components/MagneticCursor";
 import { ScrollGlow } from "@/components/ScrollGlow";
 import { AppShell } from "@/components/AppShell";
 import { CourtroomBg } from "@/components/CourtroomBg";
+import { PageTransition } from "@/components/PageTransition";
 import { ThemeProvider } from "@/lib/theme";
 
 import appCss from "../styles.css?url";
@@ -76,9 +77,13 @@ function RootComponent() {
       <ScrollGlow />
       <MagneticCursor />
       {bare ? (
-        <div className="min-h-screen bg-app"><Outlet /></div>
+        <div className="min-h-screen bg-app">
+          <PageTransition><Outlet /></PageTransition>
+        </div>
       ) : (
-        <AppShell><Outlet /></AppShell>
+        <AppShell>
+          <PageTransition><Outlet /></PageTransition>
+        </AppShell>
       )}
     </ThemeProvider>
   );
