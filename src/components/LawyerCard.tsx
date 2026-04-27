@@ -1,6 +1,7 @@
-import { Star, Briefcase, MapPin } from "lucide-react";
+import { Briefcase, MapPin } from "lucide-react";
 import type { Lawyer } from "@/lib/mock-data";
 import { Tilt3D, TiltLayer } from "@/components/Tilt3D";
+import { Stars } from "@/components/Stars";
 
 export function LawyerCard({ lawyer, onBook }: { lawyer: Lawyer; onBook: (l: Lawyer) => void }) {
   const specialtyClass = {
@@ -12,7 +13,6 @@ export function LawyerCard({ lawyer, onBook }: { lawyer: Lawyer; onBook: (l: Law
   return (
     <Tilt3D className="group relative">
       <div className="relative surface rounded-2xl p-6 overflow-hidden" style={{ transformStyle: "preserve-3d" }}>
-        {/* Background layer (z=0) — stays flat */}
         <TiltLayer z={0}>
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
@@ -32,18 +32,18 @@ export function LawyerCard({ lawyer, onBook }: { lawyer: Lawyer; onBook: (l: Law
           </div>
         </TiltLayer>
 
-        {/* Text content (z=30) — floats above background */}
         <TiltLayer z={30}>
           <p className="mt-4 text-sm text-muted-foreground line-clamp-2">{lawyer.bio}</p>
 
-          <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
-            <span className="inline-flex items-center gap-1">
-              <Star className="h-3.5 w-3.5 fill-[oklch(0.58_0.07_55)] text-[oklch(0.58_0.07_55)]" />
-              {lawyer.rating}
-            </span>
+          <div className="mt-4 flex items-center justify-between gap-3 text-xs text-muted-foreground">
+            <div className="inline-flex items-center gap-2">
+              <Stars rating={lawyer.rating} size={13} />
+              <span className="font-semibold text-foreground">{lawyer.rating}</span>
+              <span className="text-muted-foreground">· {lawyer.reviews.length} reviews</span>
+            </div>
             <span className="inline-flex items-center gap-1">
               <Briefcase className="h-3.5 w-3.5" />
-              {lawyer.cases} cases
+              {lawyer.cases}
             </span>
           </div>
         </TiltLayer>
@@ -56,7 +56,6 @@ export function LawyerCard({ lawyer, onBook }: { lawyer: Lawyer; onBook: (l: Law
             </div>
           </TiltLayer>
 
-          {/* CTA button (z=60) — highest float */}
           <TiltLayer z={60}>
             <button
               onClick={() => onBook(lawyer)}
