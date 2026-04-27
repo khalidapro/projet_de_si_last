@@ -177,17 +177,64 @@ export function BookingModal({
               </AnimatePresence>
             </div>
 
-            <div className="mt-7 flex items-center justify-between gap-4">
+            <div className="mt-7 flex flex-wrap items-center justify-between gap-4">
               <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
                 <ShieldCheck className="h-3.5 w-3.5 text-primary" /> AES-256 · Zero-knowledge storage
               </div>
-              <button
-                onClick={confirm}
-                data-magnetic
-                className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground glow-primary"
-              >
-                Confirm booking
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={syncGoogle}
+                  aria-label="Synchroniser avec Google Agenda"
+                  title="Synchroniser avec Google Agenda"
+                  className={`group inline-flex items-center gap-2 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition ${
+                    gcalState === "done"
+                      ? "chip-emerald"
+                      : "surface text-foreground hover:bg-secondary/60"
+                  }`}
+                  disabled={gcalState !== "idle"}
+                >
+                  <span className="relative inline-grid h-4 w-4 place-items-center">
+                    <AnimatePresence mode="wait" initial={false}>
+                      {gcalState === "idle" && (
+                        <motion.span key="i" initial={{ opacity: 0, scale: 0.6 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.6 }}>
+                          <CalendarPlus className="h-4 w-4" />
+                        </motion.span>
+                      )}
+                      {gcalState === "syncing" && (
+                        <motion.span
+                          key="s"
+                          initial={{ opacity: 0, rotate: 0 }}
+                          animate={{ opacity: 1, rotate: 360 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ rotate: { repeat: Infinity, duration: 0.9, ease: "linear" }, opacity: { duration: 0.2 } }}
+                        >
+                          <Loader2 className="h-4 w-4" />
+                        </motion.span>
+                      )}
+                      {gcalState === "done" && (
+                        <motion.span
+                          key="d"
+                          initial={{ opacity: 0, scale: 0.4, rotate: -45 }}
+                          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ type: "spring", stiffness: 320, damping: 18 }}
+                        >
+                          <Check className="h-4 w-4" />
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </span>
+                  {gcalState === "done" ? "Synchronisé" : gcalState === "syncing" ? "Synchronisation…" : "Google Agenda"}
+                </button>
+                <button
+                  onClick={confirm}
+                  data-magnetic
+                  className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground glow-primary"
+                >
+                  Confirm booking
+                </button>
+              </div>
             </div>
           </motion.div>
         </motion.div>
