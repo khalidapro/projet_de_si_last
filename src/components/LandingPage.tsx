@@ -59,7 +59,7 @@ export function LandingPage() {
                 End-to-End Encrypted · Bar-vetted lawyers
               </div>
 
-              <h1 className="mt-6 font-display text-5xl md:text-7xl leading-[1.02] text-foreground">
+              <h1 className="mt-6 font-display text-5xl md:text-7xl leading-[1.02] text-foreground text-legible">
                 The lawyers' network <br />
                 <span className="text-gradient">
                   <Decrypt text="reimagined for trust." duration={1400} />
