@@ -180,25 +180,64 @@
     border: 1px solid var(--border);
     box-shadow: var(--shadow-soft-lg);
   }
+  /* Per-section glass: hero uses strong blur, lower sections lighter for balance. */
   .glass {
     background: var(--glass);
-    backdrop-filter: blur(32px) saturate(170%);
-    -webkit-backdrop-filter: blur(32px) saturate(170%);
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
     border: 1px solid var(--border);
   }
   .glass-strong {
     background: var(--glass);
-    backdrop-filter: blur(40px) saturate(185%);
-    -webkit-backdrop-filter: blur(40px) saturate(185%);
+    backdrop-filter: blur(44px) saturate(190%);
+    -webkit-backdrop-filter: blur(44px) saturate(190%);
     border: 1px solid var(--border);
     box-shadow: var(--shadow-soft-lg);
   }
-  /* Subtle text-shadow to keep Dark Brown headings crisp over the now-visible courtroom artwork. */
+  .glass-soft {
+    background: var(--glass);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid var(--border);
+  }
+
+  /*
+   * Responsive text-shadow: stronger halo on small viewports where the hero
+   * text overlaps more of the high-frequency courtroom backdrop.
+   * Default (desktop): subtle. ≤768px: bumped halo + double layer.
+   * ≤480px: maximum legibility halo.
+   */
   .text-legible {
-    text-shadow: 0 1px 2px oklch(0.98 0.015 80 / 0.55), 0 0 14px oklch(0.98 0.015 80 / 0.35);
+    text-shadow:
+      0 1px 2px oklch(0.98 0.015 80 / 0.55),
+      0 0 14px oklch(0.98 0.015 80 / 0.35);
+  }
+  @media (max-width: 768px) {
+    .text-legible {
+      text-shadow:
+        0 1px 2px oklch(0.98 0.015 80 / 0.78),
+        0 0 18px oklch(0.98 0.015 80 / 0.55),
+        0 0 32px oklch(0.98 0.015 80 / 0.35);
+    }
+  }
+  @media (max-width: 480px) {
+    .text-legible {
+      text-shadow:
+        0 1px 2px oklch(0.98 0.015 80 / 0.9),
+        0 0 22px oklch(0.98 0.015 80 / 0.7),
+        0 0 40px oklch(0.98 0.015 80 / 0.45);
+    }
   }
   .dark .text-legible {
     text-shadow: 0 1px 2px oklch(0 0 0 / 0.55), 0 0 14px oklch(0 0 0 / 0.4);
+  }
+  @media (max-width: 768px) {
+    .dark .text-legible {
+      text-shadow:
+        0 1px 2px oklch(0 0 0 / 0.78),
+        0 0 18px oklch(0 0 0 / 0.6),
+        0 0 32px oklch(0 0 0 / 0.45);
+    }
   }
   .neumorph {
     background: var(--card);
