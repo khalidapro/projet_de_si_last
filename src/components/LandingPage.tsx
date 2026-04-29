@@ -142,7 +142,7 @@ export function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, ...SPRING }}
-              className="glass rounded-2xl p-6 backdrop-blur-xl"
+              className="glass-soft rounded-2xl p-6"
             >
               <div className="grid h-10 w-10 place-items-center rounded-xl chip-emerald">
                 <f.icon className="h-5 w-5" />
