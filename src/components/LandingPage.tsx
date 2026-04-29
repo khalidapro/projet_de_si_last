@@ -72,14 +72,18 @@ export function LandingPage() {
               </p>
 
               <div className="mt-10 flex flex-wrap items-center gap-3">
-                <Link
-                  to="/login"
-                  data-magnetic
-                  className="group inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground glow-primary transition-colors duration-300 hover:bg-[oklch(0.52_0.06_55)]"
-                >
-                  Commencer
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </Link>
+                <motion.div whileHover={{ scale: 1.04, y: -1 }} whileTap={{ scale: 0.97 }} transition={SPRING}>
+                  <Link
+                    to="/login"
+                    data-magnetic
+                    className="shimmer-cognac ripple-cognac group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground glow-primary transition-colors duration-300 hover:bg-[oklch(0.50_0.062_55)]"
+                  >
+                    <span className="relative z-10 inline-flex items-center gap-2">
+                      Commencer
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                    </span>
+                  </Link>
+                </motion.div>
                 <Link
                   to="/login"
                   className="inline-flex items-center gap-2 rounded-xl glass px-6 py-3.5 text-sm font-semibold text-foreground backdrop-blur-md transition-colors hover:text-[oklch(0.52_0.06_55)]"
@@ -161,13 +165,17 @@ export function LandingPage() {
         >
           <Sparkles className="mx-auto h-6 w-6 text-accent" />
           <h2 className="mt-3 font-display text-3xl tracking-[-0.015em]">Ready to find your counsel?</h2>
-          <Link
-            to="/login"
-            data-magnetic
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground glow-primary transition-colors duration-300 hover:bg-[oklch(0.52_0.06_55)]"
-          >
-            Commencer <ArrowRight className="h-4 w-4" />
-          </Link>
+          <motion.div whileHover={{ scale: 1.04, y: -1 }} whileTap={{ scale: 0.97 }} transition={SPRING} className="mt-6 inline-block">
+            <Link
+              to="/login"
+              data-magnetic
+              className="shimmer-cognac ripple-cognac group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground glow-primary transition-colors duration-300 hover:bg-[oklch(0.50_0.062_55)]"
+            >
+              <span className="relative z-10 inline-flex items-center gap-2">
+                Commencer <ArrowRight className="h-4 w-4" />
+              </span>
+            </Link>
+          </motion.div>
         </motion.div>
 
         <footer className="mt-20 flex flex-wrap items-center justify-between gap-4 text-xs text-muted-foreground border-t border-border pt-6">
