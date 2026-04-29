@@ -160,13 +160,13 @@ export function LandingPage() {
           className="mt-20 surface-lg rounded-3xl p-10 text-center backdrop-blur-2xl"
         >
           <Sparkles className="mx-auto h-6 w-6 text-accent" />
-          <h2 className="mt-3 font-display text-3xl">Ready to find your counsel?</h2>
+          <h2 className="mt-3 font-display text-3xl tracking-[-0.015em]">Ready to find your counsel?</h2>
           <Link
             to="/login"
             data-magnetic
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground glow-primary"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground glow-primary transition-colors duration-300 hover:bg-[oklch(0.52_0.06_55)]"
           >
-            Get started <ArrowRight className="h-4 w-4" />
+            Commencer <ArrowRight className="h-4 w-4" />
           </Link>
         </motion.div>
 
