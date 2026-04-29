@@ -59,14 +59,14 @@ export function LandingPage() {
                 End-to-End Encrypted · Bar-vetted lawyers
               </div>
 
-              <h1 className="mt-6 font-display text-5xl md:text-7xl leading-[1.02] text-foreground text-legible">
+              <h1 className="mt-6 font-display text-5xl md:text-7xl leading-[1.02] tracking-[-0.015em] md:tracking-[-0.02em] text-foreground text-legible">
                 The lawyers' network <br />
                 <span className="text-gradient">
                   <Decrypt text="reimagined for trust." duration={1400} />
                 </span>
               </h1>
 
-              <p className="mt-6 max-w-xl text-base text-muted-foreground">
+              <p className="mt-6 max-w-xl text-base text-muted-foreground tracking-[0.005em]">
                 Avocat-Link pairs you with vetted attorneys in seconds. Encrypted documents,
                 confidential consultations, zero friction.
               </p>
@@ -75,14 +75,14 @@ export function LandingPage() {
                 <Link
                   to="/login"
                   data-magnetic
-                  className="group inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground glow-primary"
+                  className="group inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground glow-primary transition-colors duration-300 hover:bg-[oklch(0.52_0.06_55)]"
                 >
-                  Get started
+                  Commencer
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </Link>
                 <Link
                   to="/login"
-                  className="inline-flex items-center gap-2 rounded-xl glass px-6 py-3.5 text-sm font-semibold text-foreground backdrop-blur-md"
+                  className="inline-flex items-center gap-2 rounded-xl glass px-6 py-3.5 text-sm font-semibold text-foreground backdrop-blur-md transition-colors hover:text-[oklch(0.52_0.06_55)]"
                 >
                   Sign in
                 </Link>
@@ -160,13 +160,13 @@ export function LandingPage() {
           className="mt-20 surface-lg rounded-3xl p-10 text-center backdrop-blur-2xl"
         >
           <Sparkles className="mx-auto h-6 w-6 text-accent" />
-          <h2 className="mt-3 font-display text-3xl">Ready to find your counsel?</h2>
+          <h2 className="mt-3 font-display text-3xl tracking-[-0.015em]">Ready to find your counsel?</h2>
           <Link
             to="/login"
             data-magnetic
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground glow-primary"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground glow-primary transition-colors duration-300 hover:bg-[oklch(0.52_0.06_55)]"
           >
-            Get started <ArrowRight className="h-4 w-4" />
+            Commencer <ArrowRight className="h-4 w-4" />
           </Link>
         </motion.div>
 

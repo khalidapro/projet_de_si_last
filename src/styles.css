@@ -46,26 +46,26 @@
   --radius: 0.875rem;
   /* Light mode — Monochromatic Legal (cream parchment + dark brown + tan) */
   --background: oklch(0.93 0.025 75);               /* Warm parchment */
-  --foreground: oklch(0.32 0.045 50);               /* Dark Brown #6F4E37 */
+  --foreground: oklch(0.52 0.06 55);               /* Cognac Brown #96694C */
   --card: oklch(0.98 0.015 80);                     /* Cream/Ivory */
-  --card-foreground: oklch(0.32 0.045 50);
+  --card-foreground: oklch(0.52 0.06 55);
   --popover: oklch(0.98 0.015 80);
-  --popover-foreground: oklch(0.32 0.045 50);
+  --popover-foreground: oklch(0.52 0.06 55);
 
   --primary: oklch(0.58 0.07 55);                   /* Medium Tan #A67B5B */
   --primary-foreground: oklch(0.98 0.015 80);
   --secondary: oklch(0.91 0.04 75);                 /* Cream/Beige #F5E0C8 */
-  --secondary-foreground: oklch(0.32 0.045 50);
+  --secondary-foreground: oklch(0.52 0.06 55);
   --muted: oklch(0.88 0.02 70);
   --muted-foreground: oklch(0.55 0.015 60);         /* Medium Gray-ish */
 
   --accent: oklch(0.72 0.005 60);                   /* Medium Gray #AFAFAF */
-  --accent-foreground: oklch(0.32 0.045 50);
+  --accent-foreground: oklch(0.52 0.06 55);
   --destructive: oklch(0.45 0.10 35);               /* Dark Rust */
   --destructive-foreground: oklch(0.98 0.015 80);
 
   --border: oklch(0.72 0.005 60 / 45%);             /* Gray 45% */
-  --input: oklch(0.32 0.045 50 / 12%);
+  --input: oklch(0.52 0.06 55 / 12%);
   --ring: oklch(0.58 0.07 55);
 
   /* Status tokens — strictly monochromatic, NO green/yellow/bright red */
@@ -86,11 +86,11 @@
   --gradient-primary: linear-gradient(135deg, oklch(0.62 0.07 55), oklch(0.42 0.06 48));
   --gradient-amber:   linear-gradient(135deg, oklch(0.70 0.045 70), oklch(0.55 0.05 60));
 
-  --shadow-soft: 0 1px 2px oklch(0.32 0.045 50 / 0.06),
-                 0 8px 24px -12px oklch(0.32 0.045 50 / 0.14);
-  --shadow-soft-lg: 0 2px 4px oklch(0.32 0.045 50 / 0.06),
-                    0 24px 48px -16px oklch(0.32 0.045 50 / 0.20);
-  --shadow-neumorph: 8px 8px 24px oklch(0.32 0.045 50 / 0.14),
+  --shadow-soft: 0 1px 2px oklch(0.52 0.06 55 / 0.06),
+                 0 8px 24px -12px oklch(0.52 0.06 55 / 0.14);
+  --shadow-soft-lg: 0 2px 4px oklch(0.52 0.06 55 / 0.06),
+                    0 24px 48px -16px oklch(0.52 0.06 55 / 0.20);
+  --shadow-neumorph: 8px 8px 24px oklch(0.52 0.06 55 / 0.14),
                      -6px -6px 18px oklch(0.99 0.003 80 / 0.95);
 
   --shadow-glow:         0 0 0 4px oklch(0.58 0.07 55 / 0.18), 0 12px 32px -8px oklch(0.58 0.07 55 / 0.45);
