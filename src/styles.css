@@ -130,7 +130,7 @@
   --amber:   var(--warning);
   --rose:    var(--danger);
 
-  --glass: oklch(0.32 0.018 55 / 0.45);             /* Cards subtly transparent over courtroom */
+  --glass: oklch(0.32 0.018 55 / 0.36);             /* Cards subtly transparent over courtroom */
 
   --gradient-radial:
     radial-gradient(ellipse at center, oklch(0.26 0.025 50) 0%, oklch(0.18 0.025 50) 55%, oklch(0.1 0.02 50) 100%);
