@@ -78,7 +78,7 @@
   --amber:   var(--warning);
   --rose:    var(--danger);
 
-  --glass: oklch(0.98 0.015 80 / 0.62);
+  --glass: oklch(0.98 0.015 80 / 0.68);            /* +6% opacity → guarantees AA for cognac body text */
 
   --gradient-radial:
     radial-gradient(ellipse at center, oklch(0.97 0.015 75) 0%, oklch(0.92 0.022 70) 55%, oklch(0.82 0.025 65) 100%);
