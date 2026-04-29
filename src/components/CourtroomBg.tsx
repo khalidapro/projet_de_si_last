@@ -28,11 +28,11 @@ export function CourtroomBg() {
       />
 
       {/*
-        Light theme: a very thin Cream/Beige (#F5E0C8 ≈ oklch(0.91 0.04 75)) wash at ~22%
-        — lets the courtroom artwork breathe through while keeping warmth.
-        Dark theme: keeps a stronger sepia veil so dark-mode text stays readable.
+        Light theme: Cream/Beige (#F5E0C8) wash at ~32% — bumped from 22% to
+        meet WCAG AA-large for Dark Brown headings while still letting the
+        artwork breathe. Dark theme keeps its sepia veil.
       */}
-      <div className="absolute inset-0 bg-[oklch(0.91_0.04_75)]/22 dark:bg-[oklch(0.12_0.02_45)]/55" />
+      <div className="absolute inset-0 bg-[oklch(0.91_0.04_75)]/32 dark:bg-[oklch(0.12_0.02_45)]/55" />
 
       {/*
         Radial vignette — bright spot tracks the hero region (upper third on
