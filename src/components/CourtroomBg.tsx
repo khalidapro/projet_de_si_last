@@ -35,20 +35,20 @@ export function CourtroomBg() {
       <div className="absolute inset-0 bg-[oklch(0.91_0.04_75)]/20 dark:bg-[oklch(0.12_0.02_45)]/55" />
 
       {/*
-        Radial vignette — bright spot tracks the hero region (upper third on
-        desktop, upper quarter on mobile where the hero sits higher).
-        Edges fade to a gentle Dark Brown to frame the UI.
+        Radial vignette — strong focus pull. Center stays fully clear (~50%
+        radius), then ramps darker toward the edges to frame the UI and
+        guide the eye. Overlay above remains ~20% so artwork stays visible.
       */}
       <div
         className="absolute inset-0
-          [background:radial-gradient(ellipse_60%_55%_at_50%_32%,transparent_0%,transparent_42%,oklch(0.32_0.045_50/0.18)_72%,oklch(0.32_0.045_50/0.45)_100%)]
-          md:[background:radial-gradient(ellipse_55%_60%_at_42%_38%,transparent_0%,transparent_42%,oklch(0.32_0.045_50/0.18)_72%,oklch(0.32_0.045_50/0.42)_100%)]
-          dark:[background:radial-gradient(ellipse_60%_55%_at_50%_32%,transparent_0%,transparent_38%,oklch(0_0_0/0.45)_75%,oklch(0_0_0/0.78)_100%)]
-          dark:md:[background:radial-gradient(ellipse_55%_60%_at_42%_38%,transparent_0%,transparent_38%,oklch(0_0_0/0.45)_75%,oklch(0_0_0/0.75)_100%)]"
+          [background:radial-gradient(ellipse_65%_60%_at_50%_34%,transparent_0%,transparent_50%,oklch(0.32_0.045_50/0.28)_78%,oklch(0.22_0.04_45/0.62)_100%)]
+          md:[background:radial-gradient(ellipse_58%_62%_at_44%_40%,transparent_0%,transparent_50%,oklch(0.32_0.045_50/0.28)_78%,oklch(0.22_0.04_45/0.6)_100%)]
+          dark:[background:radial-gradient(ellipse_65%_60%_at_50%_34%,transparent_0%,transparent_46%,oklch(0_0_0/0.58)_80%,oklch(0_0_0/0.88)_100%)]
+          dark:md:[background:radial-gradient(ellipse_58%_62%_at_44%_40%,transparent_0%,transparent_46%,oklch(0_0_0/0.55)_80%,oklch(0_0_0/0.85)_100%)]"
       />
 
       {/* Warm halo positioned over hero (upper-left third on desktop) */}
-      <div className="absolute left-1/2 top-[32%] md:left-[42%] md:top-[38%] h-[55vmax] w-[55vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[oklch(0.85_0.09_60)]/12 blur-3xl dark:bg-[oklch(0.7_0.13_55)]/12" />
+      <div className="absolute left-1/2 top-[32%] md:left-[42%] md:top-[38%] h-[55vmax] w-[55vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[oklch(0.85_0.09_60)]/14 blur-3xl dark:bg-[oklch(0.7_0.13_55)]/14" />
     </div>
   );
 }
