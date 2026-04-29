@@ -46,7 +46,7 @@
   --radius: 0.875rem;
   /* Light mode — Monochromatic Legal (cream parchment + dark brown + tan) */
   --background: oklch(0.93 0.025 75);               /* Warm parchment */
-  --foreground: oklch(0.52 0.06 55);               /* Cognac Brown #96694C */
+  --foreground: oklch(0.50 0.062 55);              /* Cognac Brown ~#8E6244 — slightly deeper for WCAG AA on cream/glass */
   --card: oklch(0.98 0.015 80);                     /* Cream/Ivory */
   --card-foreground: oklch(0.52 0.06 55);
   --popover: oklch(0.98 0.015 80);
