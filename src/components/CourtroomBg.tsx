@@ -2,15 +2,14 @@ import { motion } from "framer-motion";
 import courtroom from "@/assets/courtroom-cinematic.jpg";
 
 /**
- * Cinematic courtroom backdrop with Ken Burns effect.
- * - Slow infinite scale (1 → 1.05) + subtle drift so the room feels alive
- * - Heavy theme-aware overlay for high text contrast
- * - Warm vignette to focus the eye on center content
+ * Cinematic courtroom backdrop. Cool slate-blue tone (no sepia).
+ *  - Slow Ken Burns motion
+ *  - ~25% pearl wash for legibility
+ *  - Subtle slate vignette to focus on the UI
  */
 export function CourtroomBg() {
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 -z-20 overflow-hidden">
-      {/* Ken Burns image layer */}
       <motion.img
         src={courtroom}
         alt=""
@@ -27,28 +26,19 @@ export function CourtroomBg() {
         transition={{ duration: 40, ease: "easeInOut", repeat: Infinity }}
       />
 
-      {/*
-        Light theme: Cream/Beige (#F5E0C8) wash at ~20% so the courtroom
-        artwork stays clearly visible. The cognac foreground (#96694C) keeps
-        sufficient contrast against this softer veil.
-      */}
-      <div className="absolute inset-0 bg-[oklch(0.91_0.04_75)]/20 dark:bg-[oklch(0.12_0.02_45)]/55" />
+      {/* Pearl wash — keeps text legible without obscuring the artwork */}
+      <div className="absolute inset-0 bg-[oklch(0.985_0.004_250)]/25 dark:bg-[oklch(0.10_0.03_260)]/55" />
 
-      {/*
-        Radial vignette — strong focus pull. Center stays fully clear (~50%
-        radius), then ramps darker toward the edges to frame the UI and
-        guide the eye. Overlay above remains ~20% so artwork stays visible.
-      */}
+      {/* Slate vignette — clear center, deeper edges */}
       <div
         className="absolute inset-0
-          [background:radial-gradient(ellipse_65%_60%_at_50%_34%,transparent_0%,transparent_50%,oklch(0.32_0.045_50/0.28)_78%,oklch(0.22_0.04_45/0.62)_100%)]
-          md:[background:radial-gradient(ellipse_58%_62%_at_44%_40%,transparent_0%,transparent_50%,oklch(0.32_0.045_50/0.28)_78%,oklch(0.22_0.04_45/0.6)_100%)]
-          dark:[background:radial-gradient(ellipse_65%_60%_at_50%_34%,transparent_0%,transparent_46%,oklch(0_0_0/0.58)_80%,oklch(0_0_0/0.88)_100%)]
-          dark:md:[background:radial-gradient(ellipse_58%_62%_at_44%_40%,transparent_0%,transparent_46%,oklch(0_0_0/0.55)_80%,oklch(0_0_0/0.85)_100%)]"
+          [background:radial-gradient(ellipse_65%_60%_at_50%_38%,transparent_0%,transparent_50%,oklch(0.40_0.04_258/0.20)_78%,oklch(0.20_0.05_260/0.45)_100%)]
+          md:[background:radial-gradient(ellipse_58%_62%_at_46%_42%,transparent_0%,transparent_50%,oklch(0.40_0.04_258/0.20)_78%,oklch(0.20_0.05_260/0.45)_100%)]
+          dark:[background:radial-gradient(ellipse_65%_60%_at_50%_34%,transparent_0%,transparent_46%,oklch(0_0_0/0.55)_80%,oklch(0_0_0/0.85)_100%)]"
       />
 
-      {/* Warm halo positioned over hero (upper-left third on desktop) */}
-      <div className="absolute left-1/2 top-[32%] md:left-[42%] md:top-[38%] h-[55vmax] w-[55vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[oklch(0.85_0.09_60)]/14 blur-3xl dark:bg-[oklch(0.7_0.13_55)]/14" />
+      {/* Cool blue halo over hero region */}
+      <div className="absolute left-1/2 top-[32%] md:left-[44%] md:top-[40%] h-[55vmax] w-[55vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[oklch(0.65_0.08_258)]/12 blur-3xl dark:bg-[oklch(0.50_0.12_258)]/16" />
     </div>
   );
 }
