@@ -47,8 +47,8 @@ function LoginPage() {
       <div className="relative flex items-center justify-center p-8">
         <div className="w-full max-w-sm">
           <Link to="/" className="inline-flex items-center gap-2">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[oklch(0.58_0.07_55)] to-[oklch(0.50_0.07_50)]">
-              <Scale className="h-4 w-4 text-white" strokeWidth={2.4} />
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-primary">
+              <Scale className="h-4 w-4 text-primary-foreground" strokeWidth={2.4} />
             </div>
             <span className="font-display text-xl font-semibold">Avocat<span className="text-gradient">·</span>Link</span>
           </Link>
@@ -89,7 +89,7 @@ function LoginPage() {
                       }`}
                     >
                       {r === "client" ? <User className="h-4 w-4" /> : <Scale className="h-4 w-4" />}
-                      {r === "client" ? "Je suis un Client" : "Je suis un Avocat"}
+                      {r === "client" ? "I am a Client" : "I am a Lawyer"}
                     </button>
                   ))}
                 </div>
@@ -120,7 +120,7 @@ function LoginPage() {
                     >
                       <div className="grid grid-cols-2 gap-3 mt-4">
                         <div>
-                          <label className="block text-xs uppercase tracking-wider text-muted-foreground">Spécialité</label>
+                          <label className="block text-xs uppercase tracking-wider text-muted-foreground">Specialty</label>
                           <select
                             value={specialty}
                             onChange={(e) => setSpecialty(e.target.value as typeof specialty)}
@@ -130,7 +130,7 @@ function LoginPage() {
                           </select>
                         </div>
                         <div>
-                          <label className="block text-xs uppercase tracking-wider text-muted-foreground">Barreau</label>
+                          <label className="block text-xs uppercase tracking-wider text-muted-foreground">Bar Association</label>
                           <input
                             value={barreau}
                             onChange={(e) => setBarreau(e.target.value)}
