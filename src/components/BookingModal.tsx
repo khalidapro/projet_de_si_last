@@ -89,7 +89,7 @@ export function BookingModal({
                   animate={{ scale: [0, 1.4, 1], opacity: [0, 1, 0.95] }}
                   transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
                   className="h-3 w-3 rounded-full bg-primary"
-                  style={{ boxShadow: "0 0 30px 10px rgba(166,123,91,0.55)" }}
+                  style={{ boxShadow: "0 0 30px 10px rgba(11, 27, 58, 0.55)" }}
                 />
                 <span className="absolute inset-0 grid place-items-center">
                   <span className="absolute h-3 w-3 rounded-full pulse-ring" />
@@ -185,8 +185,8 @@ export function BookingModal({
                 <button
                   type="button"
                   onClick={syncGoogle}
-                  aria-label="Synchroniser avec Google Agenda"
-                  title="Synchroniser avec Google Agenda"
+                  aria-label="Sync with Google Calendar"
+                  title="Sync with Google Calendar"
                   className={`group inline-flex items-center gap-2 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition ${
                     gcalState === "done"
                       ? "chip-emerald"
@@ -225,7 +225,7 @@ export function BookingModal({
                       )}
                     </AnimatePresence>
                   </span>
-                  {gcalState === "done" ? "Synchronisé" : gcalState === "syncing" ? "Synchronisation…" : "Google Agenda"}
+                  {gcalState === "done" ? "Synced" : gcalState === "syncing" ? "Syncing…" : "Google Calendar"}
                 </button>
                 <button
                   onClick={confirm}
