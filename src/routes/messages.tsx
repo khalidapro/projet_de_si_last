@@ -94,7 +94,7 @@ function MessagesPage() {
                     <div className="flex items-center justify-between gap-2">
                       <div className="text-xs text-muted-foreground truncate">{t.lastMessage}</div>
                       {t.unread > 0 && (
-                        <span className="grid h-5 min-w-5 place-items-center rounded-full bg-[oklch(0.58_0.07_55)] px-1 text-[10px] font-bold text-white">
+                        <span className="grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
                           {t.unread}
                         </span>
                       )}
@@ -145,11 +145,11 @@ function MessagesPage() {
                 >
                   <div className={`max-w-[78%] rounded-2xl px-4 py-2.5 text-sm ${
                     m.from === "me"
-                      ? "bg-primary/15 text-foreground ring-1 ring-primary/25"
-                      : "bg-card ring-1 ring-border text-foreground"
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "bg-card ring-1 ring-border text-foreground shadow-sm"
                   }`}>
                     <div className="leading-relaxed">{m.text}</div>
-                    <div className="mt-1 text-[10px] text-muted-foreground text-right">{m.time}</div>
+                    <div className={`mt-1 text-[10px] text-right ${m.from === "me" ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{m.time}</div>
                   </div>
                 </motion.div>
               ))}

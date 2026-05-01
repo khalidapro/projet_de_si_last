@@ -98,7 +98,7 @@ export function InvoiceModal({
                 </div>
                 <div>
                   <div className="text-[11px] uppercase tracking-wider text-slate-500">From</div>
-                  <div className="mt-1 font-semibold">Maître {data.lawyerName}</div>
+                  <div className="mt-1 font-semibold">Counsel {data.lawyerName}</div>
                   <div className="text-slate-600">Counsel · Bar registered</div>
                 </div>
               </div>
