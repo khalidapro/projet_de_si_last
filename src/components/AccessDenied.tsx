@@ -29,7 +29,7 @@ export function AccessDenied({ reason, requiredRole }: { reason?: string; requir
         <p className="mt-2 text-sm text-muted-foreground">
           {reason ??
             (requiredRole
-              ? `This area is restricted to ${requiredRole === "lawyer" ? "Avocats" : "Clients"}.`
+              ? `This area is restricted to ${requiredRole === "lawyer" ? "Lawyers" : "Clients"}.`
               : "Your current role does not have permission to view this page.")}
         </p>
         {user && (

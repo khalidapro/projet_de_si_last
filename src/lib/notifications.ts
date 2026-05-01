@@ -30,7 +30,7 @@ export interface Notif {
 }
 
 export const CLIENT_NOTIFS: Notif[] = [
-  { id: "n1", title: "Brief under analysis", body: "Maître Renard is reviewing your custody brief.", tone: "amber", time: "2 min ago", unread: true },
+  { id: "n1", title: "Brief under analysis", body: "Counsel Renard is reviewing your custody brief.", tone: "amber", time: "2 min ago", unread: true },
   { id: "n2", title: "Booking confirmed", body: "Consultation with Amelia Laurent on Apr 28 at 10:00.", tone: "emerald", time: "1 h ago", unread: true },
   { id: "n3", title: "Document encrypted", body: "NDA_Acquisition_v3.pdf was sealed in your vault.", tone: "emerald", time: "Yesterday", unread: false },
 ];
@@ -59,9 +59,9 @@ export interface ChatMessage {
 }
 
 export const CLIENT_THREADS: ChatThread[] = [
-  { id: "t1", name: "Me. Amelia Laurent", initials: "AL", lastMessage: "I'll review the NDA tonight.", time: "10:42", online: true, unread: 2 },
-  { id: "t2", name: "Me. Sofia Renard",   initials: "SR", lastMessage: "We can mediate next week.",   time: "Yesterday", online: false, unread: 0 },
-  { id: "t3", name: "Me. Inès Vautrin",   initials: "IV", lastMessage: "Sending the draft now.",      time: "Mon",       online: true,  unread: 0 },
+  { id: "t1", name: "Counsel Amelia Laurent", initials: "AL", lastMessage: "I'll review the NDA tonight.", time: "10:42", online: true, unread: 2 },
+  { id: "t2", name: "Counsel Sofia Renard",   initials: "SR", lastMessage: "We can mediate next week.",   time: "Yesterday", online: false, unread: 0 },
+  { id: "t3", name: "Counsel Inès Vautrin",   initials: "IV", lastMessage: "Sending the draft now.",      time: "Mon",       online: true,  unread: 0 },
 ];
 
 export const LAWYER_THREADS: ChatThread[] = [
@@ -71,8 +71,8 @@ export const LAWYER_THREADS: ChatThread[] = [
 ];
 
 export const SAMPLE_THREAD: ChatMessage[] = [
-  { id: "m1", from: "them", text: "Bonjour Maître, I just uploaded the latest version of the brief.", time: "10:31" },
-  { id: "m2", from: "me",   text: "Reçu — I'll go through it this afternoon and revert with a redline.", time: "10:33" },
+  { id: "m1", from: "them", text: "Hello Counsel, I just uploaded the latest version of the brief.", time: "10:31" },
+  { id: "m2", from: "me",   text: "Received — I'll go through it this afternoon and revert with a redline.", time: "10:33" },
   { id: "m3", from: "them", text: "Perfect. Anything I should prepare on my side?", time: "10:34" },
   { id: "m4", from: "me",   text: "Just the prior correspondence with the counterparty if you have it.", time: "10:36" },
   { id: "m5", from: "them", text: "Will send those over right away.", time: "10:41" },

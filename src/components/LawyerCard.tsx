@@ -38,7 +38,7 @@ export function LawyerCard({ lawyer, onBook }: { lawyer: Lawyer; onBook: (l: Law
 
           <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1">
-              <Star className="h-3.5 w-3.5 fill-[oklch(0.58_0.07_55)] text-[oklch(0.58_0.07_55)]" />
+              <Star className="h-3.5 w-3.5 fill-[oklch(0.72_0.10_80)] text-[oklch(0.72_0.10_80)]" />
               {lawyer.rating}
             </span>
             <span className="inline-flex items-center gap-1">
@@ -56,14 +56,13 @@ export function LawyerCard({ lawyer, onBook }: { lawyer: Lawyer; onBook: (l: Law
             </div>
           </TiltLayer>
 
-          {/* CTA button (z=60) — highest float */}
           <TiltLayer z={60}>
             <button
               onClick={() => onBook(lawyer)}
               data-magnetic
-              className="relative inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground glow-primary hover:brightness-105 transition shadow-lg"
+              className="relative inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground glow-primary hover:brightness-110 transition shadow-lg"
             >
-              Réserver
+              Book Now
             </button>
           </TiltLayer>
         </div>

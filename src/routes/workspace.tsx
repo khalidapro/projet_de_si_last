@@ -54,12 +54,12 @@ function WorkspaceInner() {
           <div>
             <div className="inline-flex items-center gap-2 rounded-full chip-emerald px-3 py-1 text-xs font-semibold">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              Lawyer Portal · {user.barreau ? `Barreau de ${user.barreau}` : "Bar verified"}
+              Lawyer Portal · {user.barreau ? `Bar of ${user.barreau}` : "Bar verified"}
             </div>
             <h1 className="mt-3 font-display text-4xl md:text-5xl">
-              <Decrypt text={`Bonjour, Maître ${user.name.split(" ").slice(-1)[0]}`} duration={900} />
+              <Decrypt text={`Welcome, ${user.name.split(" ").slice(-1)[0]}`} duration={900} />
             </h1>
-            <p className="mt-2 text-muted-foreground">Spécialité · {user.specialty ?? "Generalist"}</p>
+            <p className="mt-2 text-muted-foreground">Specialty · {user.specialty ?? "Generalist"}</p>
           </div>
         </div>
       </motion.div>
@@ -263,16 +263,16 @@ function RequestCard({ r, onAccept, onDecline, onReview, onInvoice, muted }: {
             data-magnetic
             className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground glow-primary"
           >
-            <CheckCircle2 className="h-3.5 w-3.5" /> Accepter
+            <CheckCircle2 className="h-3.5 w-3.5" /> Accept
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
             onClick={onDecline}
             data-magnetic
-            className="inline-flex items-center justify-center gap-1.5 rounded-lg chip-rose px-3 py-2 text-xs font-semibold glow-rose"
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg surface px-3 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground"
           >
-            <XCircle className="h-3.5 w-3.5" /> Décliner
+            <XCircle className="h-3.5 w-3.5" /> Decline
           </motion.button>
         </div>
       )}

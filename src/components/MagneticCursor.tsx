@@ -46,12 +46,12 @@ export function MagneticCursor() {
         animate={{
           width: hovering ? 44 : 12,
           height: hovering ? 44 : 12,
-          backgroundColor: hovering ? "rgba(245, 224, 200, 0.20)" : "rgba(150, 105, 76, 0.95)",
-          borderColor: hovering ? "rgba(210, 180, 140, 0.7)" : "transparent",
+          backgroundColor: hovering ? "rgba(11, 27, 58, 0.16)" : "rgba(11, 27, 58, 0.95)",
+          borderColor: hovering ? "rgba(184, 146, 74, 0.75)" : "transparent",
         }}
         transition={{ type: "spring", stiffness: 350, damping: 25 }}
         className="-translate-x-1/2 -translate-y-1/2 rounded-full border-2"
-        style={{ boxShadow: "0 0 22px rgba(150, 105, 76, 0.5)" }}
+        style={{ boxShadow: "0 0 22px rgba(11, 27, 58, 0.45)" }}
       />
     </motion.div>
   );

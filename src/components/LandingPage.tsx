@@ -76,17 +76,17 @@ export function LandingPage() {
                   <Link
                     to="/login"
                     data-magnetic
-                    className="shimmer-cognac ripple-cognac group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground glow-primary transition-colors duration-300 hover:bg-[oklch(0.50_0.062_55)]"
+                    className="shimmer-navy ripple-navy group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground glow-primary transition-colors duration-300 hover:brightness-110"
                   >
                     <span className="relative z-10 inline-flex items-center gap-2">
-                      Commencer
+                      Get Started
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                     </span>
                   </Link>
                 </motion.div>
                 <Link
                   to="/login"
-                  className="inline-flex items-center gap-2 rounded-xl glass px-6 py-3.5 text-sm font-semibold text-foreground backdrop-blur-md transition-colors hover:text-[oklch(0.52_0.06_55)]"
+                  className="inline-flex items-center gap-2 rounded-xl glass px-6 py-3.5 text-sm font-semibold text-foreground backdrop-blur-md transition-colors hover:text-primary"
                 >
                   Sign in
                 </Link>
@@ -169,10 +169,10 @@ export function LandingPage() {
             <Link
               to="/login"
               data-magnetic
-              className="shimmer-cognac ripple-cognac group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground glow-primary transition-colors duration-300 hover:bg-[oklch(0.50_0.062_55)]"
+              className="shimmer-navy ripple-navy group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground glow-primary transition-colors duration-300 hover:brightness-110"
             >
               <span className="relative z-10 inline-flex items-center gap-2">
-                Commencer <ArrowRight className="h-4 w-4" />
+                Get Started <ArrowRight className="h-4 w-4" />
               </span>
             </Link>
           </motion.div>

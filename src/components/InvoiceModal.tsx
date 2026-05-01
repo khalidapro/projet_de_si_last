@@ -31,12 +31,12 @@ export function InvoiceModal({
     w.document.write(`<html><head><title>Invoice ${data?.reference ?? ""}</title>
       <style>
         body{font-family:'Inter',sans-serif;color:#0f172a;padding:48px;margin:0;background:#fff}
-        h1{font-family:'Playfair Display',serif;letter-spacing:-0.02em}
+        h1{font-family:'Playfair Display',serif;letter-spacing:-0.02em;color:#0B1B3A}
         .muted{color:#64748b}
         table{width:100%;border-collapse:collapse;margin-top:24px}
         th,td{text-align:left;padding:12px 0;border-bottom:1px solid #e2e8f0;font-size:14px}
         th{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#64748b}
-        .total{font-size:24px;font-family:'Playfair Display',serif;color:#A67B5B}
+        .total{font-size:24px;font-family:'Playfair Display',serif;color:#0B1B3A}
       </style></head><body>${node.innerHTML}</body></html>`);
     w.document.close();
     setTimeout(() => { w.focus(); w.print(); }, 250);
@@ -62,7 +62,7 @@ export function InvoiceModal({
           >
             <div className="flex items-center justify-between px-6 py-3 border-b border-border">
               <div className="text-sm font-semibold inline-flex items-center gap-2">
-                <Scale className="h-4 w-4 text-primary" /> Reçu / Invoice
+                <Scale className="h-4 w-4 text-primary" /> Receipt / Invoice
               </div>
               <div className="flex items-center gap-2">
                 <button onClick={handlePrint} className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground glow-primary">
@@ -76,7 +76,7 @@ export function InvoiceModal({
               <div className="flex items-start justify-between">
                 <div>
                   <div className="inline-flex items-center gap-2">
-                    <div className="grid h-8 w-8 place-items-center rounded-lg bg-[#A67B5B] text-white">
+                    <div className="grid h-8 w-8 place-items-center rounded-lg bg-[#0B1B3A] text-white">
                       <Scale className="h-4 w-4" />
                     </div>
                     <span className="font-display text-xl font-semibold">Avocat·Link</span>
@@ -98,7 +98,7 @@ export function InvoiceModal({
                 </div>
                 <div>
                   <div className="text-[11px] uppercase tracking-wider text-slate-500">From</div>
-                  <div className="mt-1 font-semibold">Maître {data.lawyerName}</div>
+                  <div className="mt-1 font-semibold">Counsel {data.lawyerName}</div>
                   <div className="text-slate-600">Counsel · Bar registered</div>
                 </div>
               </div>
@@ -128,13 +128,13 @@ export function InvoiceModal({
                   <div className="flex justify-between py-1"><span className="text-slate-500">VAT (20%)</span><span>€{tax.toFixed(2)}</span></div>
                   <div className="flex justify-between mt-2 pt-2 border-t border-slate-200">
                     <span className="font-semibold">Total due</span>
-                    <span className="font-display text-2xl text-[#6F4E37]">€{total.toFixed(2)}</span>
+                    <span className="font-display text-2xl text-[#0B1B3A]">€{total.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
 
               <div className="mt-10 pt-6 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
-                <div className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-[#A67B5B]" /> Issued via Avocat·Link · digitally signed</div>
+                <div className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-[#B8924A]" /> Issued via Avocat·Link · digitally signed</div>
                 <div>Thank you for your trust.</div>
               </div>
             </div>
