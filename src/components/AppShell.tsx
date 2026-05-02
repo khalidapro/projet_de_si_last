@@ -124,20 +124,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Main column */}
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Top header */}
-        <header className="sticky top-0 z-40 px-4 md:px-6 pt-4">
-          <div className="glass-strong flex items-center justify-between rounded-2xl px-4 py-2.5">
+        <header className="sticky top-0 z-40 px-4 md:px-6 pt-4 pb-3 border-b-2 border-border bg-[oklch(0.965_0.006_250)]/80 backdrop-blur-md">
+          <div className="glass-strong flex items-center justify-between rounded-2xl px-4 py-2.5 shadow-md">
             <div className="flex items-center gap-3 flex-1">
               <div className="md:hidden flex items-center gap-2">
                 <Scale className="h-5 w-5 text-primary" />
                 <span className="font-display font-semibold">Avocat<span className="text-gradient">·</span>Link</span>
               </div>
-              <div className="hidden md:flex flex-1 max-w-md items-center gap-2 surface rounded-xl px-3 py-2">
+              <div className="hidden md:flex flex-1 max-w-md items-center gap-2 rounded-xl px-3 py-2 bg-[oklch(0.93_0.010_250)] border border-border">
                 <Search className="h-4 w-4 text-muted-foreground" />
                 <input
                   placeholder="Search the suite…"
                   className="flex-1 bg-transparent text-sm outline-none"
                 />
-                <kbd className="hidden lg:inline-flex items-center gap-1 rounded-md bg-secondary px-1.5 py-0.5 text-[10px] text-muted-foreground">⌘K</kbd>
+                <kbd className="hidden lg:inline-flex items-center gap-1 rounded-md bg-card px-1.5 py-0.5 text-[10px] text-muted-foreground border border-border">⌘K</kbd>
               </div>
             </div>
             <div className="flex items-center gap-2">
