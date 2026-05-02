@@ -56,23 +56,23 @@
 
   /* Backgrounds — distinct light slate canvas (slate-100) so white cards pop */
   --background: oklch(0.955 0.006 250);            /* ≈ slate-100 — visible gray canvas */
-  --foreground: oklch(0.30 0.025 255);             /* charcoal slate-800 — body */
+  --foreground: oklch(0.40 0.022 255);             /* warm dark gray ≈ slate-700 — softer body */
   --card: oklch(1 0 0);                             /* pure white cards */
-  --card-foreground: oklch(0.26 0.03 258);          /* slate-800/900 for headings */
+  --card-foreground: oklch(0.22 0.06 262);          /* Deep Navy Blue ≈ blue-950 — headings */
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.26 0.03 258);
+  --popover-foreground: oklch(0.22 0.06 262);
 
-  /* Primary — Deep Navy Blue (~ #0B1B3A) */
-  --primary: oklch(0.27 0.07 262);
+  /* Primary — Deep Navy Blue (~ #0B1B3A / blue-950) */
+  --primary: oklch(0.22 0.06 262);
   --primary-foreground: oklch(0.99 0.003 250);
 
   /* Secondary — slate-200 used for chips, kbd, inputs */
   --secondary: oklch(0.92 0.010 250);
-  --secondary-foreground: oklch(0.30 0.03 258);
+  --secondary-foreground: oklch(0.40 0.022 255);
 
-  /* Muted — slate-100/200 surfaces, tertiary text slate-500/600 */
+  /* Muted — slate-100/200 surfaces, tertiary text warm slate-600/700 */
   --muted: oklch(0.93 0.008 250);
-  --muted-foreground: oklch(0.50 0.02 255);         /* slate-500/600 */
+  --muted-foreground: oklch(0.45 0.02 255);         /* warm dark gray ≈ slate-600/700 */
 
   /* Accent — Subdued Gold / Brass for premium icons, stars, badges */
   --accent: oklch(0.72 0.10 80);                    /* subdued brass ~ #B8924A */
