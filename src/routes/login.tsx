@@ -95,7 +95,7 @@ function LoginPage() {
                 </div>
 
                 <label className="mt-6 block text-xs uppercase tracking-wider text-muted-foreground">Email</label>
-                <div className="mt-1.5 flex items-center gap-2 surface rounded-xl px-3.5 py-3">
+                <div className="mt-1.5 flex items-center gap-2 rounded-xl px-3.5 py-3 bg-[oklch(0.94_0.008_250)] border border-border">
                   <Mail className="h-4 w-4 text-muted-foreground" />
                   <input
                     value={email}
@@ -105,7 +105,7 @@ function LoginPage() {
                   />
                 </div>
                 <label className="mt-4 block text-xs uppercase tracking-wider text-muted-foreground">Password</label>
-                <div className="mt-1.5 flex items-center gap-2 surface rounded-xl px-3.5 py-3">
+                <div className="mt-1.5 flex items-center gap-2 rounded-xl px-3.5 py-3 bg-[oklch(0.94_0.008_250)] border border-border">
                   <Lock className="h-4 w-4 text-muted-foreground" />
                   <input type="password" defaultValue="••••••••••" className="flex-1 bg-transparent text-sm outline-none" />
                 </div>
@@ -124,7 +124,7 @@ function LoginPage() {
                           <select
                             value={specialty}
                             onChange={(e) => setSpecialty(e.target.value as typeof specialty)}
-                            className="mt-1.5 w-full surface rounded-xl px-3 py-3 text-sm outline-none"
+                            className="mt-1.5 w-full rounded-xl px-3 py-3 text-sm outline-none bg-[oklch(0.94_0.008_250)] border border-border"
                           >
                             {SPECIALTIES.map((s) => <option key={s} value={s}>{s}</option>)}
                           </select>
@@ -134,7 +134,7 @@ function LoginPage() {
                           <input
                             value={barreau}
                             onChange={(e) => setBarreau(e.target.value)}
-                            className="mt-1.5 w-full surface rounded-xl px-3 py-3 text-sm outline-none"
+                            className="mt-1.5 w-full rounded-xl px-3 py-3 text-sm outline-none bg-[oklch(0.94_0.008_250)] border border-border"
                           />
                         </div>
                       </div>
@@ -269,7 +269,7 @@ function OnboardingFlow({ role, step, name, setName, onNext }: { role: Role; ste
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="mt-1.5 w-full surface rounded-xl px-3.5 py-3 text-sm outline-none"
+            className="mt-1.5 w-full rounded-xl px-3.5 py-3 text-sm outline-none bg-[oklch(0.94_0.008_250)] border border-border"
           />
         </div>
       )}

@@ -62,7 +62,7 @@ function MessagesPage() {
         {/* Conversations */}
         <aside className="border-r border-border flex flex-col bg-secondary/30">
           <div className="p-4">
-            <div className="flex items-center gap-2 surface rounded-xl px-3 py-2">
+            <div className="flex items-center gap-2 rounded-xl px-3 py-2 bg-[oklch(0.94_0.008_250)] border border-border">
               <Search className="h-4 w-4 text-muted-foreground" />
               <input placeholder="Search conversations…" className="flex-1 bg-transparent text-sm outline-none" />
             </div>
