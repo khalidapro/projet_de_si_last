@@ -152,7 +152,7 @@ export function NotificationsBell() {
                     data-testid="notif-item"
                   >
                     <div className={`grid h-8 w-8 place-items-center rounded-lg ${chip}`}>
-                      <Icon className="h-4 w-4" />
+                      <Icon className={`h-4 w-4 ${semantic === "success" ? "text-accent" : ""}`} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
