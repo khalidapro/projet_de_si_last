@@ -47,8 +47,8 @@ function LoginPage() {
       <div className="relative flex items-center justify-center p-8">
         <div className="w-full max-w-sm">
           <Link to="/" className="inline-flex items-center gap-2">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-primary">
-              <Scale className="h-4 w-4 text-primary-foreground" strokeWidth={2.4} />
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-primary ring-1 ring-accent/60">
+              <Scale className="h-4 w-4 text-accent" strokeWidth={2.4} />
             </div>
             <span className="font-display text-xl font-semibold">Avocat<span className="text-gradient">·</span>Link</span>
           </Link>
