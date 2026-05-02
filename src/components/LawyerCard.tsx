@@ -16,7 +16,7 @@ export function LawyerCard({ lawyer, onBook }: { lawyer: Lawyer; onBook: (l: Law
         <TiltLayer z={0}>
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className="relative grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 ring-1 ring-border font-display text-lg text-foreground">
+              <div className="relative grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 ring-1 ring-accent/50 font-display text-lg text-foreground">
                 {lawyer.initials}
               </div>
               <div>
