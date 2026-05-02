@@ -52,9 +52,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <aside className="hidden md:flex sticky top-0 h-screen w-[260px] flex-col p-4 border-r-2 border-border bg-[oklch(0.975_0.005_250)]">
         <div className="glass-strong flex h-full flex-col rounded-2xl p-4 shadow-md">
           <Link to="/" className="flex items-center gap-2.5 px-2 py-1.5">
-            <div className="relative grid h-9 w-9 place-items-center rounded-xl bg-[image:var(--gradient-primary)]">
-              <Scale className="h-4.5 w-4.5 text-primary-foreground" strokeWidth={2.4} />
-              <div className="absolute inset-0 rounded-xl bg-primary/30 blur-lg opacity-70" />
+            <div className="relative grid h-9 w-9 place-items-center rounded-xl bg-[image:var(--gradient-primary)] ring-1 ring-accent/60">
+              <Scale className="h-4.5 w-4.5 text-accent" strokeWidth={2.4} />
+              <div className="absolute inset-0 rounded-xl bg-accent/20 blur-lg opacity-70" />
             </div>
             <div className="leading-tight">
               <div className="font-display text-lg font-semibold">Avocat<span className="text-gradient">·</span>Link</div>
@@ -99,7 +99,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
             {user && (
               <div className="surface rounded-xl p-3 flex items-center gap-3">
-                <div className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-primary/30 to-accent/30 ring-1 ring-border font-semibold text-sm">
+                <div className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-primary/30 to-accent/30 ring-1 ring-accent/60 font-semibold text-sm">
                   {user.name.split(" ").map((n) => n[0]).slice(0, 2).join("")}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -128,7 +128,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="glass-strong flex items-center justify-between rounded-2xl px-4 py-2.5 shadow-md">
             <div className="flex items-center gap-3 flex-1">
               <div className="md:hidden flex items-center gap-2">
-                <Scale className="h-5 w-5 text-primary" />
+                <Scale className="h-5 w-5 text-accent" />
                 <span className="font-display font-semibold">Avocat<span className="text-gradient">·</span>Link</span>
               </div>
               <div className="hidden md:flex flex-1 max-w-md items-center gap-2 rounded-xl px-3 py-2 bg-[oklch(0.93_0.010_250)] border border-border">

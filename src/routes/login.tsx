@@ -47,8 +47,8 @@ function LoginPage() {
       <div className="relative flex items-center justify-center p-8">
         <div className="w-full max-w-sm">
           <Link to="/" className="inline-flex items-center gap-2">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-primary">
-              <Scale className="h-4 w-4 text-primary-foreground" strokeWidth={2.4} />
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-primary ring-1 ring-accent/60">
+              <Scale className="h-4 w-4 text-accent" strokeWidth={2.4} />
             </div>
             <span className="font-display text-xl font-semibold">Avocat<span className="text-gradient">·</span>Link</span>
           </Link>
@@ -193,8 +193,8 @@ function LoginPage() {
             transition={{ type: "spring", stiffness: 160, damping: 22 }}
             className="glass-strong rounded-3xl p-10 max-w-md text-center backdrop-blur-2xl"
           >
-            <div className="relative mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-primary glow-primary">
-              <ShieldCheck className="h-10 w-10 text-primary-foreground" />
+            <div className="relative mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-primary glow-primary ring-2 ring-accent/50">
+              <ShieldCheck className="h-10 w-10 text-accent" />
               <span className="absolute inset-0 rounded-2xl pulse-ring" />
             </div>
             <div className="mt-6 inline-flex items-center gap-2 rounded-full chip-emerald px-3 py-1 text-xs font-semibold">

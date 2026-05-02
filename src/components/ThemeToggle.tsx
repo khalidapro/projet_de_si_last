@@ -29,7 +29,7 @@ export function ThemeToggle() {
             transition={{ type: "spring", stiffness: 380, damping: 22 }}
             className="absolute"
           >
-            <Moon className="h-4.5 w-4.5 text-foreground" strokeWidth={2.2} />
+            <Moon className="h-4.5 w-4.5 text-accent" strokeWidth={2.2} />
           </motion.span>
         ) : (
           <motion.span
@@ -40,7 +40,7 @@ export function ThemeToggle() {
             transition={{ type: "spring", stiffness: 380, damping: 22 }}
             className="absolute"
           >
-            <Sun className="h-4.5 w-4.5 text-primary" strokeWidth={2.2} />
+            <Sun className="h-4.5 w-4.5 text-accent" strokeWidth={2.2} />
           </motion.span>
         )}
       </AnimatePresence>

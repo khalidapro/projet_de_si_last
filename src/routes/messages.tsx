@@ -146,7 +146,7 @@ function MessagesPage() {
                   <div className={`max-w-[78%] rounded-2xl px-4 py-2.5 text-sm ${
                     m.from === "me"
                       ? "bg-primary text-primary-foreground shadow-sm"
-                      : "bg-[oklch(0.94_0.008_250)] ring-1 ring-border text-foreground shadow-sm"
+                      : "bg-[oklch(0.955_0.006_250)] ring-1 ring-border text-foreground shadow-sm"
                   }`}>
                     <div className="leading-relaxed">{m.text}</div>
                     <div className={`mt-1 text-[10px] text-right ${m.from === "me" ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{m.time}</div>
@@ -162,7 +162,7 @@ function MessagesPage() {
                   exit={{ opacity: 0 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-[oklch(0.94_0.008_250)] ring-1 ring-border rounded-2xl px-4 py-2.5 text-sm inline-flex items-center gap-2">
+                  <div className="bg-[oklch(0.955_0.006_250)] ring-1 ring-border rounded-2xl px-4 py-2.5 text-sm inline-flex items-center gap-2">
                     <div className="flex gap-1">
                       {[0, 1, 2].map((i) => (
                         <motion.span
