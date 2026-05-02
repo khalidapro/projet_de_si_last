@@ -99,7 +99,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
             {user && (
               <div className="surface rounded-xl p-3 flex items-center gap-3">
-                <div className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-primary/30 to-accent/30 ring-1 ring-border font-semibold text-sm">
+                <div className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-primary/30 to-accent/30 ring-1 ring-accent/60 font-semibold text-sm">
                   {user.name.split(" ").map((n) => n[0]).slice(0, 2).join("")}
                 </div>
                 <div className="flex-1 min-w-0">
