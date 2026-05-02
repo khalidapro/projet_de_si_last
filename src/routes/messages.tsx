@@ -62,7 +62,7 @@ function MessagesPage() {
         {/* Conversations */}
         <aside className="border-r border-border flex flex-col bg-secondary/30">
           <div className="p-4">
-            <div className="flex items-center gap-2 surface rounded-xl px-3 py-2">
+            <div className="flex items-center gap-2 rounded-xl px-3 py-2 bg-[oklch(0.94_0.008_250)] border border-border">
               <Search className="h-4 w-4 text-muted-foreground" />
               <input placeholder="Search conversations…" className="flex-1 bg-transparent text-sm outline-none" />
             </div>
@@ -146,7 +146,7 @@ function MessagesPage() {
                   <div className={`max-w-[78%] rounded-2xl px-4 py-2.5 text-sm ${
                     m.from === "me"
                       ? "bg-primary text-primary-foreground shadow-sm"
-                      : "bg-card ring-1 ring-border text-foreground shadow-sm"
+                      : "bg-[oklch(0.94_0.008_250)] ring-1 ring-border text-foreground shadow-sm"
                   }`}>
                     <div className="leading-relaxed">{m.text}</div>
                     <div className={`mt-1 text-[10px] text-right ${m.from === "me" ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{m.time}</div>
@@ -162,7 +162,7 @@ function MessagesPage() {
                   exit={{ opacity: 0 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-card ring-1 ring-border rounded-2xl px-4 py-2.5 text-sm inline-flex items-center gap-2">
+                  <div className="bg-[oklch(0.94_0.008_250)] ring-1 ring-border rounded-2xl px-4 py-2.5 text-sm inline-flex items-center gap-2">
                     <div className="flex gap-1">
                       {[0, 1, 2].map((i) => (
                         <motion.span
@@ -188,7 +188,7 @@ function MessagesPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Write an encrypted message…"
-              className="flex-1 surface rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/30"
+              className="flex-1 rounded-xl px-3.5 py-2.5 text-sm outline-none bg-[oklch(0.94_0.008_250)] border border-border focus:ring-2 focus:ring-primary/30"
             />
             <button
               type="submit"

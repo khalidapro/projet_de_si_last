@@ -54,10 +54,10 @@
 :root {
   --radius: 0.875rem;
 
-  /* Backgrounds — crisp off-white / pearl */
-  --background: oklch(0.985 0.004 250);            /* near-white pearl */
+  /* Backgrounds — distinct light slate canvas (slate-100) so white cards pop */
+  --background: oklch(0.955 0.006 250);            /* ≈ slate-100 — visible gray canvas */
   --foreground: oklch(0.30 0.025 255);             /* charcoal slate-800 — body */
-  --card: oklch(1 0 0);                             /* pure white */
+  --card: oklch(1 0 0);                             /* pure white cards */
   --card-foreground: oklch(0.26 0.03 258);          /* slate-800/900 for headings */
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.26 0.03 258);
@@ -66,11 +66,11 @@
   --primary: oklch(0.27 0.07 262);
   --primary-foreground: oklch(0.99 0.003 250);
 
-  /* Secondary — Cool Slate Gray (~ slate-100/200) */
-  --secondary: oklch(0.95 0.008 250);
+  /* Secondary — slate-200 used for chips, kbd, inputs */
+  --secondary: oklch(0.92 0.010 250);
   --secondary-foreground: oklch(0.30 0.03 258);
 
-  /* Muted — light slate, tertiary text slate-500/600 */
+  /* Muted — slate-100/200 surfaces, tertiary text slate-500/600 */
   --muted: oklch(0.93 0.008 250);
   --muted-foreground: oklch(0.50 0.02 255);         /* slate-500/600 */
 
@@ -82,8 +82,8 @@
   --destructive: oklch(0.50 0.13 25);
   --destructive-foreground: oklch(0.99 0.003 250);
 
-  /* Borders / inputs / focus ring — cool slate */
-  --border: oklch(0.88 0.012 250);                  /* slate-200/300 */
+  /* Borders / inputs / focus ring — distinct slate-300 for visible separation */
+  --border: oklch(0.83 0.014 250);                  /* slate-300 — visible card/sidebar borders */
   --input: oklch(0.30 0.025 255 / 14%);
   --ring: oklch(0.27 0.07 262);
 
@@ -106,10 +106,12 @@
   --gradient-primary: linear-gradient(135deg, oklch(0.32 0.08 262), oklch(0.20 0.06 262));
   --gradient-amber:   linear-gradient(135deg, oklch(0.78 0.10 80), oklch(0.62 0.10 70));
 
-  --shadow-soft: 0 1px 2px oklch(0.20 0.04 260 / 0.06),
-                 0 8px 24px -12px oklch(0.20 0.04 260 / 0.14);
-  --shadow-soft-lg: 0 2px 4px oklch(0.20 0.04 260 / 0.06),
-                    0 24px 48px -16px oklch(0.20 0.04 260 / 0.20);
+  --shadow-soft: 0 1px 2px oklch(0.20 0.04 260 / 0.10),
+                 0 6px 16px -6px oklch(0.20 0.04 260 / 0.18),
+                 0 12px 32px -12px oklch(0.20 0.04 260 / 0.22);
+  --shadow-soft-lg: 0 2px 6px oklch(0.20 0.04 260 / 0.10),
+                    0 16px 32px -10px oklch(0.20 0.04 260 / 0.20),
+                    0 28px 56px -16px oklch(0.20 0.04 260 / 0.28);
   --shadow-neumorph: 8px 8px 24px oklch(0.20 0.04 260 / 0.10),
                      -6px -6px 18px oklch(1 0 0 / 0.95);
 
