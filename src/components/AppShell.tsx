@@ -128,7 +128,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="glass-strong flex items-center justify-between rounded-2xl px-4 py-2.5 shadow-md">
             <div className="flex items-center gap-3 flex-1">
               <div className="md:hidden flex items-center gap-2">
-                <Scale className="h-5 w-5 text-primary" />
+                <Scale className="h-5 w-5 text-accent" />
                 <span className="font-display font-semibold">Avocat<span className="text-gradient">·</span>Link</span>
               </div>
               <div className="hidden md:flex flex-1 max-w-md items-center gap-2 rounded-xl px-3 py-2 bg-[oklch(0.93_0.010_250)] border border-border">
