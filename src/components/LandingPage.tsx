@@ -102,8 +102,8 @@ export function LandingPage() {
             >
               <div className="glass-strong rounded-3xl p-8 backdrop-blur-2xl">
                 <div className="flex items-center gap-3">
-                  <div className="grid h-12 w-12 place-items-center rounded-2xl bg-primary glow-primary">
-                    <Gavel className="h-5 w-5 text-primary-foreground" />
+                  <div className="grid h-12 w-12 place-items-center rounded-2xl bg-primary glow-primary ring-1 ring-accent/60">
+                    <Gavel className="h-5 w-5 text-accent" />
                   </div>
                   <div>
                     <div className="font-display text-lg">Live Counsel Network</div>
