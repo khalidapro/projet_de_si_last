@@ -61,7 +61,7 @@ export function NotificationsBell() {
         {muted ? (
           <BellOff className="h-4.5 w-4.5 text-muted-foreground" strokeWidth={2.2} />
         ) : (
-          <Bell className="h-4.5 w-4.5 text-foreground" strokeWidth={2.2} />
+          <Bell className="h-4.5 w-4.5 text-accent" strokeWidth={2.2} />
         )}
         {unread > 0 && (
           <motion.span
