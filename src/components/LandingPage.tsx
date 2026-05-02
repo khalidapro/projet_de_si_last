@@ -12,8 +12,8 @@ export function LandingPage() {
       <header className="sticky top-4 z-40 mx-auto mt-4 w-[min(1200px,calc(100%-2rem))]">
         <div className="glass-strong flex items-center justify-between rounded-2xl px-5 py-3 backdrop-blur-xl">
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="relative grid h-9 w-9 place-items-center rounded-xl bg-[image:var(--gradient-primary)]">
-              <Scale className="h-4 w-4 text-primary-foreground" strokeWidth={2.4} />
+            <div className="relative grid h-9 w-9 place-items-center rounded-xl bg-[image:var(--gradient-primary)] ring-1 ring-accent/60">
+              <Scale className="h-4 w-4 text-accent" strokeWidth={2.4} />
             </div>
             <div className="leading-tight">
               <div className="font-display text-lg font-semibold">Avocat<span className="text-gradient">·</span>Link</div>
