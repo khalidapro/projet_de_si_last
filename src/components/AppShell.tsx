@@ -52,9 +52,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <aside className="hidden md:flex sticky top-0 h-screen w-[260px] flex-col p-4 border-r-2 border-border bg-[oklch(0.975_0.005_250)]">
         <div className="glass-strong flex h-full flex-col rounded-2xl p-4 shadow-md">
           <Link to="/" className="flex items-center gap-2.5 px-2 py-1.5">
-            <div className="relative grid h-9 w-9 place-items-center rounded-xl bg-[image:var(--gradient-primary)]">
-              <Scale className="h-4.5 w-4.5 text-primary-foreground" strokeWidth={2.4} />
-              <div className="absolute inset-0 rounded-xl bg-primary/30 blur-lg opacity-70" />
+            <div className="relative grid h-9 w-9 place-items-center rounded-xl bg-[image:var(--gradient-primary)] ring-1 ring-accent/60">
+              <Scale className="h-4.5 w-4.5 text-accent" strokeWidth={2.4} />
+              <div className="absolute inset-0 rounded-xl bg-accent/20 blur-lg opacity-70" />
             </div>
             <div className="leading-tight">
               <div className="font-display text-lg font-semibold">Avocat<span className="text-gradient">·</span>Link</div>
