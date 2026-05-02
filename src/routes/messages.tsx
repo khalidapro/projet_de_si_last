@@ -162,7 +162,7 @@ function MessagesPage() {
                   exit={{ opacity: 0 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-[oklch(0.94_0.008_250)] ring-1 ring-border rounded-2xl px-4 py-2.5 text-sm inline-flex items-center gap-2">
+                  <div className="bg-[oklch(0.955_0.006_250)] ring-1 ring-border rounded-2xl px-4 py-2.5 text-sm inline-flex items-center gap-2">
                     <div className="flex gap-1">
                       {[0, 1, 2].map((i) => (
                         <motion.span
