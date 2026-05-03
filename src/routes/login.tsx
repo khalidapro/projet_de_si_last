@@ -236,11 +236,33 @@ function LoginPage() {
                   )}
                 </AnimatePresence>
 
+                {authError && (
+                  <div className="mt-4 rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+                    {authError}
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground glow-primary"
+                  disabled={submitting || !email || !password}
+                  className="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground glow-primary disabled:opacity-60"
                 >
-                  Continue as {role === "client" ? "Client" : "Lawyer"} <ArrowRight className="h-4 w-4" />
+                  {submitting
+                    ? "Please wait…"
+                    : authMode === "signup"
+                    ? `Create ${role === "client" ? "Client" : "Lawyer"} account`
+                    : `Continue as ${role === "client" ? "Client" : "Lawyer"}`}
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => { setAuthError(null); setAuthMode((m) => (m === "signin" ? "signup" : "signin")); }}
+                  className="mt-3 w-full text-center text-xs text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {authMode === "signin"
+                    ? "New here? Create an account"
+                    : "Already have an account? Sign in"}
                 </button>
 
                 <div className="mt-4 inline-flex items-center gap-2 rounded-full chip-emerald px-3 py-1 text-[10px] font-semibold">
