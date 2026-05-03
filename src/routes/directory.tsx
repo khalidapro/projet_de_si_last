@@ -1,13 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, SlidersHorizontal } from "lucide-react";
-import { LAWYERS, type Lawyer, type Specialty } from "@/lib/mock-data";
+import type { Lawyer, Specialty } from "@/lib/mock-data";
 import { LawyerCard } from "@/components/LawyerCard";
 import { BookingModal } from "@/components/BookingModal";
 import { useApp } from "@/lib/store";
 import { useAudit } from "@/lib/audit";
 import { RoleGuard } from "@/components/RoleGuard";
+import { Skeleton } from "@/components/ui/skeleton";
+import { fetchLawyers, createConsultation, initialsOf, type LawyerRow } from "@/lib/supabase-data";
 
 export const Route = createFileRoute("/directory")({
   component: DirectoryPage,
@@ -23,23 +25,38 @@ function DirectoryPage() {
   );
 }
 
+function rowToLawyer(r: LawyerRow): Lawyer {
+  return {
+    id: r.id,
+    name: r.name || r.email,
+    specialty: (r.specialty as Specialty) ?? "Business",
+    rate: r.rate ?? 0,
+    rating: r.rating ?? 0,
+    cases: r.cases ?? 0,
+    city: r.city ?? "—",
+    initials: initialsOf(r.name || r.email),
+    bio: r.bio ?? "Profile under review.",
+  };
+}
+
 function DirectoryInner() {
   const [q, setQ] = useState("");
   const [spec, setSpec] = useState<"All" | Specialty>("All");
   const [maxRate, setMaxRate] = useState(450);
   const [selected, setSelected] = useState<Lawyer | null>(null);
-  const addConsultation = useApp((s) => s.addConsultation);
+  const [rows, setRows] = useState<LawyerRow[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const filtered = useMemo(
-    () =>
-      LAWYERS.filter(
-        (l) =>
-          (spec === "All" || l.specialty === spec) &&
-          l.rate <= maxRate &&
-          (q === "" || l.name.toLowerCase().includes(q.toLowerCase()) || l.city.toLowerCase().includes(q.toLowerCase()))
-      ),
-    [q, spec, maxRate]
-  );
+  useEffect(() => {
+    let cancelled = false;
+    setError(null);
+    fetchLawyers({ specialty: spec, maxRate, q })
+      .then((data) => { if (!cancelled) setRows(data); })
+      .catch((e) => { if (!cancelled) { setError(e.message ?? "Failed to load"); setRows([]); } });
+    return () => { cancelled = true; };
+  }, [spec, maxRate, q]);
+
+  const lawyers = useMemo(() => (rows ?? []).map(rowToLawyer), [rows]);
 
   return (
     <div className="mx-auto max-w-7xl px-6 pt-8 pb-24">
@@ -105,59 +122,80 @@ function DirectoryInner() {
         </div>
       </div>
 
-      {/* Grid — staggered cascade entrance */}
-      <motion.div
-        layout
-        initial="hidden"
-        animate="show"
-        variants={{
-          hidden: {},
-          show: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } },
-        }}
-        className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        <AnimatePresence mode="popLayout">
-          {filtered.map((l) => (
-            <motion.div
-              key={l.id}
-              layout
-              variants={{
-                hidden: { opacity: 0, y: 32, scale: 0.94 },
-                show: { opacity: 1, y: 0, scale: 1 },
-              }}
-              initial="hidden"
-              animate="show"
-              exit={{ opacity: 0, scale: 0.94 }}
-              transition={{ type: "spring", stiffness: 180, damping: 22, mass: 0.9 }}
-            >
-              <LawyerCard lawyer={l} onBook={setSelected} />
-            </motion.div>
+      {/* Loading skeleton */}
+      {rows === null && (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-64 rounded-2xl" />
           ))}
-        </AnimatePresence>
-      </motion.div>
+        </div>
+      )}
 
-      {filtered.length === 0 && (
-        <div className="text-center text-muted-foreground py-16">No lawyers match your filters.</div>
+      {/* Grid */}
+      {rows !== null && (
+        <motion.div
+          layout
+          initial="hidden"
+          animate="show"
+          variants={{
+            hidden: {},
+            show: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } },
+          }}
+          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          <AnimatePresence mode="popLayout">
+            {lawyers.map((l) => (
+              <motion.div
+                key={l.id}
+                layout
+                variants={{
+                  hidden: { opacity: 0, y: 32, scale: 0.94 },
+                  show: { opacity: 1, y: 0, scale: 1 },
+                }}
+                initial="hidden"
+                animate="show"
+                exit={{ opacity: 0, scale: 0.94 }}
+                transition={{ type: "spring", stiffness: 180, damping: 22, mass: 0.9 }}
+              >
+                <LawyerCard lawyer={l} onBook={setSelected} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+      )}
+
+      {rows !== null && lawyers.length === 0 && (
+        <div className="text-center text-muted-foreground py-16">
+          {error ? `Failed to load lawyers: ${error}` : "No lawyers match your filters yet."}
+        </div>
       )}
 
       <BookingModal
         lawyer={selected}
         onClose={() => setSelected(null)}
-        onConfirm={(c) => {
-          addConsultation(c);
-          const u = useApp.getState().user;
-          useAudit.getState().log({
-            type: "booking",
-            actor: u?.name ?? "Anonymous",
-            role: u?.role ?? "anonymous",
-            detail: `Booked ${c.lawyer.name} · ${c.documentName}`,
-          });
-          useAudit.getState().log({
-            type: "upload",
-            actor: u?.name ?? "Anonymous",
-            role: u?.role ?? "anonymous",
-            detail: `Encrypted brief uploaded: ${c.documentName}`,
-          });
+        onConfirm={async (c) => {
+          try {
+            await createConsultation({
+              lawyer_id: c.lawyer.id,
+              scheduled_at: c.date,
+              document_name: c.documentName,
+            });
+            const u = useApp.getState().user;
+            useAudit.getState().log({
+              type: "booking",
+              actor: u?.name ?? "Anonymous",
+              role: u?.role ?? "anonymous",
+              detail: `Booked ${c.lawyer.name} · ${c.documentName}`,
+            });
+            useAudit.getState().log({
+              type: "upload",
+              actor: u?.name ?? "Anonymous",
+              role: u?.role ?? "anonymous",
+              detail: `Encrypted brief uploaded: ${c.documentName}`,
+            });
+          } catch (err) {
+            console.error("[directory] createConsultation failed", err);
+          }
         }}
       />
     </div>
