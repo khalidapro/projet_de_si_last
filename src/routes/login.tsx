@@ -1,9 +1,10 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShieldCheck, Mail, Lock, ArrowRight, User, KeyRound, Search, Check, Briefcase, Scale } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useApp, type Role } from "@/lib/store";
 import { useAudit } from "@/lib/audit";
+import { supabase } from "@/integrations/supabase/client";
 import scalesImg from "@/assets/scales-of-justice.jpg";
 
 export const Route = createFileRoute("/login")({
@@ -15,26 +16,113 @@ const SPECIALTIES = ["Business", "Penal", "Family"] as const;
 function LoginPage() {
   const [step, setStep] = useState<"login" | 1 | 2 | 3>("login");
   const [role, setRole] = useState<Role>("client");
-  const [email, setEmail] = useState("alex@avocat-link.io");
-  const [name, setName] = useState("Alex Mercier");
+  const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [specialty, setSpecialty] = useState<(typeof SPECIALTIES)[number]>("Business");
   const [barreau, setBarreau] = useState("Paris");
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const setUser = useApp((s) => s.setUser);
 
-  const submitLogin = (e: React.FormEvent) => {
+  // If a session is already active, route the user to their portal.
+  useEffect(() => {
+    let mounted = true;
+    supabase.auth.getSession().then(async ({ data }) => {
+      if (!mounted || !data.session) return;
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("name, email, role, specialty, barreau")
+        .eq("id", data.session.user.id)
+        .maybeSingle();
+      if (!mounted) return;
+      const r: Role = (profile?.role as Role) ?? "client";
+      setUser({
+        name: profile?.name || data.session.user.email || "",
+        email: profile?.email || data.session.user.email || "",
+        role: r,
+        ...(r === "lawyer"
+          ? { specialty: (profile?.specialty as never) ?? "Business", barreau: profile?.barreau ?? "" }
+          : {}),
+      });
+      navigate({ to: r === "lawyer" ? "/workspace" : "/directory" });
+    });
+    return () => { mounted = false; };
+  }, [navigate, setUser]);
+
+  const submitLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStep(1);
+    setAuthError(null);
+    setSubmitting(true);
+    try {
+      if (authMode === "signup") {
+        const redirectUrl = `${window.location.origin}/`;
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: redirectUrl,
+            data: {
+              name: name || email.split("@")[0],
+              role,
+              ...(role === "lawyer" ? { specialty, barreau } : {}),
+            },
+          },
+        });
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+      }
+      // Move into the onboarding wizard; finish() will sync the profile and redirect.
+      setStep(1);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Authentication failed";
+      setAuthError(message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  const finish = () => {
+  const finish = async () => {
+    const { data: sessionData } = await supabase.auth.getSession();
+    const userId = sessionData.session?.user.id;
+    if (!userId) {
+      setAuthError("Session expired. Please sign in again.");
+      setStep("login");
+      return;
+    }
+
+    // Upsert the profile with the latest wizard inputs (trigger seeded the row on signup).
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .upsert(
+        {
+          id: userId,
+          email,
+          name: name || email.split("@")[0],
+          role,
+          specialty: role === "lawyer" ? specialty : null,
+          barreau: role === "lawyer" ? barreau : null,
+        },
+        { onConflict: "id" },
+      );
+    if (profileError) {
+      setAuthError(profileError.message);
+      return;
+    }
+
     setUser({
-      name, email, role,
+      name: name || email.split("@")[0],
+      email,
+      role,
       ...(role === "lawyer" ? { specialty, barreau } : {}),
     });
     useAudit.getState().log({
       type: "login",
-      actor: name,
+      actor: name || email,
       role,
       detail: `Signed in as ${role} · ${email}`,
     });
@@ -107,7 +195,13 @@ function LoginPage() {
                 <label className="mt-4 block text-xs uppercase tracking-wider text-muted-foreground">Password</label>
                 <div className="mt-1.5 flex items-center gap-2 rounded-xl px-3.5 py-3 bg-[oklch(0.94_0.008_250)] border border-border">
                   <Lock className="h-4 w-4 text-muted-foreground" />
-                  <input type="password" defaultValue="••••••••••" className="flex-1 bg-transparent text-sm outline-none" />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••••"
+                    className="flex-1 bg-transparent text-sm outline-none"
+                  />
                 </div>
 
                 <AnimatePresence>
@@ -142,11 +236,33 @@ function LoginPage() {
                   )}
                 </AnimatePresence>
 
+                {authError && (
+                  <div className="mt-4 rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+                    {authError}
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground glow-primary"
+                  disabled={submitting || !email || !password}
+                  className="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground glow-primary disabled:opacity-60"
                 >
-                  Continue as {role === "client" ? "Client" : "Lawyer"} <ArrowRight className="h-4 w-4" />
+                  {submitting
+                    ? "Please wait…"
+                    : authMode === "signup"
+                    ? `Create ${role === "client" ? "Client" : "Lawyer"} account`
+                    : `Continue as ${role === "client" ? "Client" : "Lawyer"}`}
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => { setAuthError(null); setAuthMode((m) => (m === "signin" ? "signup" : "signin")); }}
+                  className="mt-3 w-full text-center text-xs text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {authMode === "signin"
+                    ? "New here? Create an account"
+                    : "Already have an account? Sign in"}
                 </button>
 
                 <div className="mt-4 inline-flex items-center gap-2 rounded-full chip-emerald px-3 py-1 text-[10px] font-semibold">
