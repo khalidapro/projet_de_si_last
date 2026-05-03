@@ -1,9 +1,10 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { useMemo, useState } from "react";
-import { Briefcase, TrendingUp, Inbox, CheckCircle2, XCircle, FileText, Star, Clock, Wallet, Receipt } from "lucide-react";
-import { useApp } from "@/lib/store";
+import { useEffect, useMemo, useState } from "react";
+import { TrendingUp, Inbox, CheckCircle2, XCircle, FileText, Star, Clock, Wallet, Receipt } from "lucide-react";
 import { useAudit } from "@/lib/audit";
+import { supabase } from "@/integrations/supabase/client";
+import { fetchMyConsultations, initialsOf, type ConsultationRow } from "@/lib/supabase-data";
 import { Decrypt } from "@/components/Decrypt";
 import { VaultUnlock } from "@/components/VaultUnlock";
 import { PdfViewer } from "@/components/PdfViewer";
@@ -11,6 +12,22 @@ import { StickyNote } from "@/components/StickyNote";
 import { InvoiceModal, type InvoiceData } from "@/components/InvoiceModal";
 import { Redacted } from "@/components/Redacted";
 import { RoleGuard } from "@/components/RoleGuard";
+import { Skeleton } from "@/components/ui/skeleton";
+
+type ProfileSummary = {
+  name: string;
+  email: string;
+  specialty: string | null;
+  barreau: string | null;
+  rate: number | null;
+};
+
+type Bucket = "pending" | "accepted" | "declined";
+function bucketOf(status: ConsultationRow["status"]): Bucket {
+  if (status === "Pending" || status === "Analyzing") return "pending";
+  if (status === "Confirmed") return "accepted";
+  return "declined";
+}
 
 export const Route = createFileRoute("/workspace")({
   component: WorkspacePage,
@@ -25,27 +42,81 @@ function WorkspacePage() {
 }
 
 function WorkspaceInner() {
-  const user = useApp((s) => s.user);
-  const requests = useApp((s) => s.requests);
-  const decide = useApp((s) => s.decideRequest);
-  const navigate = useNavigate();
-
+  const [profile, setProfile] = useState<ProfileSummary | null>(null);
+  const [consultations, setConsultations] = useState<ConsultationRow[] | null>(null);
   const [vaultFor, setVaultFor] = useState<string | null>(null);
   const [viewerFor, setViewerFor] = useState<string | null>(null);
   const [invoice, setInvoice] = useState<InvoiceData | null>(null);
 
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data: u } = await supabase.auth.getUser();
+      const uid = u.user?.id;
+      if (uid) {
+        const { data: p } = await supabase
+          .from("profiles")
+          .select("name,email,specialty,barreau,rate")
+          .eq("id", uid)
+          .maybeSingle();
+        if (!cancelled && p) setProfile(p as ProfileSummary);
+      }
+      try {
+        const list = await fetchMyConsultations();
+        if (!cancelled) setConsultations(list);
+      } catch (e) {
+        console.error("[workspace] fetchMyConsultations", e);
+        if (!cancelled) setConsultations([]);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  const decide = async (id: string, decision: "accepted" | "declined") => {
+    const next = decision === "accepted" ? "Confirmed" : "Declined";
+    const prev = consultations;
+    setConsultations((cur) => cur?.map((c) => c.id === id ? { ...c, status: next as ConsultationRow["status"] } : c) ?? cur);
+    const { error } = await supabase.from("consultations").update({ status: next }).eq("id", id);
+    if (error) {
+      console.error("[workspace] decide", error);
+      setConsultations(prev ?? null);
+    }
+  };
+
+  const list = consultations ?? [];
+
   const stats = useMemo(() => {
-    const accepted = requests.filter((r) => r.status === "accepted");
-    const pending = requests.filter((r) => r.status === "pending");
-    const revenue = accepted.reduce((s, r) => s + r.estimatedFee, 0);
+    const accepted = list.filter((c) => bucketOf(c.status) === "accepted");
+    const pending = list.filter((c) => bucketOf(c.status) === "pending");
+    const rate = profile?.rate ?? 0;
+    const revenue = accepted.length * rate * 4; // 4h estimate
     return { revenue, pending: pending.length, accepted: accepted.length };
-  }, [requests]);
+  }, [list, profile]);
 
-  // Guard handles unauthenticated/wrong-role; safe to assume lawyer here.
-  if (!user) return null;
-  void navigate;
+  if (consultations === null || profile === null) {
+    return (
+      <div className="mx-auto max-w-7xl px-6 pt-8 pb-24">
+        <Skeleton className="h-12 w-64 rounded-xl" />
+        <div className="mt-10 grid gap-4 md:grid-cols-3">
+          <Skeleton className="h-28 rounded-2xl" />
+          <Skeleton className="h-28 rounded-2xl" />
+          <Skeleton className="h-28 rounded-2xl" />
+        </div>
+        <div className="mt-12 grid gap-5 md:grid-cols-3">
+          <Skeleton className="h-64 rounded-2xl" />
+          <Skeleton className="h-64 rounded-2xl" />
+          <Skeleton className="h-64 rounded-2xl" />
+        </div>
+      </div>
+    );
+  }
 
-  const activeRequest = requests.find((r) => r.id === viewerFor);
+  const activeConsult = list.find((c) => c.id === viewerFor);
+  const lastName = (profile.name || profile.email).split(" ").slice(-1)[0];
+
+  const pending = list.filter((c) => bucketOf(c.status) === "pending");
+  const accepted = list.filter((c) => bucketOf(c.status) === "accepted");
+  const declined = list.filter((c) => bucketOf(c.status) === "declined");
 
   return (
     <div className="mx-auto max-w-7xl px-6 pt-8 pb-24">
@@ -54,12 +125,12 @@ function WorkspaceInner() {
           <div>
             <div className="inline-flex items-center gap-2 rounded-full chip-emerald px-3 py-1 text-xs font-semibold">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              Lawyer Portal · {user.barreau ? `Bar of ${user.barreau}` : "Bar verified"}
+              Lawyer Portal · {profile.barreau ? `Bar of ${profile.barreau}` : "Bar verified"}
             </div>
             <h1 className="mt-3 font-display text-4xl md:text-5xl">
-              <Decrypt text={`Welcome, ${user.name.split(" ").slice(-1)[0]}`} duration={900} />
+              <Decrypt text={`Welcome, ${lastName}`} duration={900} />
             </h1>
-            <p className="mt-2 text-muted-foreground">Specialty · {user.specialty ?? "Generalist"}</p>
+            <p className="mt-2 text-muted-foreground">Specialty · {profile.specialty ?? "Generalist"}</p>
           </div>
         </div>
       </motion.div>
@@ -76,67 +147,76 @@ function WorkspaceInner() {
           <div className="text-xs text-muted-foreground">Auto-sorted by status</div>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-3">
-          <Column title="Pending" tone="amber" count={requests.filter((r) => r.status === "pending").length}>
-            <AnimatePresence mode="popLayout">
-              {requests.filter((r) => r.status === "pending").map((r) => (
-                <RequestCard
-                  key={r.id} r={r}
-                  onAccept={() => {
-                    decide(r.id, "accepted");
-                    useAudit.getState().log({ type: "role_switch", actor: user.name, role: "lawyer", detail: `Accepted request from ${r.clientName}` });
-                  }}
-                  onDecline={() => {
-                    decide(r.id, "declined");
-                    useAudit.getState().log({ type: "access_denied", actor: user.name, role: "lawyer", detail: `Declined request from ${r.clientName}` });
-                  }}
-                  onReview={() => setVaultFor(r.id)}
-                />
-              ))}
-            </AnimatePresence>
-          </Column>
-          <Column title="Accepted" tone="emerald" count={requests.filter((r) => r.status === "accepted").length}>
-            <AnimatePresence mode="popLayout">
-              {requests.filter((r) => r.status === "accepted").map((r) => (
-                <RequestCard
-                  key={r.id} r={r}
-                  onReview={() => setVaultFor(r.id)}
-                  onInvoice={() => {
-                    const data = {
-                      clientName: r.clientName,
-                      lawyerName: user.name,
-                      rate: Math.round(r.estimatedFee / 4),
-                      hours: 4,
-                      date: new Date().toISOString(),
-                      reference: `AVL-${new Date().getFullYear()}-${r.id.toUpperCase()}`,
-                    };
-                    setInvoice(data);
-                    useAudit.getState().log({ type: "invoice_generated", actor: user.name, role: "lawyer", detail: `Invoice ${data.reference} for ${r.clientName} · €${data.rate * data.hours}` });
-                  }}
-                  muted
-                />
-              ))}
-            </AnimatePresence>
-          </Column>
-          <Column title="Declined" tone="rose" count={requests.filter((r) => r.status === "declined").length}>
-            <AnimatePresence mode="popLayout">
-              {requests.filter((r) => r.status === "declined").map((r) => (
-                <RequestCard key={r.id} r={r} muted />
-              ))}
-            </AnimatePresence>
-          </Column>
-        </div>
+        {list.length === 0 ? (
+          <div className="surface rounded-2xl p-10 text-center text-muted-foreground">
+            No client requests yet. New consultations will appear here in real time.
+          </div>
+        ) : (
+          <div className="grid gap-5 md:grid-cols-3">
+            <Column title="Pending" tone="amber" count={pending.length}>
+              <AnimatePresence mode="popLayout">
+                {pending.map((c) => (
+                  <RequestCard
+                    key={c.id} c={c} hourly={profile.rate ?? 0}
+                    onAccept={() => {
+                      decide(c.id, "accepted");
+                      useAudit.getState().log({ type: "role_switch", actor: profile.name, role: "lawyer", detail: `Accepted request from ${c.client?.name ?? "client"}` });
+                    }}
+                    onDecline={() => {
+                      decide(c.id, "declined");
+                      useAudit.getState().log({ type: "access_denied", actor: profile.name, role: "lawyer", detail: `Declined request from ${c.client?.name ?? "client"}` });
+                    }}
+                    onReview={() => setVaultFor(c.id)}
+                  />
+                ))}
+              </AnimatePresence>
+            </Column>
+            <Column title="Accepted" tone="emerald" count={accepted.length}>
+              <AnimatePresence mode="popLayout">
+                {accepted.map((c) => {
+                  const fee = (profile.rate ?? 0) * 4;
+                  return (
+                    <RequestCard
+                      key={c.id} c={c} hourly={profile.rate ?? 0}
+                      onReview={() => setVaultFor(c.id)}
+                      onInvoice={() => {
+                        const data: InvoiceData = {
+                          clientName: c.client?.name ?? "Client",
+                          lawyerName: profile.name,
+                          rate: profile.rate ?? 0,
+                          hours: 4,
+                          date: new Date().toISOString(),
+                          reference: `AVL-${new Date().getFullYear()}-${c.id.slice(0, 6).toUpperCase()}`,
+                        };
+                        setInvoice(data);
+                        useAudit.getState().log({ type: "invoice_generated", actor: profile.name, role: "lawyer", detail: `Invoice ${data.reference} for ${c.client?.name ?? "client"} · €${fee}` });
+                      }}
+                      muted
+                    />
+                  );
+                })}
+              </AnimatePresence>
+            </Column>
+            <Column title="Declined" tone="rose" count={declined.length}>
+              <AnimatePresence mode="popLayout">
+                {declined.map((c) => (
+                  <RequestCard key={c.id} c={c} hourly={profile.rate ?? 0} muted />
+                ))}
+              </AnimatePresence>
+            </Column>
+          </div>
+        )}
       </div>
 
       <VaultUnlock
         open={vaultFor !== null}
-        clientName={requests.find((r) => r.id === vaultFor)?.clientName ?? ""}
+        clientName={list.find((c) => c.id === vaultFor)?.client?.name ?? ""}
         onClose={() => setVaultFor(null)}
         onUnlocked={() => {
           const id = vaultFor;
-          const req = requests.find((r) => r.id === id);
+          const req = list.find((c) => c.id === id);
           if (req) {
-            useAudit.getState().log({ type: "vault_unlock", actor: user.name, role: "lawyer", detail: `Unlocked vault: ${req.clientName} · ${req.documentName}` });
+            useAudit.getState().log({ type: "vault_unlock", actor: profile.name, role: "lawyer", detail: `Unlocked vault: ${req.client?.name ?? "client"} · ${req.document_name}` });
           }
           setVaultFor(null);
           setViewerFor(id);
@@ -144,10 +224,10 @@ function WorkspaceInner() {
       />
 
       <PdfViewer
-        open={!!viewerFor && !!activeRequest}
+        open={!!viewerFor && !!activeConsult}
         onClose={() => setViewerFor(null)}
-        documentName={activeRequest?.documentName ?? ""}
-        userName={activeRequest?.clientName ?? ""}
+        documentName={activeConsult?.document_name ?? ""}
+        userName={activeConsult?.client?.name ?? ""}
         layoutId={`vault-${viewerFor ?? "x"}`}
       />
 
@@ -198,8 +278,17 @@ function Column({ title, tone, count, children }: { title: string; tone: "amber"
   );
 }
 
-function RequestCard({ r, onAccept, onDecline, onReview, onInvoice, muted }: {
-  r: import("@/lib/mock-data").LawyerRequest;
+function RequestCard({
+  c,
+  hourly,
+  onAccept,
+  onDecline,
+  onReview,
+  onInvoice,
+  muted,
+}: {
+  c: ConsultationRow;
+  hourly: number;
   onAccept?: () => void;
   onDecline?: () => void;
   onReview?: () => void;
@@ -211,6 +300,10 @@ function RequestCard({ r, onAccept, onDecline, onReview, onInvoice, muted }: {
     setStrike(true);
     setTimeout(() => { setStrike(false); onAccept?.(); }, 520);
   };
+  const clientName = c.client?.name || "Client";
+  const clientInitials = initialsOf(clientName);
+  const estimatedFee = hourly * 4;
+  const subject = `Consultation · ${c.lawyer?.specialty ?? "case"}`;
   return (
     <motion.div
       layout
@@ -223,22 +316,22 @@ function RequestCard({ r, onAccept, onDecline, onReview, onInvoice, muted }: {
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 ring-1 ring-border font-display text-sm">
-            {r.clientInitials}
+            {clientInitials}
           </div>
           <div>
-            <div className="text-sm font-semibold">{r.clientName}</div>
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{r.specialty}</div>
+            <div className="text-sm font-semibold">{clientName}</div>
+            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{c.lawyer?.specialty ?? "—"}</div>
           </div>
         </div>
         <div className="text-right">
-          <div className="text-xs text-gradient font-bold">€{r.estimatedFee}</div>
+          <div className="text-xs text-gradient font-bold">€{estimatedFee}</div>
           <div className="mt-0.5 inline-flex items-center gap-1 text-[10px] text-muted-foreground">
-            <Clock className="h-3 w-3" /> {new Date(r.submittedAt).toLocaleDateString()}
+            <Clock className="h-3 w-3" /> {new Date(c.scheduled_at).toLocaleDateString()}
           </div>
         </div>
       </div>
 
-      <p className="mt-3 text-sm text-muted-foreground line-clamp-2">{r.subject}</p>
+      <p className="mt-3 text-sm text-muted-foreground line-clamp-2">{subject}</p>
 
       <div className="mt-2 text-[11px] text-muted-foreground inline-flex items-center gap-1.5">
         Direct line: <Redacted>+33 6 12 34 56 78</Redacted>
@@ -250,7 +343,7 @@ function RequestCard({ r, onAccept, onDecline, onReview, onInvoice, muted }: {
         className="mt-3 w-full surface inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs hover:bg-secondary transition disabled:opacity-50"
       >
         <FileText className="h-3.5 w-3.5 text-primary" />
-        <span className="font-semibold truncate">{r.documentName}</span>
+        <span className="font-semibold truncate">{c.document_name}</span>
         <span className="text-[oklch(0.42_0.06_50)]">· encrypted</span>
       </button>
 
@@ -277,7 +370,7 @@ function RequestCard({ r, onAccept, onDecline, onReview, onInvoice, muted }: {
         </div>
       )}
 
-      {!onAccept && r.status === "accepted" && (
+      {!onAccept && c.status === "Confirmed" && (
         <div className="mt-3 flex items-center justify-between gap-2">
           <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-[oklch(0.42_0.06_50)]">
             <Star className="h-3 w-3 fill-current" /> Active engagement
@@ -294,8 +387,9 @@ function RequestCard({ r, onAccept, onDecline, onReview, onInvoice, muted }: {
       )}
 
       <div className="mt-3 pt-3 border-t border-border/60">
-        <StickyNote defaultValue={r.status === "accepted" ? "Counterparty seems open to settlement — confirm next call." : ""} />
+        <StickyNote defaultValue={c.status === "Confirmed" ? "Counterparty seems open to settlement — confirm next call." : ""} />
       </div>
     </motion.div>
   );
 }
+

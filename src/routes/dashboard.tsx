@@ -2,14 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Calendar, FileText, ArrowUpRight, Video, Scale, Clock, ShieldCheck } from "lucide-react";
-import { useApp } from "@/lib/store";
-import { useAudit } from "@/lib/audit";
+import { supabase } from "@/integrations/supabase/client";
+import { fetchMyConsultations, advanceConsultation, initialsOf, type ConsultationRow } from "@/lib/supabase-data";
 import { StatusStepper } from "@/components/StatusStepper";
 import { PdfViewer } from "@/components/PdfViewer";
 import { Decrypt } from "@/components/Decrypt";
 import { Redacted } from "@/components/Redacted";
 import { Tilt3D, TiltLayer } from "@/components/Tilt3D";
 import { RoleGuard } from "@/components/RoleGuard";
+import { Skeleton } from "@/components/ui/skeleton";
 import { downloadIcs } from "@/lib/ics";
 
 type StatTone = "primary" | "emerald" | "amber";
@@ -69,9 +70,8 @@ function DashboardPage() {
 }
 
 function DashboardInner() {
-  const consultations = useApp((s) => s.consultations);
-  const advance = useApp((s) => s.advance);
-  const user = useApp((s) => s.user);
+  const [profileName, setProfileName] = useState<string | null>(null);
+  const [consultations, setConsultations] = useState<ConsultationRow[] | null>(null);
   const [openDoc, setOpenDoc] = useState<string | null>(null);
   const [now, setNow] = useState(Date.now());
 
@@ -80,54 +80,91 @@ function DashboardInner() {
     return () => clearInterval(t);
   }, []);
 
-  const exportIcs = (c: { lawyer: { name: string }; date: string; documentName: string }) => {
-    downloadIcs(`consultation-${c.lawyer.name.replace(/\s/g, "-")}.ics`, {
-      title: `Consultation with ${c.lawyer.name}`,
-      description: `Confidential consultation — doc: ${c.documentName}`,
-      start: new Date(c.date),
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data: u } = await supabase.auth.getUser();
+      const uid = u.user?.id;
+      if (uid) {
+        const { data: p } = await supabase
+          .from("profiles")
+          .select("name,email")
+          .eq("id", uid)
+          .maybeSingle();
+        if (!cancelled) setProfileName(p?.name || p?.email || u.user?.email || "Counsel");
+      }
+      try {
+        const list = await fetchMyConsultations();
+        if (!cancelled) setConsultations(list);
+      } catch (e) {
+        console.error("[dashboard] fetchMyConsultations", e);
+        if (!cancelled) setConsultations([]);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  const advance = async (id: string, current: ConsultationRow["status"]) => {
+    try {
+      const next = await advanceConsultation(id, current);
+      setConsultations((prev) => prev?.map((c) => c.id === id ? { ...c, status: next } : c) ?? prev);
+    } catch (e) {
+      console.error("[dashboard] advance", e);
+    }
+  };
+
+  const exportIcs = (c: ConsultationRow) => {
+    downloadIcs(`consultation-${(c.lawyer?.name ?? "lawyer").replace(/\s/g, "-")}.ics`, {
+      title: `Consultation with ${c.lawyer?.name ?? "lawyer"}`,
+      description: `Confidential consultation — doc: ${c.document_name}`,
+      start: new Date(c.scheduled_at),
     });
   };
+
+  const list = consultations ?? [];
 
   return (
     <div className="mx-auto max-w-6xl px-6 pt-8 pb-24">
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="font-display text-4xl md:text-5xl">
-          <Decrypt text={`Welcome, ${user?.name ?? "Counsel"}`} duration={900} />
+          <Decrypt text={`Welcome, ${profileName ?? "Counsel"}`} duration={900} />
         </h1>
-        <p className="mt-2 text-muted-foreground">{consultations.length} active consultations</p>
+        <p className="mt-2 text-muted-foreground">
+          {consultations === null ? "Loading consultations…" : `${list.length} active consultations`}
+        </p>
       </motion.div>
 
       <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        <StatWidget
-          icon={Scale}
-          label="Active cases"
-          value={consultations.length}
-          hint="Across all specialties"
-          tone="primary"
-        />
+        <StatWidget icon={Scale} label="Active cases" value={list.length} hint="Across all specialties" tone="primary" />
         <StatWidget
           icon={Clock}
           label="Next hearing"
-          value={
-            consultations[0]
-              ? new Date(consultations[0].date).toLocaleDateString(undefined, { month: "short", day: "numeric" })
-              : "—"
-          }
-          hint={consultations[0]?.lawyer.name ?? "No upcoming"}
+          value={list[0] ? new Date(list[0].scheduled_at).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "—"}
+          hint={list[0]?.lawyer?.name ?? "No upcoming"}
           tone="amber"
         />
-        <StatWidget
-          icon={ShieldCheck}
-          label="Documents secured"
-          value={consultations.length}
-          hint="End-to-end encrypted"
-          tone="emerald"
-        />
+        <StatWidget icon={ShieldCheck} label="Documents secured" value={list.length} hint="End-to-end encrypted" tone="emerald" />
       </div>
 
+      {consultations === null && (
+        <div className="mt-10 space-y-4">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <Skeleton key={i} className="h-40 rounded-2xl" />
+          ))}
+        </div>
+      )}
+
+      {consultations !== null && list.length === 0 && (
+        <div className="mt-10 surface rounded-2xl p-10 text-center text-muted-foreground">
+          No consultations yet — head to the Directory to book one.
+        </div>
+      )}
+
       <div className="mt-10 space-y-4">
-        {consultations.map((c, i) => {
+        {list.map((c, i) => {
           const docId = `doc-${c.id}`;
+          const lawyerName = c.lawyer?.name ?? "Lawyer";
+          const lawyerInitials = initialsOf(lawyerName);
           return (
             <motion.div
               key={c.id}
@@ -139,11 +176,13 @@ function DashboardInner() {
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="flex items-center gap-4">
                   <div className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 ring-1 ring-border font-display">
-                    {c.lawyer.initials}
+                    {lawyerInitials}
                   </div>
                   <div>
-                    <div className="font-display text-xl">{c.lawyer.name}</div>
-                    <div className="text-xs text-muted-foreground">{c.lawyer.specialty} · {new Date(c.date).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}</div>
+                    <div className="font-display text-xl">{lawyerName}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {(c.lawyer?.specialty ?? "—")} · {new Date(c.scheduled_at).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}
+                    </div>
                   </div>
                 </div>
 
@@ -151,7 +190,7 @@ function DashboardInner() {
                   <StatusStepper status={c.status} />
                   {c.status !== "Confirmed" && (
                     <button
-                      onClick={() => advance(c.id)}
+                      onClick={() => advance(c.id, c.status)}
                       className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
                     >
                       Advance <ArrowUpRight className="h-3 w-3" />
@@ -171,12 +210,12 @@ function DashboardInner() {
                   className="surface inline-flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm hover:bg-secondary transition"
                 >
                   <FileText className="h-4 w-4 text-primary" />
-                  <span className="font-semibold">{c.documentName}</span>
+                  <span className="font-semibold">{c.document_name}</span>
                   <span className="text-xs text-[oklch(0.42_0.06_50)]">· encrypted</span>
                 </motion.button>
 
                 {c.status === "Confirmed" && (() => {
-                  const callTime = new Date(c.date).getTime();
+                  const callTime = new Date(c.scheduled_at).getTime();
                   const liveWindow = now >= callTime - 10 * 60 * 1000 && now <= callTime + 60 * 60 * 1000;
                   return (
                     <div className="flex items-center gap-2">
@@ -207,8 +246,8 @@ function DashboardInner() {
               <PdfViewer
                 open={openDoc === c.id}
                 onClose={() => setOpenDoc(null)}
-                documentName={c.documentName}
-                userName={user?.name ?? "Client"}
+                documentName={c.document_name}
+                userName={profileName ?? "Client"}
                 layoutId={docId}
               />
             </motion.div>
