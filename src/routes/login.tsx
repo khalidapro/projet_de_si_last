@@ -195,7 +195,13 @@ function LoginPage() {
                 <label className="mt-4 block text-xs uppercase tracking-wider text-muted-foreground">Password</label>
                 <div className="mt-1.5 flex items-center gap-2 rounded-xl px-3.5 py-3 bg-[oklch(0.94_0.008_250)] border border-border">
                   <Lock className="h-4 w-4 text-muted-foreground" />
-                  <input type="password" defaultValue="••••••••••" className="flex-1 bg-transparent text-sm outline-none" />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••••"
+                    className="flex-1 bg-transparent text-sm outline-none"
+                  />
                 </div>
 
                 <AnimatePresence>
