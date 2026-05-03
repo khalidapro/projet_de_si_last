@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
-import { Briefcase, TrendingUp, Inbox, CheckCircle2, XCircle, FileText, Star, Clock, Wallet, Receipt } from "lucide-react";
+import { TrendingUp, Inbox, CheckCircle2, XCircle, FileText, Star, Clock, Wallet, Receipt } from "lucide-react";
 import { useAudit } from "@/lib/audit";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchMyConsultations, initialsOf, type ConsultationRow } from "@/lib/supabase-data";
@@ -393,5 +393,3 @@ function RequestCard({
   );
 }
 
-// keep import to satisfy bundler tree-shake check
-void Briefcase;
