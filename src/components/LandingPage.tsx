@@ -74,7 +74,7 @@ export function LandingPage() {
               <div className="mt-10 flex flex-wrap items-center gap-3">
                 <motion.div whileHover={{ scale: 1.04, y: -1 }} whileTap={{ scale: 0.97 }} transition={SPRING}>
                   <Link
-                    to="/login"
+                    to="/signup"
                     data-magnetic
                     className="shimmer-navy ripple-navy group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground glow-primary transition-colors duration-300 hover:brightness-110"
                   >
@@ -167,7 +167,7 @@ export function LandingPage() {
           <h2 className="mt-3 font-display text-3xl tracking-[-0.015em]">Ready to find your counsel?</h2>
           <motion.div whileHover={{ scale: 1.04, y: -1 }} whileTap={{ scale: 0.97 }} transition={SPRING} className="mt-6 inline-block">
             <Link
-              to="/login"
+              to="/signup"
               data-magnetic
               className="shimmer-navy ripple-navy group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground glow-primary transition-colors duration-300 hover:brightness-110"
             >
