@@ -16,18 +16,40 @@ const rootDir = path.join(__dirname, "..");
 const clientDir = path.join(rootDir, "dist", "client");
 const indexPath = path.join(clientDir, "index.html");
 
-// Find the main JS bundle
+// Find the main JS bundle and CSS
 const assetsDir = path.join(clientDir, "assets");
 let mainBundle = "";
 let mainCss = "";
 
 if (fs.existsSync(assetsDir)) {
   const files = fs.readdirSync(assetsDir);
-  const jsFile = files.find((f) => f.startsWith("client-") && f.endsWith(".js"));
+  
+  // Find CSS file
   const cssFile = files.find((f) => f.startsWith("styles-") && f.endsWith(".css"));
-
-  if (jsFile) mainBundle = `/assets/${jsFile}`;
   if (cssFile) mainCss = `/assets/${cssFile}`;
+
+  // Find the main JS bundle
+  // Look for the largest JS file that isn't known to be a chunk or route
+  const jsFiles = files.filter(
+    (f) => f.endsWith(".js") && !f.includes("worker-entry")
+  );
+  
+  if (jsFiles.length > 0) {
+    // Get file sizes and sort by size descending
+    const filesWithSize = jsFiles.map((f) => {
+      const filePath = path.join(assetsDir, f);
+      const size = fs.statSync(filePath).size;
+      return { name: f, size };
+    });
+    
+    filesWithSize.sort((a, b) => b.size - a.size);
+    
+    // The largest JS file should be the main bundle
+    // (typically the React app + TanStack Router bundle)
+    if (filesWithSize[0]) {
+      mainBundle = `/assets/${filesWithSize[0].name}`;
+    }
+  }
 }
 
 // Generate the HTML template
