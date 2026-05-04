@@ -1,12 +1,10 @@
-import { Outlet, Link, createRootRoute, HeadContent, Scripts, useLocation } from "@tanstack/react-router";
+import { Outlet, Link, createRootRoute, useLocation } from "@tanstack/react-router";
 import { MagneticCursor } from "@/components/MagneticCursor";
 import { ScrollGlow } from "@/components/ScrollGlow";
 import { AppShell } from "@/components/AppShell";
 import { CourtroomBg } from "@/components/CourtroomBg";
 import { PageTransition } from "@/components/PageTransition";
 import { ThemeProvider } from "@/lib/theme";
-
-import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
   return (
@@ -31,41 +29,9 @@ function NotFoundComponent() {
 }
 
 export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Avocat-Link — Premium LegalTech" },
-      { name: "description", content: "Find, book, and consult vetted lawyers with end-to-end encryption." },
-      { name: "author", content: "Avocat-Link" },
-      { property: "og:title", content: "Avocat-Link — Premium LegalTech" },
-      { property: "og:description", content: "Find, book, and consult vetted lawyers with end-to-end encryption." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-    ],
-  }),
-  shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
 });
-
-function RootShell({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
 
 function RootComponent() {
   const loc = useLocation();

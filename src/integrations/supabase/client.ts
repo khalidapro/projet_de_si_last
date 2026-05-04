@@ -10,12 +10,17 @@ function createSupabaseClient() {
 
   if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
     const missing = [
-      ...(!SUPABASE_URL ? ['SUPABASE_URL'] : []),
-      ...(!SUPABASE_PUBLISHABLE_KEY ? ['SUPABASE_PUBLISHABLE_KEY'] : []),
+      ...(!SUPABASE_URL ? ['VITE_SUPABASE_URL'] : []),
+      ...(!SUPABASE_PUBLISHABLE_KEY ? ['VITE_SUPABASE_PUBLISHABLE_KEY'] : []),
     ];
-    const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Connect Supabase in Lovable Cloud.`;
-    console.error(`[Supabase] ${message}`);
-    throw new Error(message);
+    const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Please ensure these are set in your environment.`;
+    console.error(`[Supabase Client] ${message}`);
+    
+    // In SPA on Vercel, if Supabase isn't configured, throw error with clear context
+    // This prevents hydration mismatches and allows React to properly handle the error
+    const error = new Error(message);
+    error.name = 'SupabaseConfigurationError';
+    throw error;
   }
 
   return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
@@ -28,13 +33,27 @@ function createSupabaseClient() {
 }
 
 let _supabase: ReturnType<typeof createSupabaseClient> | undefined;
+let _initError: Error | null = null;
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 export const supabase = new Proxy({} as ReturnType<typeof createSupabaseClient>, {
   get(_, prop, receiver) {
-    if (!_supabase) _supabase = createSupabaseClient();
-    return Reflect.get(_supabase, prop, receiver);
+    // If initialization failed before, throw the same error again
+    if (_initError) {
+      throw _initError;
+    }
+    
+    try {
+      if (!_supabase) {
+        _supabase = createSupabaseClient();
+      }
+      return Reflect.get(_supabase, prop, receiver);
+    } catch (error) {
+      // Cache the error so subsequent accesses throw the same error
+      _initError = error instanceof Error ? error : new Error(String(error));
+      throw _initError;
+    }
   },
 });
 

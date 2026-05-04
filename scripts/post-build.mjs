@@ -52,19 +52,35 @@ if (fs.existsSync(assetsDir)) {
   }
 }
 
-// Generate the HTML template
+// Generate the HTML template with proper SPA structure
+// This HTML will be served to all routes and TanStack Router handles client-side routing
 const html = `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Avocat-Link — Premium LegalTech</title>
     <meta name="description" content="Find, book, and consult vetted lawyers with end-to-end encryption." />
     <meta name="author" content="Avocat-Link" />
+    
+    <!-- OG Tags -->
+    <meta property="og:title" content="Avocat-Link — Premium LegalTech" />
+    <meta property="og:description" content="Find, book, and consult vetted lawyers with end-to-end encryption." />
+    <meta property="og:type" content="website" />
+    
+    <!-- Twitter Tags -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@Lovable" />
+    
+    <title>Avocat-Link — Premium LegalTech</title>
     ${mainCss ? `<link rel="stylesheet" href="${mainCss}" />` : ""}
   </head>
   <body>
+    <!-- Mount point for React SPA -->
+    <!-- TanStack Router will render the app here -->
     <div id="app"></div>
+    
+    <!-- Load the main React bundle -->
+    <!-- This bundle includes TanStack Router and handles all client-side routing -->
     <script type="module" src="${mainBundle}"></script>
   </body>
 </html>
@@ -81,4 +97,5 @@ fs.writeFileSync(indexPath, html, "utf-8");
 console.log("✅ Post-build: Generated dist/client/index.html");
 console.log(`   - Main bundle: ${mainBundle}`);
 console.log(`   - Main CSS: ${mainCss}`);
+console.log(`   - Mount point: <div id="app"></div>`);
 console.log(`\n📋 SPA ready for Vercel deployment!`);
