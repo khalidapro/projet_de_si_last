@@ -152,6 +152,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               >
                 <MessageSquare className="h-4 w-4" /> Chat
               </Link>
+              <button
+                onClick={signOut}
+                aria-label="Sign out"
+                className="inline-flex items-center gap-2 rounded-xl surface px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden md:inline">Sign out</span>
+              </button>
             </div>
           </div>
         </header>
