@@ -16,7 +16,6 @@ const SPECIALTIES = ["Business", "Penal", "Family"] as const;
 function LoginPage() {
   const [step, setStep] = useState<"login" | 1 | 2 | 3>("login");
   const [role, setRole] = useState<Role>("client");
-  const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -57,26 +56,26 @@ function LoginPage() {
     setAuthError(null);
     setSubmitting(true);
     try {
-      if (authMode === "signup") {
-        const redirectUrl = `${window.location.origin}/`;
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: redirectUrl,
-            data: {
-              name: name || email.split("@")[0],
-              role,
-              ...(role === "lawyer" ? { specialty, barreau } : {}),
-            },
-          },
-        });
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      // Pull profile so we know role/name before the wizard
+      const { data: sessionData } = await supabase.auth.getSession();
+      const uid = sessionData.session?.user.id;
+      if (uid) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("name, role, specialty, barreau")
+          .eq("id", uid)
+          .maybeSingle();
+        if (profile?.name) setName(profile.name);
+        if (profile?.role === "lawyer") {
+          setRole("lawyer");
+          if (profile.specialty) setSpecialty(profile.specialty as typeof specialty);
+          if (profile.barreau) setBarreau(profile.barreau);
+        } else {
+          setRole("client");
+        }
       }
-      // Move into the onboarding wizard; finish() will sync the profile and redirect.
       setStep(1);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Authentication failed";
