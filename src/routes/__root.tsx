@@ -70,7 +70,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   const loc = useLocation();
   // Login & landing have their own layouts (no chrome)
-  const bare = loc.pathname === "/login" || loc.pathname === "/" || loc.pathname === "/terms" || loc.pathname === "/privacy";
+  const bare = loc.pathname === "/login" || loc.pathname === "/signup" || loc.pathname === "/" || loc.pathname === "/terms" || loc.pathname === "/privacy";
   return (
     <ThemeProvider>
       <CourtroomBg />

@@ -16,7 +16,6 @@ const SPECIALTIES = ["Business", "Penal", "Family"] as const;
 function LoginPage() {
   const [step, setStep] = useState<"login" | 1 | 2 | 3>("login");
   const [role, setRole] = useState<Role>("client");
-  const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -57,26 +56,26 @@ function LoginPage() {
     setAuthError(null);
     setSubmitting(true);
     try {
-      if (authMode === "signup") {
-        const redirectUrl = `${window.location.origin}/`;
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: redirectUrl,
-            data: {
-              name: name || email.split("@")[0],
-              role,
-              ...(role === "lawyer" ? { specialty, barreau } : {}),
-            },
-          },
-        });
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      // Pull profile so we know role/name before the wizard
+      const { data: sessionData } = await supabase.auth.getSession();
+      const uid = sessionData.session?.user.id;
+      if (uid) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("name, role, specialty, barreau")
+          .eq("id", uid)
+          .maybeSingle();
+        if (profile?.name) setName(profile.name);
+        if (profile?.role === "lawyer") {
+          setRole("lawyer");
+          if (profile.specialty) setSpecialty(profile.specialty as typeof specialty);
+          if (profile.barreau) setBarreau(profile.barreau);
+        } else {
+          setRole("client");
+        }
       }
-      // Move into the onboarding wizard; finish() will sync the profile and redirect.
       setStep(1);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Authentication failed";
@@ -151,36 +150,8 @@ function LoginPage() {
                 onSubmit={submitLogin}
                 className="mt-8"
               >
-                <h1 className="font-display text-3xl">Welcome.</h1>
-                <p className="mt-1 text-sm text-muted-foreground">Choose your portal to continue.</p>
-
-                {/* Role toggle */}
-                <div className="mt-6 relative grid grid-cols-2 gap-1 surface rounded-2xl p-1.5">
-                  <motion.div
-                    layout
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    className="absolute inset-y-1.5 w-[calc(50%-6px)] rounded-xl bg-primary glow-primary"
-                    style={{ left: role === "client" ? 6 : "calc(50%)" }}
-                  />
-                  {(["client", "lawyer"] as Role[]).map((r) => (
-                    <button
-                      key={r}
-                      type="button"
-                      onClick={() => {
-                        if (r !== role) {
-                          useAudit.getState().log({ type: "role_switch", actor: name || "Anonymous", role: r, detail: `Switched intent to ${r}` });
-                        }
-                        setRole(r);
-                      }}
-                      className={`relative z-10 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-colors ${
-                        role === r ? "text-primary-foreground" : "text-muted-foreground"
-                      }`}
-                    >
-                      {r === "client" ? <User className="h-4 w-4" /> : <Scale className="h-4 w-4" />}
-                      {r === "client" ? "I am a Client" : "I am a Lawyer"}
-                    </button>
-                  ))}
-                </div>
+                <h1 className="font-display text-3xl">Welcome back.</h1>
+                <p className="mt-1 text-sm text-muted-foreground">Sign in to continue to your suite.</p>
 
                 <label className="mt-6 block text-xs uppercase tracking-wider text-muted-foreground">Email</label>
                 <div className="mt-1.5 flex items-center gap-2 rounded-xl px-3.5 py-3 bg-[oklch(0.94_0.008_250)] border border-border">
@@ -189,6 +160,7 @@ function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     type="email"
+                    autoComplete="email"
                     className="flex-1 bg-transparent text-sm outline-none"
                   />
                 </div>
@@ -200,41 +172,10 @@ function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••••"
+                    autoComplete="current-password"
                     className="flex-1 bg-transparent text-sm outline-none"
                   />
                 </div>
-
-                <AnimatePresence>
-                  {role === "lawyer" && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="grid grid-cols-2 gap-3 mt-4">
-                        <div>
-                          <label className="block text-xs uppercase tracking-wider text-muted-foreground">Specialty</label>
-                          <select
-                            value={specialty}
-                            onChange={(e) => setSpecialty(e.target.value as typeof specialty)}
-                            className="mt-1.5 w-full rounded-xl px-3 py-3 text-sm outline-none bg-[oklch(0.94_0.008_250)] border border-border"
-                          >
-                            {SPECIALTIES.map((s) => <option key={s} value={s}>{s}</option>)}
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-xs uppercase tracking-wider text-muted-foreground">Bar Association</label>
-                          <input
-                            value={barreau}
-                            onChange={(e) => setBarreau(e.target.value)}
-                            className="mt-1.5 w-full rounded-xl px-3 py-3 text-sm outline-none bg-[oklch(0.94_0.008_250)] border border-border"
-                          />
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
 
                 {authError && (
                   <div className="mt-4 rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
@@ -247,23 +188,14 @@ function LoginPage() {
                   disabled={submitting || !email || !password}
                   className="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground glow-primary disabled:opacity-60"
                 >
-                  {submitting
-                    ? "Please wait…"
-                    : authMode === "signup"
-                    ? `Create ${role === "client" ? "Client" : "Lawyer"} account`
-                    : `Continue as ${role === "client" ? "Client" : "Lawyer"}`}
+                  {submitting ? "Signing in…" : "Sign in"}
                   <ArrowRight className="h-4 w-4" />
                 </button>
 
-                <button
-                  type="button"
-                  onClick={() => { setAuthError(null); setAuthMode((m) => (m === "signin" ? "signup" : "signin")); }}
-                  className="mt-3 w-full text-center text-xs text-muted-foreground hover:text-primary transition-colors"
-                >
-                  {authMode === "signin"
-                    ? "New here? Create an account"
-                    : "Already have an account? Sign in"}
-                </button>
+                <div className="mt-3 text-center text-xs text-muted-foreground">
+                  New to Avocat-Link?{" "}
+                  <Link to="/signup" className="text-primary font-semibold hover:underline">Create an account</Link>
+                </div>
 
                 <div className="mt-4 inline-flex items-center gap-2 rounded-full chip-emerald px-3 py-1 text-[10px] font-semibold">
                   <ShieldCheck className="h-3 w-3" /> Secure E2E Encrypted Login

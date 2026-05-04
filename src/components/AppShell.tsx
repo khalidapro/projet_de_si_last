@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { useAudit } from "@/lib/audit";
+import { supabase } from "@/integrations/supabase/client";
 import { NotificationsBell } from "./NotificationsBell";
 import { ThemeToggle } from "./ThemeToggle";
 import type { ComponentType } from "react";
@@ -33,7 +34,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const items = user?.role === "lawyer" ? lawyerNav : clientNav;
 
-  const signOut = () => {
+  const signOut = async () => {
     if (user) {
       useAudit.getState().log({
         type: "logout",
@@ -42,6 +43,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         detail: "Session ended from sidebar",
       });
     }
+    try { await supabase.auth.signOut(); } catch { /* ignore */ }
     setUser(null);
     navigate({ to: "/login" });
   };
@@ -150,6 +152,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               >
                 <MessageSquare className="h-4 w-4" /> Chat
               </Link>
+              <button
+                onClick={signOut}
+                aria-label="Sign out"
+                className="inline-flex items-center gap-2 rounded-xl surface px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden md:inline">Sign out</span>
+              </button>
             </div>
           </div>
         </header>
