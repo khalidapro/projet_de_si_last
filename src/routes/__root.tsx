@@ -33,10 +33,16 @@ export const Route = createRootRoute({
   notFoundComponent: NotFoundComponent,
 });
 
+/**
+ * Root component - renders the main app layout
+ * useLocation() here is safe because it's called within the RouterProvider context
+ * which is established by TanStack Start's automatic setup
+ */
 function RootComponent() {
   const loc = useLocation();
   // Login & landing have their own layouts (no chrome)
   const bare = loc.pathname === "/login" || loc.pathname === "/signup" || loc.pathname === "/" || loc.pathname === "/terms" || loc.pathname === "/privacy";
+  
   return (
     <ThemeProvider>
       <CourtroomBg />
