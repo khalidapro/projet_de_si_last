@@ -1,51 +1,146 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Send, Paperclip, Search, ShieldCheck, Phone, Video, MoreHorizontal } from "lucide-react";
-import { useApp } from "@/lib/store";
+import { supabase } from "@/integrations/supabase/client";
+import { fetchMyConsultations, initialsOf, type ConsultationRow } from "@/lib/supabase-data";
 import { CLIENT_THREADS, LAWYER_THREADS, SAMPLE_THREAD, type ChatMessage } from "@/lib/notifications";
+import { useApp } from "@/lib/store";
 
 export const Route = createFileRoute("/messages")({
   component: MessagesPage,
 });
 
+interface Thread {
+  id: string;            // consultation id (or fallback id)
+  name: string;
+  initials: string;
+  lastMessage: string;
+  time: string;
+  online: boolean;
+  unread: number;
+  isReal: boolean;
+}
+
 function MessagesPage() {
   const role = useApp((s) => s.user?.role) ?? "client";
-  const threads = role === "lawyer" ? LAWYER_THREADS : CLIENT_THREADS;
-  const [activeId, setActiveId] = useState(threads[0]?.id);
-  const [messages, setMessages] = useState<ChatMessage[]>(SAMPLE_THREAD);
+  const [uid, setUid] = useState<string | null>(null);
+  const [threads, setThreads] = useState<Thread[]>([]);
+  const [activeId, setActiveId] = useState<string | undefined>();
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
-  const [typing, setTyping] = useState(true);
+  const [typing, setTyping] = useState(false);
+  const [loading, setLoading] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const active = threads.find((t) => t.id === activeId);
 
+  // Load session + threads from real consultations
   useEffect(() => {
-    setMessages(SAMPLE_THREAD);
-    setTyping(true);
-    const t = setTimeout(() => setTyping(false), 2200);
-    return () => clearTimeout(t);
-  }, [activeId]);
+    let mounted = true;
+    (async () => {
+      const { data: u } = await supabase.auth.getUser();
+      if (!mounted) return;
+      const id = u.user?.id ?? null;
+      setUid(id);
+      try {
+        const consults = await fetchMyConsultations();
+        if (!mounted) return;
+        const real: Thread[] = consults.map((c: ConsultationRow) => {
+          const peer = role === "lawyer" ? c.client : c.lawyer;
+          const name = peer?.name || peer?.email || "Untitled case";
+          return {
+            id: c.id,
+            name,
+            initials: initialsOf(name),
+            lastMessage: c.document_name,
+            time: new Date(c.scheduled_at).toLocaleDateString([], { month: "short", day: "numeric" }),
+            online: c.status === "Confirmed",
+            unread: 0,
+            isReal: true,
+          };
+        });
+        const fallback: Thread[] = (role === "lawyer" ? LAWYER_THREADS : CLIENT_THREADS).map((t) => ({ ...t, isReal: false }));
+        const all = real.length > 0 ? real : fallback;
+        setThreads(all);
+        setActiveId(all[0]?.id);
+      } catch {
+        const fallback: Thread[] = (role === "lawyer" ? LAWYER_THREADS : CLIENT_THREADS).map((t) => ({ ...t, isReal: false }));
+        setThreads(fallback);
+        setActiveId(fallback[0]?.id);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, [role]);
+
+  const active = useMemo(() => threads.find((t) => t.id === activeId), [threads, activeId]);
+
+  // Load messages for active thread
+  useEffect(() => {
+    if (!active || !uid) return;
+    let mounted = true;
+    (async () => {
+      if (active.isReal) {
+        const { data, error } = await supabase
+          .from("messages")
+          .select("id,sender_id,body,created_at")
+          .eq("consultation_id", active.id)
+          .order("created_at", { ascending: true });
+        if (!mounted) return;
+        if (error || !data) {
+          setMessages([]);
+          return;
+        }
+        setMessages(
+          data.map((m) => ({
+            id: m.id,
+            from: m.sender_id === uid ? "me" : "them",
+            text: m.body,
+            time: new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          })),
+        );
+      } else {
+        setMessages(SAMPLE_THREAD);
+      }
+    })();
+    return () => { mounted = false; };
+  }, [active, uid]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, typing]);
 
-  const send = (e: React.FormEvent) => {
+  const send = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
-    const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    setMessages((m) => [...m, { id: crypto.randomUUID(), from: "me", text: input.trim(), time }]);
+    if (!input.trim() || !active) return;
+    const body = input.trim();
     setInput("");
-    setTyping(true);
-    setTimeout(() => {
-      setMessages((m) => [...m, {
-        id: crypto.randomUUID(),
-        from: "them",
-        text: "Noted — I'll incorporate that into the next draft.",
-        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      }]);
-      setTyping(false);
-    }, 2400);
+
+    if (active.isReal && uid) {
+      const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      const optimistic: ChatMessage = { id: crypto.randomUUID(), from: "me", text: body, time };
+      setMessages((m) => [...m, optimistic]);
+      const { error } = await supabase.from("messages").insert({
+        consultation_id: active.id,
+        sender_id: uid,
+        body,
+      });
+      if (error) {
+        setMessages((m) => m.filter((x) => x.id !== optimistic.id));
+      }
+    } else {
+      const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      setMessages((m) => [...m, { id: crypto.randomUUID(), from: "me", text: body, time }]);
+      setTyping(true);
+      setTimeout(() => {
+        setMessages((m) => [...m, {
+          id: crypto.randomUUID(), from: "them",
+          text: "Noted — I'll incorporate that into the next draft.",
+          time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        }]);
+        setTyping(false);
+      }, 1800);
+    }
   };
 
   return (
@@ -59,7 +154,6 @@ function MessagesPage() {
       </div>
 
       <div className="surface-lg rounded-3xl overflow-hidden grid md:grid-cols-[320px_1fr] h-[calc(100vh-220px)] min-h-[520px]">
-        {/* Conversations */}
         <aside className="border-r border-border flex flex-col bg-secondary/30">
           <div className="p-4">
             <div className="flex items-center gap-2 rounded-xl px-3 py-2 bg-[oklch(0.94_0.008_250)] border border-border">
@@ -68,14 +162,18 @@ function MessagesPage() {
             </div>
           </div>
           <div className="flex-1 overflow-y-auto px-2 pb-4 space-y-1">
+            {loading && <div className="px-3 py-2 text-xs text-muted-foreground">Loading conversations…</div>}
+            {!loading && threads.length === 0 && (
+              <div className="px-3 py-6 text-center text-xs text-muted-foreground">No conversations yet.</div>
+            )}
             {threads.map((t) => {
-              const active = t.id === activeId;
+              const isActive = t.id === activeId;
               return (
                 <button
                   key={t.id}
                   onClick={() => setActiveId(t.id)}
                   className={`w-full text-left px-3 py-3 rounded-xl flex items-center gap-3 transition ${
-                    active ? "bg-card shadow-sm ring-1 ring-border" : "hover:bg-card/60"
+                    isActive ? "bg-card shadow-sm ring-1 ring-border" : "hover:bg-card/60"
                   }`}
                 >
                   <div className="relative">
@@ -106,7 +204,6 @@ function MessagesPage() {
           </div>
         </aside>
 
-        {/* Conversation */}
         <section className="flex flex-col min-w-0">
           <header className="flex items-center justify-between border-b border-border px-5 py-3">
             <div className="flex items-center gap-3">
@@ -119,7 +216,7 @@ function MessagesPage() {
                 )}
               </div>
               <div>
-                <div className="font-semibold text-sm">{active?.name}</div>
+                <div className="font-semibold text-sm">{active?.name ?? "Select a conversation"}</div>
                 <div className="text-[11px] text-muted-foreground inline-flex items-center gap-1">
                   <span className={`h-1.5 w-1.5 rounded-full ${active?.online ? "bg-primary" : "bg-muted-foreground"}`} />
                   {active?.online ? "Online · E2E secure" : "Offline"}
@@ -153,24 +250,12 @@ function MessagesPage() {
                   </div>
                 </motion.div>
               ))}
-
               {typing && (
-                <motion.div
-                  key="typing"
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  className="flex justify-start"
-                >
+                <motion.div key="typing" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="flex justify-start">
                   <div className="bg-[oklch(0.955_0.006_250)] ring-1 ring-border rounded-2xl px-4 py-2.5 text-sm inline-flex items-center gap-2">
                     <div className="flex gap-1">
                       {[0, 1, 2].map((i) => (
-                        <motion.span
-                          key={i}
-                          animate={{ y: [0, -3, 0] }}
-                          transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.15 }}
-                          className="h-1.5 w-1.5 rounded-full bg-primary"
-                        />
+                        <motion.span key={i} animate={{ y: [0, -3, 0] }} transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.15 }} className="h-1.5 w-1.5 rounded-full bg-primary" />
                       ))}
                     </div>
                     <span className="text-xs text-muted-foreground">{active?.name} is typing…</span>
