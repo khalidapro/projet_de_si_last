@@ -86,6 +86,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     navigate({ to: "/login" });
   };
 
+  if (hydrating) {
+    return (
+      <div className="min-h-screen grid place-items-center bg-app">
+        <div className="text-sm text-muted-foreground">Loading your suite…</div>
+      </div>
+    );
+  }
+  if (!user) return null;
+
   return (
     <div className="min-h-screen flex">
       {/* Sidebar */}
