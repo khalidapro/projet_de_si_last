@@ -4,7 +4,8 @@ import {
   Scale, Users, LayoutDashboard, MessageSquare, Briefcase,
   LogOut, Search, FileText, Shield, ScrollText, Settings as Cog,
 } from "lucide-react";
-import { useApp } from "@/lib/store";
+import { useEffect, useState } from "react";
+import { useApp, type Role } from "@/lib/store";
 import { useAudit } from "@/lib/audit";
 import { supabase } from "@/integrations/supabase/client";
 import { NotificationsBell } from "./NotificationsBell";
@@ -33,6 +34,43 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const loc = useLocation();
   const navigate = useNavigate();
   const items = user?.role === "lawyer" ? lawyerNav : clientNav;
+  const [hydrating, setHydrating] = useState(true);
+
+  // Hydrate the user from the live Supabase session — guards every protected page.
+  useEffect(() => {
+    let cancelled = false;
+    const hydrate = async (uid: string | undefined) => {
+      if (!uid) { if (!cancelled) { setUser(null); setHydrating(false); } return; }
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("name,email,role,specialty,barreau")
+        .eq("id", uid)
+        .maybeSingle();
+      if (cancelled) return;
+      const role: Role = (profile?.role as Role) ?? "client";
+      setUser({
+        name: profile?.name || profile?.email || "",
+        email: profile?.email || "",
+        role,
+        ...(role === "lawyer"
+          ? { specialty: (profile?.specialty as never) ?? "Business", barreau: profile?.barreau ?? "" }
+          : {}),
+      });
+      setHydrating(false);
+    };
+    supabase.auth.getSession().then(({ data }) => hydrate(data.session?.user.id));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      hydrate(session?.user.id);
+    });
+    return () => { cancelled = true; sub.subscription.unsubscribe(); };
+  }, [setUser]);
+
+  // Route guard: any AppShell-wrapped page is private.
+  useEffect(() => {
+    if (!hydrating && !user) {
+      navigate({ to: "/login" });
+    }
+  }, [hydrating, user, navigate]);
 
   const signOut = async () => {
     if (user) {
