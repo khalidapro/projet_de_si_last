@@ -1,13 +1,21 @@
 import { motion } from "framer-motion";
 
 const STEPS = ["Pending", "Analyzing", "Confirmed"] as const;
-type Step = (typeof STEPS)[number];
+type Step = (typeof STEPS)[number] | "Declined";
 
 /**
  * Semantic stepper — every state maps to a status token (pending/warning/success).
  * No inline color literals; palette changes propagate via CSS variables only.
  */
 export function StatusStepper({ status }: { status: Step }) {
+  if (status === "Declined") {
+    return (
+      <div className="inline-flex items-center gap-2">
+        <span className="h-2.5 w-2.5 rounded-full bg-destructive" />
+        <span className="text-xs font-semibold text-destructive">Declined</span>
+      </div>
+    );
+  }
   const current = STEPS.indexOf(status);
   return (
     <div className="flex items-center gap-2">
