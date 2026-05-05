@@ -23,7 +23,7 @@ interface AppState {
 }
 
 export const useApp = create<AppState>((set) => ({
-  user: { name: "Alex Mercier", email: "alex@avocat-link.io", role: "client" },
+  user: null,
   consultations: INITIAL_CONSULTATIONS,
   requests: INITIAL_REQUESTS,
   setUser: (u) => set({ user: u }),

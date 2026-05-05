@@ -20,7 +20,7 @@ export interface ConsultationRow {
   lawyer_id: string;
   scheduled_at: string;
   document_name: string;
-  status: "Pending" | "Analyzing" | "Confirmed";
+  status: "Pending" | "Analyzing" | "Confirmed" | "Declined";
   created_at: string;
   // joined
   lawyer?: LawyerRow | null;
